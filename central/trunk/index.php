@@ -2,12 +2,13 @@
 
 /* InstaDisc Server - A Four Island Project */
 
-include('common.php');
+include('includes/common.php');
 
-?>Welcome to the <?php echo($config['title']); ?> InstaDisc Server!<P><?php
+$template = new FITemplate('index');
+$template->add('TITLE', $config['title']);
+$template->add('TEXT', $config['text']);
+$template->display();
 
-echo($config['text']);
-
-include('footer.php');
+include('includes/footer.php');
 
 ?>
