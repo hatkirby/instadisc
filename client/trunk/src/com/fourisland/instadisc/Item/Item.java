@@ -23,5 +23,9 @@ public class Item {
     public void start()
     {
         WellFormedItem wfi = new WellFormedItem(this);
+        if (wfi.check())
+        {
+            
+        }
     }
 }

@@ -30,6 +30,7 @@ public class InstaDiscThread implements Runnable {
             ServerSocket svr = new ServerSocket();
             java.net.InetSocketAddress addr = new java.net.InetSocketAddress(4444);
             svr.bind(addr);
+            Runtime.getRuntime().addShutdownHook(new Thread(new CloseObjectThread(svr)));
             while (!cancelled) {
                 try {
                     Socket s = svr.accept();
@@ -90,7 +91,7 @@ class HandleItemThread implements Runnable {
                 try {
                     String[] nameVal = headers[i].split(": ");
                     String name = nameVal[0];
-                    String value = nameVal[1];
+                    String value = nameVal[1].trim();
                     headerMap.put(name, value);
                 } catch (Exception ex) {
                     break;
