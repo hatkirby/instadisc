@@ -6,6 +6,7 @@
 package com.fourisland.instadisc.FirstRun;
 
 import com.fourisland.instadisc.Database.Wrapper;
+import com.fourisland.instadisc.Item.MD5;
 import com.fourisland.instadisc.XmlRpc;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -168,8 +169,10 @@ public class Step2 extends javax.swing.JDialog {
                         {
                             jLabel5.setText("Error: No registration exists on the specified Central Server with the specified UN/PW combination");
                         } else {
+                            MD5 md5 = new MD5(jTextField2.getText());
+                            
                             Wrapper.setConfig("username", jTextField1.getText());
-                            Wrapper.setConfig("password", jTextField2.getText());
+                            Wrapper.setConfig("password", md5.hash());
                             Wrapper.setConfig("centralServerURL", jTextField3.getText());
                             
                             StepEndResults.ok = true;
