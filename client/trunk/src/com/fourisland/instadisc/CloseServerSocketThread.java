@@ -14,11 +14,11 @@ import java.util.logging.Logger;
  *
  * @author hatkirby
  */
-class CloseObjectThread implements Runnable{
+class CloseServerSocketThread implements Runnable {
     
     ServerSocket svr;
 
-    public CloseObjectThread(ServerSocket svr) {
+    public CloseServerSocketThread(ServerSocket svr) {
         this.svr = svr;
     }
 
@@ -26,7 +26,7 @@ class CloseObjectThread implements Runnable{
         try {
             svr.close();
         } catch (IOException ex) {
-            Logger.getLogger(CloseObjectThread.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CloseServerSocketThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

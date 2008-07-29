@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,13 +31,15 @@ public class InstaDiscThread implements Runnable {
             ServerSocket svr = new ServerSocket();
             java.net.InetSocketAddress addr = new java.net.InetSocketAddress(4444);
             svr.bind(addr);
-            Runtime.getRuntime().addShutdownHook(new Thread(new CloseObjectThread(svr)));
+            Runtime.getRuntime().addShutdownHook(new Thread(new CloseServerSocketThread(svr)));
             while (!cancelled) {
                 try {
                     Socket s = svr.accept();
                     HandleItemThread hit = new HandleItemThread(s);
                     Thread hitt = new Thread(hit);
                     hitt.start();
+                } catch (SocketException ex) {
+                    cancel();
                 } catch (Exception ex) {
                     cancel();
                     Logger.getLogger(InstaDiscThread.class.getName()).log(Level.SEVERE, null, ex);
@@ -105,7 +108,7 @@ class HandleItemThread implements Runnable {
             } catch (IOException ex) {
                 Logger.getLogger(HandleItemThread.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             Item idI = new Item(headerMap);
             idI.start();
         } catch (IOException ex) {

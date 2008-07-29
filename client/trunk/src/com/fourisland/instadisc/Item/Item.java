@@ -5,6 +5,7 @@
 
 package com.fourisland.instadisc.Item;
 
+import com.fourisland.instadisc.XmlRpc;
 import java.util.HashMap;
 
 /**
@@ -25,7 +26,9 @@ public class Item {
         WellFormedItem wfi = new WellFormedItem(this);
         if (wfi.check())
         {
-            
+            XmlRpc xmlrpc = new XmlRpc("deleteItem");
+            xmlrpc.addParam(Integer.decode(headerMap.get("ID")));
+            xmlrpc.execute();
         }
     }
 }
