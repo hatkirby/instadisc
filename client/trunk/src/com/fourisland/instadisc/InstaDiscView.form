@@ -38,6 +38,9 @@
                 <Property name="selectionMode" type="int" value="0"/>
                 <Property name="name" type="java.lang.String" value="jList1" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jList1MouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

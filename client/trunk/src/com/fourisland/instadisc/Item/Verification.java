@@ -41,7 +41,6 @@ public class Verification {
         String temp = username + ":" + Wrapper.getConfig("password") + ":" + id;
         MD5 md5 = new MD5(temp);
         hash = md5.hash();
-        System.out.println(temp);
     }
 
     public Verification(String username, String password) {
