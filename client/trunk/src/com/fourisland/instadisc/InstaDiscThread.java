@@ -102,7 +102,7 @@ class HandleItemThread implements Runnable {
                 i++;
             }
 
-            Logger.getLogger(HandleItemThread.class.getName()).log(Level.INFO, headerMap.toString());
+            //Logger.getLogger(HandleItemThread.class.getName()).log(Level.INFO, headerMap.toString());
             try {
                 s.close();
             } catch (IOException ex) {

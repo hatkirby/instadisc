@@ -13,6 +13,8 @@ import org.jdesktop.application.SingleFrameApplication;
  * The main class of the application.
  */
 public class InstaDiscApp extends SingleFrameApplication {
+    
+    public static String base;
 
     /**
      * At startup create and show the main frame of the application.
@@ -44,6 +46,8 @@ public class InstaDiscApp extends SingleFrameApplication {
      */
     public static void main(String[] args) {
         if (args.length > 0) {
+            base = args[0];
+            
             File db = new File(args[0] + "db");
             if (!db.exists()) {
                 db.mkdir();
