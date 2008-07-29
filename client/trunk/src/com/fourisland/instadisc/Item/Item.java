@@ -51,8 +51,8 @@ public class Item {
                 temp.remove("Verification");
                 temp.remove("Verification-ID");
                 temp.remove("Subscription");
-                temp.remove("Category");
                 temp.remove("Title");
+                temp.remove("Author");
                 temp.remove("URL");
                 di.setSemantics(temp);
                 
