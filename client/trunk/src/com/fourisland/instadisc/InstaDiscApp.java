@@ -16,7 +16,7 @@ import org.jdesktop.application.SingleFrameApplication;
 public class InstaDiscApp extends SingleFrameApplication {
 
     public static TrayIcon ti;
-    
+
     /**
      * At startup create and show the main frame of the application.
      */
@@ -52,7 +52,17 @@ public class InstaDiscApp extends SingleFrameApplication {
         }
 
         Wrapper.init(db.getAbsolutePath());
-        if (!Wrapper.getConfig("initCheck").equals("done")) {
+
+        boolean notInit = false;
+        try {
+            if (!Wrapper.getConfig("initCheck").equals("done")) {
+                notInit = true;
+            }
+        } catch (NullPointerException ex) {
+            notInit = true;
+        }
+        
+        if (notInit) {
             Thread th = new Thread(new FirstRunWizard());
             th.start();
         } else {

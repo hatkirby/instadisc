@@ -48,7 +48,7 @@ public class Item {
                 di.setAuthor(headerMap.get("Author"));
                 di.setURL(new URL(headerMap.get("URL")).toString());
                 
-                HashMap<String, String> temp = headerMap;
+                HashMap<String, String> temp = (HashMap<String, String>) headerMap.clone();
                 temp.remove("ID");
                 temp.remove("Verification");
                 temp.remove("Verification-ID");

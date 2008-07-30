@@ -6,10 +6,9 @@
 
 package com.fourisland.instadisc;
 
+import com.fourisland.instadisc.Item.SubscriptionFile;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -80,11 +79,11 @@ public class AddSubscriptionForm extends javax.swing.JDialog {
                     .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1))
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel2)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -119,8 +118,9 @@ public class AddSubscriptionForm extends javax.swing.JDialog {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try { 
             URL url = new URL(jTextField1.getText());//GEN-LAST:event_jButton2ActionPerformed
+            SubscriptionFile sf = new SubscriptionFile(url, jLabel4);
         } catch (MalformedURLException ex) {
-            jLabel4.setText("Error: ");
+            jLabel4.setText("Error: Subscription URL is malformed");
         }
     }
     
