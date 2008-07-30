@@ -19,13 +19,6 @@ import javax.swing.ListCellRenderer;
  * @author hatkirby
  */
 public class IDItemListCellRenderer extends JLabel implements ListCellRenderer {
-    
-    String base;
-    
-    public IDItemListCellRenderer(String base)
-    {
-        this.base = base;
-    }
 
     public Component getListCellRendererComponent(JList arg0, Object arg1, int arg2, boolean arg3, boolean arg4) {
         Item item = (Item) arg1;
