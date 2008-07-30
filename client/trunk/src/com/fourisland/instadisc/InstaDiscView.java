@@ -90,7 +90,7 @@ public class InstaDiscView extends FrameView {
             }
         });
 
-        jList1.setCellRenderer(new IDItemListCellRenderer(InstaDiscApp.base));
+        jList1.setCellRenderer(new IDItemListCellRenderer());
         jList1.setModel(lm);
         refreshItemPane();
 
