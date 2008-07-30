@@ -8,6 +8,8 @@ import com.fourisland.instadisc.Database.Wrapper;
 import com.fourisland.instadisc.InstaDiscApp;
 import com.fourisland.instadisc.InstaDiscView;
 import com.fourisland.instadisc.XmlRpc;
+import java.awt.SystemTray;
+import java.awt.TrayIcon.MessageType;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -59,6 +61,11 @@ public class Item {
                 Wrapper.addItem(di);
             } catch (MalformedURLException ex) {
                 Logger.getLogger(Item.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            if (SystemTray.isSupported())
+            {
+                InstaDiscApp.ti.displayMessage("New item recieved!", Wrapper.getSubscription(headerMap.get("Subscription")).getTitle() + ", " + headerMap.get("Title") + " by " + headerMap.get("Author"), MessageType.INFO);
             }
 
             ((InstaDiscView)InstaDiscApp.getApplication().getMainView()).refreshItemPane();

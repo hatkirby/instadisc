@@ -5,6 +5,11 @@ package com.fourisland.instadisc;
 
 import com.fourisland.instadisc.Database.Item;
 import com.fourisland.instadisc.Database.Wrapper;
+import com.fourisland.instadisc.Item.Categories.InstaDiscIcon;
+import java.awt.AWTException;
+import java.awt.Image;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -20,6 +25,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.Timer;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
@@ -89,6 +95,17 @@ public class InstaDiscView extends FrameView {
                 }
             }
         });
+        
+        if (SystemTray.isSupported())
+        {
+            try {
+                TrayIcon ti = new TrayIcon(new ImageIcon(InstaDiscIcon.instadiscicon).getImage(), "InstaDisc");
+                SystemTray.getSystemTray().add(ti);
+                InstaDiscApp.ti = ti;
+            } catch (AWTException ex) {
+                Logger.getLogger(InstaDiscView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 
         jList1.setCellRenderer(new IDItemListCellRenderer());
         jList1.setModel(lm);
