@@ -21,6 +21,9 @@ public class Category {
         if (category.equals("blog-post"))
         {
             return new ImageIcon(Blogpost.blogpost);
+        } else if (category.equals("instadisc"))
+        {
+            return new ImageIcon(InstaDiscIcon.instadiscicon);
         }
         return null;
     }

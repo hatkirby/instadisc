@@ -24,7 +24,7 @@ public class IDItemListCellRenderer extends JLabel implements ListCellRenderer {
         Item item = (Item) arg1;
 
         this.setIcon(Category.iconFromCategory(Wrapper.getSubscription(item.getSubscription()).getCategory()));
-        this.setText("<HTML><I>" + Wrapper.getSubscription(item.getSubscription()).getTitle() + "</I><B>" + item.getTitle() + "</B> by " + item.getAuthor());
+        this.setText("<HTML><I>" + Wrapper.getSubscription(item.getSubscription()).getTitle() + "</I>, <B>" + item.getTitle() + "</B> by " + item.getAuthor());
 
         /*if (item.getUnread()) {
             this.setBackground(Color.YELLOW);

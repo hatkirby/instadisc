@@ -5,6 +5,7 @@ package com.fourisland.instadisc;
 
 import com.fourisland.instadisc.Database.Wrapper;
 import com.fourisland.instadisc.FirstRun.FirstRunWizard;
+import java.awt.TrayIcon;
 import java.io.File;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
@@ -14,6 +15,8 @@ import org.jdesktop.application.SingleFrameApplication;
  */
 public class InstaDiscApp extends SingleFrameApplication {
 
+    public static TrayIcon ti;
+    
     /**
      * At startup create and show the main frame of the application.
      */
