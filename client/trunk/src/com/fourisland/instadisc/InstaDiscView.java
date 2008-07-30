@@ -96,10 +96,12 @@ public class InstaDiscView extends FrameView {
             }
         });
         
+        this.getFrame().setIconImage(new ImageIcon(InstaDiscIcon.instadiscicon).getImage());
+        
         if (SystemTray.isSupported())
         {
             try {
-                TrayIcon ti = new TrayIcon(new ImageIcon(InstaDiscIcon.instadiscicon).getImage(), "InstaDisc");
+                TrayIcon ti = new TrayIcon(new ImageIcon(InstaDiscIcon.instadisciconmiddle).getImage(), "InstaDisc");
                 SystemTray.getSystemTray().add(ti);
                 InstaDiscApp.ti = ti;
             } catch (AWTException ex) {
