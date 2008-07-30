@@ -285,7 +285,8 @@ public class InstaDiscView extends FrameView {
     }//GEN-LAST:event_jList1MouseClicked
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
+        AddSubscriptionForm asf = new AddSubscriptionForm(new JFrame(), true);
+        asf.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

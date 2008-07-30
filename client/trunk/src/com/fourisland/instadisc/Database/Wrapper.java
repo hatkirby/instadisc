@@ -36,7 +36,7 @@ public class Wrapper {
         envConfig.setAllowCreate(true);
         esConfig.setAllowCreate(true);
         try {
-            e = new Environment(new File(loc + "db"), envConfig);
+            e = new Environment(new File(loc), envConfig);
             es = new EntityStore(e, "EntityStore", esConfig);
         } catch (DatabaseException ex) {
             Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
@@ -54,37 +54,38 @@ public class Wrapper {
             Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public static String getConfig(String key)
-    {
-        try {
-            return idConfig.get(key).getValue();
-        } catch (DatabaseException ex) {
-            Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
-            return "";
-        }
-    }
-    
-    public static void setConfig(String key, String value)
-    {
-        try {
-            if (idConfig.contains(key)) {
-                IDConfig temp = idConfig.get(key);
-                temp.setValue(value);
-                idConfig.put(temp);
-            } else {
-                IDConfig temp = new IDConfig();
-                temp.setKey(key);
-                temp.setValue(value);
-                idConfig.put(temp);
+
+    public static String getConfig(String key) {
+        synchronized (idConfig) {
+            try {
+                return idConfig.get(key).getValue();
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+                return "";
             }
-        } catch (DatabaseException ex) {
-            Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public static boolean containsOldVerID(Integer id)
-    {
+
+    public static void setConfig(String key, String value) {
+        synchronized (idConfig) {
+            try {
+                if (idConfig.contains(key)) {
+                    IDConfig temp = idConfig.get(key);
+                    temp.setValue(value);
+                    idConfig.put(temp);
+                } else {
+                    IDConfig temp = new IDConfig();
+                    temp.setKey(key);
+                    temp.setValue(value);
+                    idConfig.put(temp);
+                }
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public static boolean containsOldVerID(Integer id) {
         try {
             return oldVerID.contains(id);
         } catch (DatabaseException ex) {
@@ -92,117 +93,134 @@ public class Wrapper {
             return false;
         }
     }
-    
-    public static int countOldVerID()
-    {
-        try {
-            return (int) oldVerID.count();
-        } catch (DatabaseException ex) {
-            Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
-            return 0;
-        }
-    }
-    
-    public static void emptyOldVerID()
-    {
-        try {
-            EntityCursor<OldVerID> ec = oldVerID.entities();
+
+    public static int countOldVerID() {
+        synchronized (oldVerID) {
             try {
-                Iterator<OldVerID> i = ec.iterator();
+                return (int) oldVerID.count();
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+                return 0;
+            }
+        }
+    }
+
+    public static void emptyOldVerID() {
+        synchronized (oldVerID) {
+            try {
+                EntityCursor<OldVerID> ec = oldVerID.entities();
+                try {
+                    Iterator<OldVerID> i = ec.iterator();
+                    while (i.hasNext()) {
+                        i.remove();
+                    }
+                } finally {
+                    ec.close();
+                }
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public static void addOldVerID(Integer id) {
+        synchronized (oldVerID) {
+            try {
+                OldVerID temp = new OldVerID();
+                temp.setID(id);
+                oldVerID.put(temp);
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public static void addItem(Item m_item) {
+        synchronized (item) {
+            try {
+                item.put(m_item);
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public static int countItem() {
+        synchronized (item) {
+            try {
+                return (int) item.count();
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+                return 0;
+            }
+        }
+    }
+
+    public static void dropFromTopItem() {
+        synchronized (item) {
+            try {
+                Integer[] keySet = (Integer[]) item.map().keySet().toArray();
+                item.delete(keySet[0]);
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public static Item[] getAllItem() {
+        synchronized (item) {
+            try {
+                Iterator<Item> i = item.entities().iterator();
+                Item[] temp = new Item[0];
+                int len = 0;
+
                 while (i.hasNext()) {
-                    i.remove();
+                    Item[] temp2 = new Item[len + 1];
+                    int j = 0;
+                    for (j = 0; j < len; j++) {
+                        temp2[j] = temp[j];
+                    }
+                    temp2[len] = i.next();
+                    temp = temp2;
                 }
-            } finally {
-                ec.close();
+
+                return temp;
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+                return new Item[0];
             }
-        } catch (DatabaseException ex) {
-            Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public static void addOldVerID(Integer id)
-    {
-        try {
-            OldVerID temp = new OldVerID();
-            temp.setID(id);
-            oldVerID.put(temp);
-        } catch (DatabaseException ex) {
-            Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public static void addItem(Item m_item)
-    {
-        try {
-            item.put(m_item);
-        } catch (DatabaseException ex) {
-            Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public static int countItem()
-    {
-        try {
-            return (int) item.count();
-        } catch (DatabaseException ex) {
-            Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
-            return 0;
-        }
-    }
-    
-    public static void dropFromTopItem()
-    {
-        try {
-            Integer[] keySet = (Integer[]) item.map().keySet().toArray();
-            item.delete(keySet[0]);
-        } catch (DatabaseException ex) {
-            Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public static Item[] getAllItem()
-    {
-        try {
-            Iterator<Item> i = item.entities().iterator();
-            Item[] temp = new Item[0];
-            int len = 0;
-            
-            while (i.hasNext())
-            {
-                Item[] temp2 = new Item[len+1];
-                int j=0;
-                for (j=0;j<len;j++)
-                {
-                    temp2[j] = temp[j];
-                }
-                temp2[len] = i.next();
-                temp = temp2;
+
+    public static Subscription getSubscription(String url) {
+        synchronized (subscription) {
+            try {
+                return subscription.get(url);
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
             }
-            
-            return temp;
-        } catch (DatabaseException ex) {
-            Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
-            return new Item[0];
         }
     }
-    
-    public static Subscription getSubscription(String url)
-    {
-        try {
-            return subscription.get(url);
-        } catch (DatabaseException ex) {
-            Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+
+    public static boolean existsSubscription(String url) {
+        synchronized (subscription) {
+            try {
+                return subscription.contains(url);
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            }
         }
     }
-    
-    public static boolean existsSubscription(String url)
-    {
-        try {
-            return subscription.contains(url);
-        } catch (DatabaseException ex) {
-            Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+
+    public static void addSubscription(Subscription s) {
+        synchronized (subscription) {
+            try {
+                subscription.put(s);
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 }

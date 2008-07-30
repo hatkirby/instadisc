@@ -5,6 +5,7 @@
 
 package com.fourisland.instadisc.Item.Categories;
 
+import com.fourisland.instadisc.Database.Wrapper;
 import com.fourisland.instadisc.Item.WellFormedItem;
 import java.util.HashMap;
 import javax.swing.Icon;
@@ -30,7 +31,8 @@ public class Category {
     
     public static boolean checkForRequiredSemantics(HashMap<String, String> headerMap) {
         boolean good = true;
-        if (headerMap.get("Category").equals("forum-post")) {
+        String category = Wrapper.getSubscription(headerMap.get("Subscription")).getCategory();
+        if (category.equals("forum-post")) {
             good = (good ? WellFormedItem.checkForRequiredHeader(headerMap, "forum") : false);
         }
         return good;
