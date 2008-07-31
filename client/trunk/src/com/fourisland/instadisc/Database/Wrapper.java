@@ -223,4 +223,41 @@ public class Wrapper {
             }
         }
     }
+    
+    public static Subscription[] getAllSubscription() {
+        synchronized (subscription) {
+            try {
+                Iterator<Subscription> i = subscription.entities().iterator();
+                Subscription[] temp = new Subscription[0];
+                int len = 0;
+
+                while (i.hasNext()) {
+                    Subscription[] temp2 = new Subscription[len + 1];
+                    int j = 0;
+                    for (j = 0; j < len; j++) {
+                        temp2[j] = temp[j];
+                    }
+                    temp2[len] = i.next();
+                    temp = temp2;
+                }
+
+                return temp;
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+                return new Subscription[0];
+            }
+        }
+    }
+    
+    public static void deleteSubscription(String url)
+    {
+        synchronized (subscription)
+        {
+            try {
+                subscription.delete(url);
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 }
