@@ -227,6 +227,11 @@ public class InstaDiscView extends FrameView {
 
         jMenuItem5.setText(resourceMap.getString("jMenuItem5.text")); // NOI18N
         jMenuItem5.setName("jMenuItem5"); // NOI18N
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem5);
 
         menuBar.add(jMenu1);
@@ -304,6 +309,11 @@ public class InstaDiscView extends FrameView {
         ManageSubscriptionsForm msf = new ManageSubscriptionsForm(new JFrame(), true);
         msf.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        AdvancedSettingsForm asf = new AdvancedSettingsForm(new JFrame(), true);
+        asf.setVisible(true);
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList jList1;
