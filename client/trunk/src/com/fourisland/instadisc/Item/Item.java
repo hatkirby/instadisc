@@ -35,7 +35,7 @@ public class Item {
             xmlrpc.addParam(Integer.decode(headerMap.get("ID")));
             //xmlrpc.execute();
             
-            if (Wrapper.countItem() >= Integer.decode(Wrapper.getConfig("itemsToHold")))
+            if (Wrapper.countItem() >= Integer.decode(Wrapper.getConfig("itemBufferSize")))
             {
                 Wrapper.dropFromTopItem();
             }

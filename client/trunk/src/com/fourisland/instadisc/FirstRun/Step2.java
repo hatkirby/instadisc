@@ -167,7 +167,8 @@ public class Step2 extends javax.swing.JDialog {
                             Wrapper.setConfig("username", jTextField1.getText());
                             Wrapper.setConfig("password", md5.hash());
                             Wrapper.setConfig("centralServerURL", jTextField3.getText());
-                            Wrapper.setConfig("itemsToHold", "10");
+                            Wrapper.setConfig("itemBufferSize", "10");
+                            Wrapper.setConfig("verIDBufferSize", "100");
                             Wrapper.setConfig("initCheck", "done");
                             
                             StepEndResults.ok = true;

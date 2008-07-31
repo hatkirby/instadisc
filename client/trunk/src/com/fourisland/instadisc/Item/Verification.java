@@ -31,7 +31,7 @@ public class Verification {
         if (Wrapper.containsOldVerID(id)) {
             throw new VerificationIDReusedException();
         } else {
-            if (Wrapper.countOldVerID() == 100) {
+            if (Wrapper.countOldVerID() == Integer.decode(Wrapper.getConfig("verIDBufferSize"))) {
                 Wrapper.emptyOldVerID();
             }
             Wrapper.addOldVerID(id);
