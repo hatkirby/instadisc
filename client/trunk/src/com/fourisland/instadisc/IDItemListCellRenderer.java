@@ -22,11 +22,16 @@ public class IDItemListCellRenderer extends JLabel implements ListCellRenderer {
         Item item = (Item) arg1;
 
         this.setIcon(Category.iconFromCategory(Wrapper.getSubscription(item.getSubscription()).getCategory()));
-        this.setText("<HTML><I>" + Wrapper.getSubscription(item.getSubscription()).getTitle() + "</I>, <B>" + item.getTitle() + "</B> by " + item.getAuthor());
+
+        if (item.getAuthor().equals("")) {
+            this.setText("<HTML><I>" + Wrapper.getSubscription(item.getSubscription()).getTitle() + "</I>, <B>" + item.getTitle() + "</B>");
+        } else {
+            this.setText("<HTML><I>" + Wrapper.getSubscription(item.getSubscription()).getTitle() + "</I>, <B>" + item.getTitle() + "</B> by " + item.getAuthor());
+        }
 
         /*if (item.getUnread()) {
-            this.setBackground(Color.YELLOW);
-        } else */{
+        this.setBackground(Color.YELLOW);
+        } else */        {
             if (arg3) {
                 this.setForeground(arg0.getSelectionForeground());
                 this.setBackground(arg0.getSelectionBackground());

@@ -8,6 +8,7 @@ package com.fourisland.instadisc;
 
 import com.fourisland.instadisc.Database.Subscription;
 import com.fourisland.instadisc.Database.Wrapper;
+import com.fourisland.instadisc.Item.SubscriptionFile;
 import javax.swing.DefaultListModel;
 
 /**
@@ -51,6 +52,7 @@ public class ManageSubscriptionsForm extends javax.swing.JDialog {
 
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
+        jLabel2.setPreferredSize(new java.awt.Dimension(1061, 71));
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
@@ -84,12 +86,12 @@ public class ManageSubscriptionsForm extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel2, 0, 0, Short.MAX_VALUE)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jButton1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2)))))
+                                .addComponent(jButton2))
+                            .addComponent(jLabel2, 0, 0, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -98,7 +100,7 @@ public class ManageSubscriptionsForm extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -115,11 +117,7 @@ public class ManageSubscriptionsForm extends javax.swing.JDialog {
         if (!jList1.isSelectionEmpty())
         {
             Subscription subscription = (Subscription) jList1.getSelectedValue();
-            Wrapper.deleteSubscription(subscription.getURL());
-            
-            XmlRpc xmlrpc = new XmlRpc("deleteSubscription");
-            xmlrpc.addParam(subscription.getURL());
-            xmlrpc.execute();
+            SubscriptionFile.deleteSubscription(subscription, true);
             
             refreshSubscriptionPane();
         }

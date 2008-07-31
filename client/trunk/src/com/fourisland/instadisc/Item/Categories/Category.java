@@ -38,10 +38,25 @@ public class Category {
     public static boolean checkForRequiredSemantics(HashMap<String, String> headerMap) {
         boolean good = true;
         String category = Wrapper.getSubscription(headerMap.get("Subscription")).getCategory();
-        if (category.equals("forum-post")) {
-            good = (good ? WellFormedItem.checkForRequiredHeader(headerMap, "forum") : false);
+        String[] semantics = getRequiredSemantics(category);
+        int i=0;
+        
+        for (i=0;i<semantics.length;i++)
+        {
+            good = (good ? WellFormedItem.checkForRequiredHeader(headerMap, semantics[i]) : false);
         }
+        
         return good;
+    }
+    
+    public static String[] getRequiredSemantics(String category)
+    {
+        if (category.equals("forum-post"))
+        {
+            return new String[] {"forum"};
+        } else {
+            return new String[] {};
+        }
     }
     
 }

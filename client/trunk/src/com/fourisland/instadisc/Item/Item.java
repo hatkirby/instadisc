@@ -33,7 +33,7 @@ public class Item {
         if (wfi.check()) {
             XmlRpc xmlrpc = new XmlRpc("deleteItem");
             xmlrpc.addParam(Integer.decode(headerMap.get("ID")));
-            //xmlrpc.execute();
+            xmlrpc.execute();
             
             if (Wrapper.countItem() >= Integer.decode(Wrapper.getConfig("itemBufferSize")))
             {
