@@ -28,6 +28,7 @@ public class Wrapper {
     public static PrimaryIndex<String, IDConfig> idConfig;
     public static PrimaryIndex<Integer, Item> item;
     public static PrimaryIndex<String, Subscription> subscription;
+    public static PrimaryIndex<Integer, Filter> filter;
 
     public static void init(String loc) {
 
@@ -50,6 +51,7 @@ public class Wrapper {
             idConfig = es.getPrimaryIndex(String.class, IDConfig.class);
             item = es.getPrimaryIndex(Integer.class, Item.class);
             subscription = es.getPrimaryIndex(String.class, Subscription.class);
+            filter = es.getPrimaryIndex(Integer.class, Filter.class);
         } catch (DatabaseException ex) {
             Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -223,7 +225,7 @@ public class Wrapper {
             }
         }
     }
-    
+
     public static Subscription[] getAllSubscription() {
         synchronized (subscription) {
             try {
@@ -248,15 +250,74 @@ public class Wrapper {
             }
         }
     }
-    
-    public static void deleteSubscription(String url)
-    {
-        synchronized (subscription)
-        {
+
+    public static void deleteSubscription(String url) {
+        synchronized (subscription) {
             try {
                 subscription.delete(url);
             } catch (DatabaseException ex) {
                 Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public static void addFilter(Filter f) {
+        if (f.getID() == -65536) {
+            f.setID(Integer.decode(Wrapper.getConfig("nextFilterID")));
+            Wrapper.setConfig("nextFilterID", Integer.toString(Integer.decode(Wrapper.getConfig("nextFilterID")) + 1));
+        }
+
+        synchronized (filter) {
+            try {
+                filter.put(f);
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public static Filter getFilter(Integer id) {
+        synchronized (filter) {
+            try {
+                return filter.get(id);
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            }
+        }
+    }
+
+    public static void deleteFilter(Integer id) {
+        synchronized (filter) {
+            try {
+                filter.delete(id);
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public static Filter[] getAllFilter() {
+        synchronized (filter) {
+            try {
+                Iterator<Filter> i = filter.entities().iterator();
+                Filter[] temp = new Filter[0];
+                int len = 0;
+
+                while (i.hasNext()) {
+                    Filter[] temp2 = new Filter[len + 1];
+                    int j = 0;
+                    for (j = 0; j < len; j++) {
+                        temp2[j] = temp[j];
+                    }
+                    temp2[len] = i.next();
+                    temp = temp2;
+                }
+
+                return temp;
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+                return new Filter[0];
             }
         }
     }
