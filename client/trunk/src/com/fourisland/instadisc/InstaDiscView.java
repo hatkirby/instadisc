@@ -7,7 +7,6 @@ import com.fourisland.instadisc.Database.Item;
 import com.fourisland.instadisc.Database.Wrapper;
 import com.fourisland.instadisc.Item.Categories.InstaDiscIcon;
 import java.awt.AWTException;
-import java.awt.Image;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import org.jdesktop.application.Action;
@@ -198,6 +197,11 @@ public class InstaDiscView extends FrameView {
 
         jMenuItem2.setText(resourceMap.getString("jMenuItem2.text")); // NOI18N
         jMenuItem2.setName("jMenuItem2"); // NOI18N
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         fileMenu.add(jMenuItem2);
 
         jSeparator1.setName("jSeparator1"); // NOI18N
@@ -296,6 +300,11 @@ public class InstaDiscView extends FrameView {
         asf.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        ManageSubscriptionsForm msf = new ManageSubscriptionsForm(new JFrame(), true);
+        msf.setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList jList1;
     private javax.swing.JMenu jMenu1;
@@ -322,7 +331,7 @@ public class InstaDiscView extends FrameView {
     private DefaultListModel lm = new DefaultListModel();
 
     public void refreshItemPane() {
-        lm.capacity();
+        lm.clear();
         Item[] items = Wrapper.getAllItem();
         int i = 0;
         for (i = 0; i < items.length; i++) {
