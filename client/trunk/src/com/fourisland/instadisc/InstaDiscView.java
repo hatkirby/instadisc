@@ -228,6 +228,11 @@ public class InstaDiscView extends FrameView {
 
         jMenuItem4.setText(resourceMap.getString("jMenuItem4.text")); // NOI18N
         jMenuItem4.setName("jMenuItem4"); // NOI18N
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem4);
 
         jMenuItem5.setText(resourceMap.getString("jMenuItem5.text")); // NOI18N
@@ -324,6 +329,11 @@ public class InstaDiscView extends FrameView {
         ManageFiltersForm mff = new ManageFiltersForm(new JFrame(), true);
         mff.setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        XmlRpc xmlrpc = new XmlRpc("requestRetained");
+        xmlrpc.execute();
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList jList1;
