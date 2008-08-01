@@ -21,12 +21,12 @@ function deleteItem($username, $verification, $verificationID, $id)
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
-		$getitem = "SELECT * FROM inbox WHERE username = \"" . $username . "\" AND itemID = " . $id;
+		$getitem = "SELECT * FROM inbox WHERE username = \"" . mysql_escape_string($username) . "\" AND itemID = " . $id;
 		$getitem2 = mysql_query($getitem);
 		$getitem3 = mysql_fetch_array($getitem2);
 		if ($getitem3['id'] == $id)
 		{
-			$delitem = "DELETE inbox WHERE username = \"" . $username . "\" AND itemID = " . $id;
+			$delitem = "DELETE inbox WHERE username = \"" . mysql_escape_string($username) . "\" AND itemID = " . $id;
 			$delitem2 = mysql_query($delitem);
 
 			return new xmlrpcresp(new xmlrpcval(0, "int"));
@@ -40,7 +40,7 @@ function resendItem($username, $verification, $verificationID, $id)
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
-		$getitem = "SELECT * FROM inbox WHERE username = \"" . $username . "\" AND itemID = " . $id;
+		$getitem = "SELECT * FROM inbox WHERE username = \"" . mysql_escape_string($username) . "\" AND itemID = " . $id;
 		$getitem2 = mysql_query($getitem);
 		$getitem3 = mysql_fetch_array($getitem2);
 		if ($getitem3['id'] == $id)
@@ -58,13 +58,13 @@ function sendFromUpdate($username, $verification, $verificationID, $subscription
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
-		$getusubs = "SELECT * FROM subscriptions WHERE username = \"" . $username . "\" AND uri = \"" . $subscription . "\" AND owner = \"true\"";
+		$getusubs = "SELECT * FROM subscriptions WHERE username = \"" . mysql_escape_string($username) . "\" AND uri = \"" . mysql_escape_string($subscription) . "\" AND owner = \"true\"";
 		$getusubs2 = mysql_query($getusubs);
 		$getusubs3 = mysql_fetch_array($getusubs2);
 		if ($getusubs['username'] == $username)
 		{
 			$cserver = $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
-			$getuk = "SELECT * FROM centralServers WHERE url = \"" . $cserver . "\"";
+			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_escape_string($cserver) . "\"";
 			$getuk2 = mysql_query($getuk);
 			$getuk3 = mysql_fetch_array($getuk2);
 
@@ -107,7 +107,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 		} else if ($softwareVersion < getConfig('softwareVersion'))
 		{
 			$cserver2 = $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
-			$getuk = "SELECT * FROM centralServers WHERE url = \"" . $cserver2 . "\"";
+			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_escape_string($cserver2) . "\"";
 			$getuk2 = mysql_query($getuk);
 			$getuk3 = mysql_fetch_array($getuk2);
 
@@ -124,7 +124,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 		if ($databaseVersion > getConfig('databaseVersion'))
 		{
 			$cserver2 = $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
-			$getuk = "SELECT * FROM centralServers WHERE url = \"" . $cserver2 . "\"";
+			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_escape_string($cserver2) . "\"";
 			$getuk2 = mysql_query($getuk);
 			$getuk3 = mysql_fetch_array($getuk2);
 
@@ -141,7 +141,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 			instaDisc_sendDatabase($cserver);
 		}
 
-		$getsed = "SELECT * FROM subscriptions WHERE uri = \"" . $subscription . "\"";
+		$getsed = "SELECT * FROM subscriptions WHERE uri = \"" . mysql_escape_string($subscription) . "\"";
 		$getsed2 = mysql_query($getsed);
 		$i=0;
 		while ($getsed3[$i] = mysql_fetch_array($getsed2))
@@ -190,12 +190,12 @@ function deleteSubscription($username, $verification, $verificationID, $subscrip
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
-		$getsub = "SELECT * FROM subscriptions WHERE url = \"" . $subscription . "\" AND username = \"" . $username . "\" AND owner = \"false\"";
+		$getsub = "SELECT * FROM subscriptions WHERE url = \"" . mysql_escape_string($subscription) . "\" AND username = \"" . mysql_escape_string($username) . "\" AND owner = \"false\"";
 		$getsub2 = mysql_query($getsub);
 		$getsub3 = mysql_fetch_array($getsub2);
 		if ($getsub3['url'] == $subscription)	
 		{
-			$delsub = "DELETE subscriptions WHERE url = \"" . $subscription . "\" AND username = \"" . $username . "\" AND owner = \"false\"";
+			$delsub = "DELETE subscriptions WHERE url = \"" . mysql_escape_string($subscription) . "\" AND username = \"" . mysql_escape_string($username . "\" AND owner = \"false\"";
 			$delsub2 = mysql_query($delsub);
 
 			return new xmlrpcresp(new xmlrpcval(0, "int"));
@@ -209,7 +209,7 @@ function addSubscription($username, $verification, $verificationID, $subscriptio
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
-		$inssub = "INSERT INTO subscriptions (url, username, owner) VALUES (\"" . $subscription . "\", \"" . $username . "\", \"false\")";
+		$inssub = "INSERT INTO subscriptions (url, username, owner) VALUES (\"" . mysql_escape_string($subscription) . "\", \"" . mysql_escape_string($username) . "\", \"false\")";
 		$inssub2 = mysql_query($inssub);
 
 		return new xmlrpcresp(new xmlrpcval(0, "int"));
