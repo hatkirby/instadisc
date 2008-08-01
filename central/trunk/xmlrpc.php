@@ -21,12 +21,12 @@ function deleteItem($username, $verification, $verificationID, $id)
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
-		$getitem = "SELECT * FROM inbox WHERE id = " . $id;
+		$getitem = "SELECT * FROM inbox WHERE username = \"" . $username . "\" AND itemID = " . $id;
 		$getitem2 = mysql_query($getitem);
 		$getitem3 = mysql_fetch_array($getitem2);
 		if ($getitem3['id'] == $id)
 		{
-			$delitem = "DELETE inbox WHERE id = " . $id;
+			$delitem = "DELETE inbox WHERE username = \"" . $username . "\" AND itemID = " . $id;
 			$delitem2 = mysql_query($delitem);
 
 			return new xmlrpcresp(new xmlrpcval(0, "int"));
@@ -40,12 +40,12 @@ function resendItem($username, $verification, $verificationID, $id)
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
-		$getitem = "SELECT * FROM inbox WHERE id = " . $id;
+		$getitem = "SELECT * FROM inbox WHERE username = \"" . $username . "\" AND itemID = " . $id;
 		$getitem2 = mysql_query($getitem);
 		$getitem3 = mysql_fetch_array($getitem2);
 		if ($getitem3['id'] == $id)
 		{
-			instaDisc_sendItem($id);
+			instaDisc_sendItem($username, $id);
 
 			return new xmlrpcresp(new xmlrpcval(0, "int"));
 		}
@@ -103,7 +103,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 	{
 		if ($softwareVersion > getConfig('softwareVersion'))
 		{
-			instaDisc_sendUpdateNotice();
+			instaDisc_sendUpdateNotice($softwareVersion);
 		} else if ($softwareVersion < getConfig('softwareVersion'))
 		{
 			$cserver2 = $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
@@ -162,7 +162,7 @@ function sendUpdateNotice($cserver, $verification, $verificationID, $softwareVer
 	{
 		if ($softwareVersion > getConfig('softwareVersion'))
 		{
-			instaDisc_sendUpdateNotice();
+			instaDisc_sendUpdateNotice($softwareVersion);
 
 			return new xmlrpcresp(new xmlrpcval(0, "int"));
 		}
@@ -186,6 +186,25 @@ function askForDatabase($cserver, $verification, $verificationID, $databaseVersi
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
+function deleteSubscription($username, $verification, $verificationID, $subscription)
+{
+	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
+	{
+		$getsub = "SELECT * FROM subscriptions WHERE url = \"" . $subscription . "\" AND username = \"" . $username . "\" AND owner = \"false\"";
+		$getsub2 = mysql_query($getsub);
+		$getsub3 = mysql_fetch_array($getsub2);
+		if ($getsub3['url'] == $subscription)	
+		{
+			$delsub = "DELETE subscriptions WHERE url = \"" . $subscription . "\" AND username = \"" . $username . "\" AND owner = \"false\"";
+			$delsub2 = mysql_query($delsub);
+
+			return new xmlrpcresp(new xmlrpcval(0, "int"));
+		}
+	}
+
+	return new xmlrpcresp(new xmlrpcval(1, "int"));
+}
+
 $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function" => "checkRegistration"),
 				"InstaDisc.deleteItem" => array("function" => "deleteItem"),
 				"InstaDisc.resendItem" => array("function" => "resendItem"),
@@ -193,7 +212,8 @@ $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function"
 				"InstaDisc.sendFromUpdate" => array("function" => "sendFromUpdate"),
 				"InstaDisc.sendFromCentral" => array("function" => "sendFromCentral"),
 				"InstaDisc.sendUpdateNotice" => array("function" => "sendUpdateNotice"),
-				"InstaDisc.askForDatabase" => array("function" => "askForDatabase")
+				"InstaDisc.askForDatabase" => array("function" => "askForDatabase"),
+				"InstaDisc.deleteSubscription" => array("function" => "deleteSubscription")
 			),0);
 $s->functions_parameters_type = 'phpvals';
 $s->service();
