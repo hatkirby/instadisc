@@ -120,6 +120,10 @@ class SubscriptionFileThread implements Runnable {
                         s.setCategory(headerMap.get("Category"));
                         Wrapper.addSubscription(s);
 
+                        XmlRpc xmlrpc = new XmlRpc("addSubscription");
+                        xmlrpc.addParam(headerMap.get("Subscription"));
+                        xmlrpc.execute();
+
                         status.setText("You've sucessfully subscribed to that website");
                     } else {
                         status.setText("Error: Subscription file is not well-formed");
