@@ -178,6 +178,8 @@ function askForDatabase($cserver, $verification, $verificationID, $databaseVersi
 		if ($databaseVersion < getConfig('databaseVersion'))
 		{
 			instaDisc_sendDatabase($cserver);
+
+			return new xmlrpcresp(new xmlrpcval(0, "int"));
 		}
 	}
 
