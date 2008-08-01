@@ -6,7 +6,7 @@ include_once('db.php');
 
 function instaDisc_checkVerification($username, $verification, $verificationID, $table, $nameField, $passField)
 {
-	$getitem = "SELECT * FROM " . $table . " WHERE " . $nameField . " = \"" . $username . "\"";
+	$getitem = "SELECT * FROM " . $table . " WHERE " . $nameField . " = \"" . mysql_escape_string($username) . "\"";
 	$getitem2 = mysql_query($getitem);
 	$getitem3 = mysql_fetch_array($getitem2);
 	if ($getitem3[$nameField] == $username)
@@ -41,16 +41,16 @@ function instaDisc_sendDatabase($cserver)
 
 function instaDisc_addItem($username, $subscription, $title, $author, $url, $semantics)
 {
-	$getuser = "SELECT * FROM users WHERE username = \"" . $username . "\"";
+	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_escape_string($username) . "\"";
 	$getuser2 = mysql_query($getuser);
 	$getuser3 = mysql_fetch_array($getuser2);
 	if ($getuser3['username'] == $username)
 	{
 		$itemID = $getuser3['nextItemID'];
-		$setuser = "UPDATE users SET nextItemID = nextItemID+1 WHERE username = \"" . $username . "\"";
+		$setuser = "UPDATE users SET nextItemID = nextItemID+1 WHERE username = \"" . mysql_escape_string($username) . "\"";
 		$setuser2 = mysql_query($setuser);
 
-		$insitem = "INSERT INTO inbox (username, itemID, subscription, title, author, url, semantics) VALUES (\"" . $username . "\", " . $itemID . ", \"" . $subscription . "\", \"" . $title . "\", \"" . $author . "\", \"" . $url . "\", \"" . serialize($semantics) . "\")";
+		$insitem = "INSERT INTO inbox (username, itemID, subscription, title, author, url, semantics) VALUES (\"" . mysql_escape_string($username) . "\", " . $itemID . ", \"" . mysql_escape_string($subscription) . "\", \"" . mysql_escape_string($title) . "\", \"" . mysql_escape_string($author) . "\", \"" . mysql_escape_string($url) . "\", \"" . mysql_escape_string(serialize($semantics)) . "\")";
 		$insitem2 = mysql_query($insitem);
 
 		instaDisc_sendItem($username, $itemID);
