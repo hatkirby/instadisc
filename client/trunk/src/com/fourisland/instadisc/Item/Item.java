@@ -13,6 +13,7 @@ import java.awt.TrayIcon.MessageType;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,7 +40,7 @@ public class Item {
             {
                 Wrapper.dropFromTopItem();
             }
-            
+
             try {
                 com.fourisland.instadisc.Database.Item di = new com.fourisland.instadisc.Database.Item();
                 di.setID(Integer.decode(headerMap.get("ID")));
@@ -48,7 +49,7 @@ public class Item {
                 di.setAuthor(headerMap.get("Author"));
                 di.setURL(new URL(headerMap.get("URL")).toString());
                 
-                HashMap<String, String> temp = (HashMap<String, String>) headerMap.clone();
+                HashMap<String, String> temp = new HashMap(headerMap);
                 temp.remove("ID");
                 temp.remove("Verification");
                 temp.remove("Verification-ID");
