@@ -21,6 +21,33 @@ function instaDisc_checkVerification($username, $verification, $verificationID, 
 
 function instaDisc_sendItem($username, $id)
 {
+	$getitem = "SELECT * FROM inbox WHERE username = \"" . mysql_escape_string($username) . "\" AND itemID = " . $id;
+	$getitem2 = mysql_query($getitem);
+	$getitem3 = mysql_fetch_array($getitem2);
+	if ($getitem3['username'] == $username)
+	{
+		$getuser = "SELECT * FROM users WHERE username = \"" . mysql_escape_string($username) . "\"";
+		$getuser2 = mysql_query($getuser);
+		$getuser3 = mysql_fetch_array($getuser2);
+
+		$fp = fsockopen($getuser3['ip'], 4444, $errno, $errstr);
+		if ($fp)
+		{
+			$verID = rand(1,65536);
+
+			$out = 'ID: ' . $id . '\r\n';
+			$out .= 'Verification: ' . md5($username . ':' . $getuser3['password'] . ':' . $verID) . '\r\n';
+			$out .= 'Verification-ID: ' . $verID . '\r\n';
+			$out .= 'Subscription: ' . $getitem3['subscription'] . '\r\n';
+			$out .= 'Title: ' . $getitem3['title'] . '\r\n';
+			$out .= 'Author: ' . $getitem3['author'] . '\r\n';
+			$out .= 'URL: ' . $getitem3['url'] . '\r\n';
+			$out .= '\r\n\r\n';
+
+			fwrite($fp, $out);
+			fclose($fp);
+		}
+	}
 }
 
 function instaDisc_sendUpdateNotice($softwareVersion)
