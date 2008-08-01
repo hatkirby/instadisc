@@ -143,12 +143,7 @@ public class Step2 extends javax.swing.JDialog {
         if (jTextField1.getText().equals("")) {
             jLabel5.setText("Error: You forgot to enter a username");
         } else {
-            /* TODO: Replace deprecated JPasswordField.getText() with
-             * JPasswordField.getPassword(). However, getPassword()
-             * returns the password in a char[], not a String, so
-             * it must be parsed prior to use.
-             */
-            if (jPasswordField1.getText().equals("")) {
+            if (jPasswordField1.getPassword().length == 0) {
                 jLabel5.setText("Error: You forgot to enter a password");
             } else {
                 if (jTextField3.getText().equals("")) {
@@ -157,17 +152,18 @@ public class Step2 extends javax.swing.JDialog {
                     try {
                         URL url = new URL(jTextField3.getText());
                         
-                        XmlRpc xmlrpc = new XmlRpc("checkRegistration", jTextField3.getText(), jTextField1.getText(), jPasswordField1.getText());
+                        MD5 md5 = new MD5(jPasswordField1.getPassword());
+                        String password = md5.hash();
+                        
+                        XmlRpc xmlrpc = new XmlRpc("checkRegistration", jTextField3.getText(), jTextField1.getText(), password);
                         Integer r = (Integer) xmlrpc.execute();
                         
                         if (r == 1)
                         {
                             jLabel5.setText("Error: No registration exists on the specified Central Server with the specified UN/PW combination");
-                        } else {
-                            MD5 md5 = new MD5(jPasswordField1.getText());
-                            
+                        } else {                            
                             Wrapper.setConfig("username", jTextField1.getText());
-                            Wrapper.setConfig("password", md5.hash());
+                            Wrapper.setConfig("password", password);
                             Wrapper.setConfig("centralServerURL", jTextField3.getText());
                             Wrapper.setConfig("itemBufferSize", "10");
                             Wrapper.setConfig("verIDBufferSize", "100");

@@ -20,6 +20,16 @@ public class MD5 {
         this.ver = ver;
     }
     
+    public MD5(char[] password) {
+        int i=0;
+        ver="";
+        for (i=0;i<password.length;i++)
+        {
+            ver += password[i];
+            password[i] = 0;
+        }
+    }
+    
     public String hash()
     {
         StringBuilder verify = new StringBuilder();
@@ -38,6 +48,7 @@ public class MD5 {
         } catch (Exception ex) {
             Logger.getLogger(WellFormedItem.class.getName()).log(Level.SEVERE, null, ex);
         }
+        ver = "";
         return verify.toString();
     }
     
