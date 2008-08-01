@@ -7,12 +7,8 @@ include('xmlrpc/xmlrpcs.inc');
 include('db.php');
 include('instadisc.php');
 
-function checkRegistration($xmlrpcmsg)
+function checkRegistration($username, $verification, $verificationID)
 {
-	$username = $xmlrpcmsg->getParam(0)->scalarVal();
-	$verification = $xmlrpcmsg->getParam(1)->scalarVal();
-	$verificationID = $xmlrpcmsg->getParam(2)->scalarVal();
-
 	$getuser = "SELECT * FROM users WHERE username = \"" . $username "\"";
 	$getuser2 = mysql_query($getuser):
 	$getuser3 = mysql_fetch_array($getuser2);
@@ -28,13 +24,8 @@ function checkRegistration($xmlrpcmsg)
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
-function deleteItem($xmlrpcmsg)
+function deleteItem($username, $verification, $verificationID, $id)
 {
-	$username = $xmlrpcmsg->getParam(0)->scalarVal();
-	$verification = $xmlrpcmsg->getParam(1)->scalarVal();
-	$verificationID = $xmlrpcmsg->getParam(2)->scalarVal();
-	$id = $xmlrpcmsg->getParam(3)->scalarVal();
-
 	$getuser = "SELECT * FROM users WHERE username = \"" . $username "\"";
 	$getuser2 = mysql_query($getuser):
 	$getuser3 = mysql_fetch_array($getuser2);
@@ -59,13 +50,8 @@ function deleteItem($xmlrpcmsg)
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
-function resendItem($xmlrpcmsg)
+function resendItem($username, $verification, $verificationID, $id)
 {
-	$username = $xmlrpcmsg->getParam(0)->scalarVal();
-	$verification = $xmlrpcmsg->getParam(1)->scalarVal();
-	$verificationID = $xmlrpcmsg->getParam(2)->scalarVal();
-	$id = $xmlrpcmsg->getParam(3)->scalarVal();
-
 	$getuser = "SELECT * FROM users WHERE username = \"" . $username "\"";
 	$getuser2 = mysql_query($getuser):
 	$getuser3 = mysql_fetch_array($getuser2);
@@ -89,17 +75,8 @@ function resendItem($xmlrpcmsg)
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
-function sendFromUpdate($xmlrpcmsg)
+function sendFromUpdate($username, $verification, $verificationID, $subscription, $title, $author, $url, $semantics)
 {
-	$username = $xmlrpcmsg->getParam(0)->scalarVal();
-	$verification = $xmlrpcmsg->getParam(1)->scalarVal();
-	$verificationID = $xmlrpcmsg->getParam(2)->scalarVal();
-	$subscription = $xmlrpcmsg->getParam(3)->scalarVal();
-	$title = $xmlrpcmsg->getParam(4)->scalarVal();
-	$author = $xmlrpcmsg->getParam(5)->scalarVal();
-	$url = $xmlrpcmsg->getParam(6)->scalarVal();
-	$semantics = deserialize($xmlrpcmsg->getParam(7)->serialize());
-
 	$getuser = "SELECT * FROM users WHERE username = \"" . $username . "\"";
 	$getuser2 = mysql_query($getuser);
 	$getuser3 = mysql_fetch_array($getuser2);
@@ -148,19 +125,8 @@ function sendFromUpdate($xmlrpcmsg)
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
-function sendFromCentral($xmlrpcmsg)
+function sendFromCentral($cserver, $verification, $verificationID, $subscription, $title, $author, $url, $semantics, $softwareVersion, $databaseVersion)
 {
-	$cserver = $xmlrpcmsg->getParam(0)->scalarVal();
-	$verification = $xmlrpcmsg->getParam(1)->scalarVal();
-	$verificationID = $xmlrpcmsg->getParam(2)->scalarVal();
-	$subscription = $xmlrpcmsg->getParam(3)->scalarVal();
-	$title = $xmlrpcmsg->getParam(4)->scalarVal();
-	$author = $xmlrpcmsg->getParam(5)->scalarVal();
-	$url = $xmlrpcmsg->getParam(6)->scalarVal();
-	$semantics = deserialize($xmlrpcmsg->getParam(7)->serialize());
-	$softwareVersion = $xmlrpcmsg->getParam(8)->scalarVal();
-	$databaseVersion = $xmlrpcmsg->getParam(9)->scalarVal();
-
 	$getcs = "SELECT * FROM centralServers WHERE url = \"" . $cserver . "\"";
 	$getcs2 = mysql_query($getcs);
 	$getcs3 = mysql_fetch_array($getcs2);
@@ -225,11 +191,14 @@ function sendFromCentral($xmlrpcmsg)
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
-$s = new xmlrpc_server(array(	"InstaDisc.checkRegistration" => array("function" => "checkRegistration"),
+$s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function" => "checkRegistration"),
 				"InstaDisc.deleteItem" => array("function" => "deleteItem"),
 				"InstaDisc.resendItem" => array("function" => "resendItem"),
 				"InstaDisc.requestRetained" => array("function" => "requestRetained"),
 				"InstaDisc.sendFromUpdate" => array("function" => "sendFromUpdate"),
-				"InstaDisc.sendFromCentral" => array("function" => "sendFromCentral")));
+				"InstaDisc.sendFromCentral" => array("function" => "sendFromCentral")
+			),0);
+$s->functions_parameters_type = 'phpvals';
+$s->service();
 
 ?>
