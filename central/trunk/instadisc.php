@@ -37,6 +37,28 @@ function instaDisc_sendUpdateNotice($softwareVersion)
 
 function instaDisc_sendDatabase($cserver)
 {
+	$getdb = "SELECT * FROM centralServers";
+	$getdb2 = mysql_query($getdb);
+	$i=0;
+	while ($getdb3[$i] = mysql_fetch_array($getdb2))
+	{
+		$db[$getdb3[$i]['url']] = $getdb3[$i]['key'];
+		$i++;
+	}
+
+	$cserver2 = $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+	$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_escape_string($cserver2) . "\"";
+	$getuk2 = mysql_query($getuk);
+	$getuk3 = mysql_fetch_array($getuk2);
+
+	$verID = rand(1,65536);
+
+	$client = new xmlrpc_client($cserver);
+	$msg = new xmlrpcmsg("InstaDisc.sendDatabase", array(	new xmlrpcval($cserver2, 'string'),
+								new xmlrpcval(md5($cserver2 + ":" + $getuk3['key'] + ":" + $verID), 'string'),
+								new xmlrpcval($verID, 'int'),
+								new xmlrpcval($db, 'array')));
+	$client->send($msg);
 }
 
 function instaDisc_addItem($username, $subscription, $title, $author, $url, $semantics)
