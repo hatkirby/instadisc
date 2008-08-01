@@ -205,6 +205,19 @@ function deleteSubscription($username, $verification, $verificationID, $subscrip
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
+function addSubscription($username, $verification, $verificationID, $subscription)
+{
+	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
+	{
+		$inssub = "INSERT INTO subscriptions (url, username, owner) VALUES (\"" . $subscription . "\", \"" . $username . "\", \"false\")";
+		$inssub2 = mysql_query($inssub);
+
+		return new xmlrpcresp(new xmlrpcval(0, "int"));
+	}
+
+	return new xmlrpcresp(new xmlrpcval(1, "int"));
+}
+
 $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function" => "checkRegistration"),
 				"InstaDisc.deleteItem" => array("function" => "deleteItem"),
 				"InstaDisc.resendItem" => array("function" => "resendItem"),
@@ -213,7 +226,8 @@ $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function"
 				"InstaDisc.sendFromCentral" => array("function" => "sendFromCentral"),
 				"InstaDisc.sendUpdateNotice" => array("function" => "sendUpdateNotice"),
 				"InstaDisc.askForDatabase" => array("function" => "askForDatabase"),
-				"InstaDisc.deleteSubscription" => array("function" => "deleteSubscription")
+				"InstaDisc.deleteSubscription" => array("function" => "deleteSubscription"),
+				"InstaDisc.addSubscription" => array("function" => "addSubscription")
 			),0);
 $s->functions_parameters_type = 'phpvals';
 $s->service();
