@@ -26,7 +26,7 @@ function deleteItem($username, $verification, $verificationID, $id)
 		$getitem3 = mysql_fetch_array($getitem2);
 		if ($getitem3['id'] == $id)
 		{
-			$delitem = "DELETE inbox WHERE username = \"" . mysql_escape_string($username) . "\" AND itemID = " . $id;
+			$delitem = "DELETE FROM inbox WHERE username = \"" . mysql_escape_string($username) . "\" AND itemID = " . $id;
 			$delitem2 = mysql_query($delitem);
 
 			return new xmlrpcresp(new xmlrpcval(0, "int"));
@@ -195,7 +195,7 @@ function deleteSubscription($username, $verification, $verificationID, $subscrip
 		$getsub3 = mysql_fetch_array($getsub2);
 		if ($getsub3['url'] == $subscription)	
 		{
-			$delsub = "DELETE subscriptions WHERE url = \"" . mysql_escape_string($subscription) . "\" AND username = \"" . mysql_escape_string($username . "\" AND owner = \"false\"";
+			$delsub = "DELETE FROM subscriptions WHERE url = \"" . mysql_escape_string($subscription) . "\" AND username = \"" . mysql_escape_string($username) . "\" AND owner = \"false\"";
 			$delsub2 = mysql_query($delsub);
 
 			return new xmlrpcresp(new xmlrpcval(0, "int"));
@@ -218,6 +218,35 @@ function addSubscription($username, $verification, $verificationID, $subscriptio
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
+function sendDatabase($cserver, $verification, $verificationID, $db)
+{
+	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'key'))
+	{
+		if (isset($db['central.fourisland.com']))
+		{
+			$getfi = "SELECT * FROM centralServers WHERE url = \"central.fourisland.com\"";
+			$getfi2 = mysql_query($getfi);
+			$getfi3 = mysql_fetch_array($getfi2);
+
+			if ($db['central.fourisland.com'] == $getfi3['key'])
+			{
+				$deldb = "TRUNCATE TABLE centralServers";
+				$deldb2 = mysql_query($deldb);
+
+				foreach($db as $name => $value)
+				{
+					$insdb = "INSERT INTO centralServers (url, key) VALUES (\"" . mysql_escape_string($name) . "\", \"" . mysql_escape_string($value) . "\")";
+					$insdb2 = mysql_query($insdb);
+				}
+
+				return new xmlrpcresp(new xmlrpcval("0", 'int'));
+			}
+		}
+	}
+
+	return new xmlrpcresp(new xmlrpcval(1, "int"));
+}
+
 $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function" => "checkRegistration"),
 				"InstaDisc.deleteItem" => array("function" => "deleteItem"),
 				"InstaDisc.resendItem" => array("function" => "resendItem"),
@@ -227,7 +256,8 @@ $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function"
 				"InstaDisc.sendUpdateNotice" => array("function" => "sendUpdateNotice"),
 				"InstaDisc.askForDatabase" => array("function" => "askForDatabase"),
 				"InstaDisc.deleteSubscription" => array("function" => "deleteSubscription"),
-				"InstaDisc.addSubscription" => array("function" => "addSubscription")
+				"InstaDisc.addSubscription" => array("function" => "addSubscription"),
+				"InstaDisc.sendDatabase" => array("function" => "sendDatabase")
 			),0);
 $s->functions_parameters_type = 'phpvals';
 $s->service();
