@@ -82,7 +82,7 @@ function sendFromUpdate($username, $verification, $verificationID, $subscription
 		$getusubs3 = mysql_fetch_array($getusubs2);
 		if ($getusubs['username'] == $username)
 		{
-			$cserver = $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+			$cserver = $_SERVER['HTTP_HOST'];
 			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_escape_string($cserver) . "\"";
 			$getuk2 = mysql_query($getuk);
 			$getuk3 = mysql_fetch_array($getuk2);
@@ -94,7 +94,7 @@ function sendFromUpdate($username, $verification, $verificationID, $subscription
 			{
 				$verID = rand(1,65536);
 
-				$client = new xmlrpc_client($getcs3[$i]['url']);
+				$client = new xmlrpc_client($getcs3[$i]['xmlrpc']);
 				$msg = new xmlrpcmsg("InstaDisc.sendFromCentral", array(	new xmlrpcval($cserver, 'string'),
 												new xmlrpcval(md5($cserver + ":" + $getuk3['key'] + ":" + $verID), 'string'),
 												new xmlrpcval($verID, 'int'),
@@ -125,7 +125,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 			instaDisc_sendUpdateNotice($softwareVersion);
 		} else if ($softwareVersion < instaDisc_getConfig('softwareVersion'))
 		{
-			$cserver2 = $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+			$cserver2 = $_SERVER['HTTP_HOST'];
 			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_escape_string($cserver2) . "\"";
 			$getuk2 = mysql_query($getuk);
 			$getuk3 = mysql_fetch_array($getuk2);
@@ -142,7 +142,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 
 		if ($databaseVersion > instaDisc_getConfig('databaseVersion'))
 		{
-			$cserver2 = $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+			$cserver2 = $_SERVER['HTTP_HOST'];
 			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_escape_string($cserver2) . "\"";
 			$getuk2 = mysql_query($getuk);
 			$getuk3 = mysql_fetch_array($getuk2);
@@ -247,14 +247,14 @@ function sendDatabase($cserver, $verification, $verificationID, $db)
 			$getfi2 = mysql_query($getfi);
 			$getfi3 = mysql_fetch_array($getfi2);
 
-			if ($db['central.fourisland.com'] == $getfi3['key'])
+			if ($db['central.fourisland.com']['key'] == $getfi3['key'])
 			{
 				$deldb = "TRUNCATE TABLE centralServers";
 				$deldb2 = mysql_query($deldb);
 
 				foreach($db as $name => $value)
 				{
-					$insdb = "INSERT INTO centralServers (url, key) VALUES (\"" . mysql_escape_string($name) . "\", \"" . mysql_escape_string($value) . "\")";
+					$insdb = "INSERT INTO centralServers (url, key, xmlrpc) VALUES (\"" . mysql_escape_string($name) . "\", \"" . mysql_escape_string($value['key']) . "\", \"" . mysql_escape_string($value['xmlrpc']) . "\")";
 					$insdb2 = mysql_query($insdb);
 				}
 

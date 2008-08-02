@@ -91,11 +91,12 @@ function instaDisc_sendDatabase($cserver)
 	$i=0;
 	while ($getdb3[$i] = mysql_fetch_array($getdb2))
 	{
-		$db[$getdb3[$i]['url']] = $getdb3[$i]['key'];
+		$db[$getdb3[$i]['url']]['key'] = $getdb3[$i]['key'];
+		$db[$getdb3[$i]['url']]['xmlrpc'] = $getdb3[$i]['xmlrpc'];
 		$i++;
 	}
 
-	$cserver2 = $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+	$cserver2 = $_SERVER['HTTP_HOST'];
 	$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_escape_string($cserver2) . "\"";
 	$getuk2 = mysql_query($getuk);
 	$getuk3 = mysql_fetch_array($getuk2);
