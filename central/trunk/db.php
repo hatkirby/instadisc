@@ -2,6 +2,11 @@
 
 /* InstaDisc Server - A Four Island Project */
 
+if (!extension_loaded('curl'))
+{
+	die('Sorry, but the PHP Extension "curl" is required for InstaDisc Server and you don\'t have it installed.');
+}
+
 if (!file_exists('config.php'))
 {
 	header('Location: install.php');
