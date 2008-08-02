@@ -3,6 +3,7 @@
 /* InstaDisc Server - A Four Island Project */
 
 include_once('db.php');
+include_once('class.phpmailer.php');
 
 function instaDisc_checkVerification($username, $verification, $verificationID, $table, $nameField, $passField)
 {
@@ -125,6 +126,107 @@ function instaDisc_addItem($username, $subscription, $title, $author, $url, $sem
 
 		instaDisc_sendItem($username, $itemID);
 	}
+}
+
+function instaDisc_phpMailer()
+{
+	$mail = new PHPMailer();
+	$mail->IsSMTP();
+	$mail->From = 'instadisc@' . getConfig('mailDomain');
+	$mail->FromName = 'InstaDisc';
+	$mail->Host = getConfig('smtpHost');
+	if (getConfig('smtpAuth') == 'true')
+	{
+		$mail->SMTPAuth = true;
+		$mail->Username = getConfig('smtpUser');
+		$mail->Password = getConfig('smtpPass');
+	}
+	$mail->Helo = $_SERVER['HTTP_HOST'];
+	$mail->ClearAddresses();
+
+	return $mail;
+}
+
+function instaDisc_sendActivationEmail($username, $password, $email)
+{
+	$penKey = md5(rand(1,65536));
+
+	$inspending = "INSERT INTO pending (username, password, email, key) VALUES (\"" . mysql_escape_string($username) . "\", \"" . mysql_escape_string($password) . "\", \"" . mysql_escape_string($email) . "\", \"" . mysql_escape_string($penKey) . "\")";
+	$inspending2 = mysql_query($inspending);
+
+	$mail = instaDisc_phpMailer();
+	$mail->AddAddress($email, $username);
+	$mail->Subject = 'InstaDisc Account Verification';
+	$mail->Body = "Hello, someone has recently registered an account at " . $_SERVER['HTTP_HOST'] . " with your email address. If that was you, and your chosen username IS " . $username . ", then copy the account verification code below to our Account Verification page, enter your username and press Activate!\r\n\r\n" . $penKey . "\r\n\r\nIf that was not you, copy the above code to our Account Verification page, enter the above username, and click Delete.";
+
+	return $mail->Send();
+}
+
+function instaDisc_activateAccount($username, $penKey)
+{
+	$getuser = "SELECT * FROM pending WHERE username = \"" . mysql_escape_string($username) . "\" AND key = \"" . mysql_escape_string($penKey) . "\"";
+	$getuser2 = mysql_query($getuser);
+	$getuser3 = mysql_fetch_array($getuser2);
+	if ($getuser3['username'] == $username)
+	{
+		$insuser = "INSERT INTO users (username, password, email) VALUES (\"" . mysql_escape_string($username) . "\", \"" . mysql_escape_string($password) . "\", \"" . mysql_escape_string($email) . "\")";
+		$insuser2 = mysql_query($insuser);
+
+		$delpending = "DELETE FROM pending WHERE username = \"" . mysql_escape_string($username) . "\"";
+		$delpending2 = mysql_query($delpending);
+
+		$mail = instaDisc_phpMailer();
+		$mail->AddAddress($getuser3['email'], $username);
+		$mail->Subject = 'Welcome to InstaDisc!';
+		$mail->Body = "Welcome to InstaDisc! Thank you for registering at " . getConfig('siteName') . " Central Server, we hope you enjoy our service! Now, when you download an InstaDisc Client, it will ask you for the following information which you will need to enter into it for it to work:\r\n\r\nUsername: " . $username . "\r\nPassword: (you should know this, it's not displayed here for security reasons)\r\nCentral Server URL: " . getConfig("xmlrpcURL") . "\r\n\r\nOnce again, thank you for choosing " . getConfig("siteName") . "!";
+
+		return $mail->Send();
+	} else {
+		return false;
+	}
+}
+
+function instaDisc_deactivateAccount($username, $penKey)
+{
+	$getuser = "SELECT * FROM pending WHERE username = \"" . mysql_escape_string($username) . "\" AND key = \"" . mysql_escape_string($penKey) . "\"";
+	$getuser2 = mysql_query($getuser);
+	$getuser3 = mysql_fetch_array($getuser2);
+	if ($getuser3['username'] == $username)
+	{
+		$delpending = "DELETE FROM pending WHERE username = \"" . mysql_escape_string($username) . "\"";
+		$delpending2 = mysql_query($delpending);
+
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function instaDisc_verifyUser($username, $password)
+{
+	return instaDisc_checkVerification($username, md5($username . ':' . md5($password) . ':0'), 0, 'users', 'username', 'password');
+}
+
+function instaDisc_deleteAccount($username)
+{
+	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_escape_string($username) . "\"";
+	$getuser2 = mysql_query($getuser);
+	$getuser3 = mysql_fetch_array($getuser2);
+	if ($getuser3['username'] == $username)
+	{
+		$deluser = "DELETE FROM users WHERE username = \"" . mysql_escape_string($username) . "\"";
+		$deluser2 = mysql_query($deluser);
+
+		$delsubs = "DELETE FROM subscriptions WHERE username = \"" . mysql_escape_string($username) . "\"";
+		$delsubs2 = mysql_query($delsubs);
+
+		$delitems = "DELETE FROM inbox WHERE username = \"" . mysql_escape_string($username) . "\"";
+		$delitems2 = mysql_query($delitems);
+
+		return true;
+	}
+
+	return false;
 }
 
 ?>
