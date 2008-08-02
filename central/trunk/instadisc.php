@@ -6,14 +6,35 @@ include_once('db.php');
 
 function instaDisc_checkVerification($username, $verification, $verificationID, $table, $nameField, $passField)
 {
-	$getitem = "SELECT * FROM " . $table . " WHERE " . $nameField . " = \"" . mysql_escape_string($username) . "\"";
-	$getitem2 = mysql_query($getitem);
-	$getitem3 = mysql_fetch_array($getitem2);
-	if ($getitem3[$nameField] == $username)
+	$getverid = "SELECT * FROM oldVerID WHERE name = \"" . mysql_escape_string($username) . "\" AND verID = " . $verificationID;
+	$getverid2 = mysql_query($getverid);
+	$getverid3 = mysql_fetch_array($getverid2);
+	if ($getverid3['id'] != $verificationID)
 	{
-		$test = $username . ':' . $getitem3[$passField] . ':' . $verificationID;
+		$getitem = "SELECT * FROM " . $table . " WHERE " . $nameField . " = \"" . mysql_escape_string($username) . "\"";
+		$getitem2 = mysql_query($getitem);
+		$getitem3 = mysql_fetch_array($getitem2);
+		if ($getitem3[$nameField] == $username)
+		{
+			$test = $username . ':' . $getitem3[$passField] . ':' . $verificationID;
 
-		return (md5($test) == $verification);
+			if (md5($test) == $verification)
+			{
+				$cntverid = "SELECT COUNT(*) FROM oldVerID WHERE username = \"" . mysql_escape_string($username) . "\"";
+				$cntverid2 = mysql_query($cntverid);
+				$cntverid3 = mysql_fetch_array($cntverid2);
+				if ($cntverid3[0] >= intval(getConfig('verIDBufferSize')))
+				{
+					$delverid = "DELETE FROM oldVerID WHERE username = \"" . mysql_escape_string($username) . "\"";
+					$delverid2 = mysql_query($delverid);
+				}
+
+				$insverid = "INSERT INTO oldVerID (name, verID) VALUES (\"" . mysql_escape_string($username) . "\", " . $verificationID . ")";
+				$insverid2 = mysql_query($insverid);
+
+				return true;
+			}
+		}
 	}
 
 	return false;
