@@ -103,8 +103,8 @@ function sendFromUpdate($username, $verification, $verificationID, $subscription
 												new xmlrpcval($author, 'string'),
 												new xmlrpcval($url, 'string'),
 												new xmlrpcval($semantics, 'array'),
-												new xmlrpcval(getConfig('softwareVersion'), 'int'),
-												new xmlrpcval(getConfig('databaseVersion'), 'int')));
+												new xmlrpcval(instaDisc_getConfig('softwareVersion'), 'int'),
+												new xmlrpcval(instaDisc_getConfig('databaseVersion'), 'int')));
 				$client->send($msg);
 				$i++;
 			}
@@ -120,10 +120,10 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 {
 	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'key'))
 	{
-		if ($softwareVersion > getConfig('softwareVersion'))
+		if ($softwareVersion > instaDisc_getConfig('softwareVersion'))
 		{
 			instaDisc_sendUpdateNotice($softwareVersion);
-		} else if ($softwareVersion < getConfig('softwareVersion'))
+		} else if ($softwareVersion < instaDisc_getConfig('softwareVersion'))
 		{
 			$cserver2 = $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
 			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_escape_string($cserver2) . "\"";
@@ -136,11 +136,11 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 			$msg = new xmlrpcmsg("InstaDisc.sendUpdateNotice", array(	new xmlrpcval($cserver2, 'string'),
 											new xmlrpcval(md5($cserver2 . ':' . $getuk3['key'] . ':' . $verID), 'string'),
 											new xmlrpcval($verID, 'int'),
-											new xmlrpcval(getConfig('softwareVersion'), 'int')));
+											new xmlrpcval(instaDisc_getConfig('softwareVersion'), 'int')));
 			$client->send($msg);
 		}
 
-		if ($databaseVersion > getConfig('databaseVersion'))
+		if ($databaseVersion > instaDisc_getConfig('databaseVersion'))
 		{
 			$cserver2 = $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
 			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_escape_string($cserver2) . "\"";
@@ -153,9 +153,9 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 			$msg = new xmlrpcmsg("InstaDisc.askForDatabase", array(	new xmlrpcval($cserver2, 'string'),
 										new xmlrpcval(md5($cserver2 . ':' . $getuk3['key'] . ':' . $verID), 'string'),
 										new xmlrpcval($verID, 'int'),
-										new xmlrpcval(getConfig('databaseVersion'), 'int')));
+										new xmlrpcval(instaDisc_getConfig('databaseVersion'), 'int')));
 			$client->send($msg);
-		} else if ($databaseVersion < getConfig('databaseVersion'))
+		} else if ($databaseVersion < instaDisc_getConfig('databaseVersion'))
 		{
 			instaDisc_sendDatabase($cserver);
 		}
@@ -179,7 +179,7 @@ function sendUpdateNotice($cserver, $verification, $verificationID, $softwareVer
 {
 	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'key'))
 	{
-		if ($softwareVersion > getConfig('softwareVersion'))
+		if ($softwareVersion > instaDisc_getConfig('softwareVersion'))
 		{
 			instaDisc_sendUpdateNotice($softwareVersion);
 
@@ -194,7 +194,7 @@ function askForDatabase($cserver, $verification, $verificationID, $databaseVersi
 {
 	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'key'))
 	{
-		if ($databaseVersion < getConfig('databaseVersion'))
+		if ($databaseVersion < instaDisc_getConfig('databaseVersion'))
 		{
 			instaDisc_sendDatabase($cserver);
 

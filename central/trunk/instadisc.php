@@ -24,7 +24,7 @@ function instaDisc_checkVerification($username, $verification, $verificationID, 
 				$cntverid = "SELECT COUNT(*) FROM oldVerID WHERE username = \"" . mysql_escape_string($username) . "\"";
 				$cntverid2 = mysql_query($cntverid);
 				$cntverid3 = mysql_fetch_array($cntverid2);
-				if ($cntverid3[0] >= intval(getConfig('verIDBufferSize')))
+				if ($cntverid3[0] >= intval(instaDisc_getConfig('verIDBufferSize')))
 				{
 					$delverid = "DELETE FROM oldVerID WHERE username = \"" . mysql_escape_string($username) . "\"";
 					$delverid2 = mysql_query($delverid);
@@ -74,7 +74,7 @@ function instaDisc_sendItem($username, $id)
 
 function instaDisc_sendUpdateNotice($softwareVersion)
 {
-	$username = getConfig('owner');
+	$username = instaDisc_getConfig('owner');
 	$subscription = 'http://' . $_SERVER['HTTP_HOST'];
 	$title = 'Update your software to ' . $software;
 	$author = 'Hatkirby';
@@ -132,14 +132,14 @@ function instaDisc_phpMailer()
 {
 	$mail = new PHPMailer();
 	$mail->IsSMTP();
-	$mail->From = 'instadisc@' . getConfig('mailDomain');
+	$mail->From = 'instadisc@' . instaDisc_getConfig('mailDomain');
 	$mail->FromName = 'InstaDisc';
-	$mail->Host = getConfig('smtpHost');
-	if (getConfig('smtpAuth') == 'true')
+	$mail->Host = instaDisc_getConfig('smtpHost');
+	if (instaDisc_getConfig('smtpAuth') == 'true')
 	{
 		$mail->SMTPAuth = true;
-		$mail->Username = getConfig('smtpUser');
-		$mail->Password = getConfig('smtpPass');
+		$mail->Username = instaDisc_getConfig('smtpUser');
+		$mail->Password = instaDisc_getConfig('smtpPass');
 	}
 	$mail->Helo = $_SERVER['HTTP_HOST'];
 	$mail->ClearAddresses();
@@ -178,7 +178,7 @@ function instaDisc_activateAccount($username, $penKey)
 		$mail = instaDisc_phpMailer();
 		$mail->AddAddress($getuser3['email'], $username);
 		$mail->Subject = 'Welcome to InstaDisc!';
-		$mail->Body = "Welcome to InstaDisc! Thank you for registering at " . getConfig('siteName') . " Central Server, we hope you enjoy our service! Now, when you download an InstaDisc Client, it will ask you for the following information which you will need to enter into it for it to work:\r\n\r\nUsername: " . $username . "\r\nPassword: (you should know this, it's not displayed here for security reasons)\r\nCentral Server URL: " . getConfig("xmlrpcURL") . "\r\n\r\nOnce again, thank you for choosing " . getConfig("siteName") . "!";
+		$mail->Body = "Welcome to InstaDisc! Thank you for registering at " . instaDisc_getConfig('siteName') . " Central Server, we hope you enjoy our service! Now, when you download an InstaDisc Client, it will ask you for the following information which you will need to enter into it for it to work:\r\n\r\nUsername: " . $username . "\r\nPassword: (you should know this, it's not displayed here for security reasons)\r\nCentral Server URL: " . instaDisc_getConfig("xmlrpcURL") . "\r\n\r\nOnce again, thank you for choosing " . instaDisc_getConfig("siteName") . "!";
 
 		return $mail->Send();
 	} else {
@@ -227,6 +227,15 @@ function instaDisc_deleteAccount($username)
 	}
 
 	return false;
+}
+
+function instaDisc_getConfig($key)
+{
+	$getconfig = "SELECT * FROM config WHERE name = \"" . mysql_escape_string($key) . "\"";
+	$getconfig2 = mysql_query($getconfig);
+	$getconfig3 = mysql_fetch_array($getconfig2);
+
+	return $getconfig3['value'];
 }
 
 ?>
