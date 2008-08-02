@@ -9,7 +9,7 @@ $idusPassword = ''; // Set this to the password you've registered
 $idusCentralServer = ''; // Set this to the Central Server you've signed up with
 $idusSubscriptionURI = ''; // Set this to your unique URI
 
-function sendItem($title, $author, $url, $semantics)
+function instaDisc_sendItem($title, $author, $url, $semantics)
 {
 	$verID = rand(1,65536);
 
