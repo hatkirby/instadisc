@@ -54,6 +54,25 @@ function resendItem($username, $verification, $verificationID, $id)
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
+function requestRetained($username, $verification, $veriicationID)
+{
+	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
+	{
+		$getitems = "SELECT * FROM inbox WHERE username = \"" . mysql_escape_string($username) . "\"";
+		$getitems2 = mysql_query($getitems);
+		$i=0;
+		while ($getitems3[$i] = mysql_fetch_array($getitems2))
+		{
+			instaDisc_sendItem($username, $getitems3[$i]['itemID']);
+			$i++;
+		}
+
+		return new xmlrpcresp(new xmlrpcval(0, "int"));
+	}
+
+	return new xmlrpcresp(new xmlrpcval(1, "int"));
+}
+
 function sendFromUpdate($username, $verification, $verificationID, $subscription, $title, $author, $url, $semantics)
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
