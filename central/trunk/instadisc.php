@@ -239,4 +239,110 @@ function instaDisc_getConfig($key)
 	return $getconfig3['value'];
 }
 
+function instaDisc_listSubscriptions($username)
+{
+	$getsubs = "SELECT * FROM subscriptions WHERE username = \"" . mysql_escape_string($username) . "\" AND owner = \"true\"";
+	$getsubs2 = mysql_query($getsubs);
+	$i=0;
+	while ($getsubs3[$i] = mysql_fetch_array($getsubs2))
+	{
+		$subs[$i] = $getsubs3[$i]['url'];
+
+		$i++;
+	}
+
+	$subs['size'] = $i;
+	return $subs;
+}
+
+function instaDisc_addSubscription($username, $url)
+{
+	$getcode = "SELECT * FROM pending2 WHERE username = \"" . mysql_escape_string($username) . "\" AND url = \"" . mysql_escape_string($url) . "\"";
+	$getcode2 = mysql_query($getcode);
+	$getcode3 = mysql_fetch_array($getcode2);
+	if ($getcode3['username'] == $username)
+	{
+		$delcode = "DELETE FROM pending2 WHERE username = \"" . mysql_escape_string($username) . "\" AND url = \"" . mysql_escape_string($url) . "\"";
+		$delcode2 = mysql_query($delcode);
+
+		$c = curl_init();
+		curl_setopt($c, CURLOPT_URL, $url);
+		curl_setopt($c, CURLOPT_HEADER, false);
+		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+		$page_data = curl_exec($c);
+		curl_close($c);
+
+		$headers = split("\n", $page_date);
+		foreach ($headers as $name => $value)
+		{
+			$header = split(": ", $value);
+			$headerMap[$header[0]] = $header[1];
+		}
+
+		if (isset($header['Subscription']))
+		{
+			if (isset($header['Title']))
+			{
+				if (isset($header['Category']))
+				{
+					if (isset($header['Key']))
+					{
+						if ($header['Key'] == $getcode3['code'])
+						{
+							$inssub = "INSERT INTO subscriptions (username,url,owner) VALUES (\"" . mysql_escape_string($username) . "\", \"" . mysql_escape_string($header['Subscription']) . "\", \"true\")";
+							$inssub2 = mysql_query($inssub);
+
+							return true;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+function instaDisc_listPendingSubscriptions($username)
+{
+	$getsubs = "SELECT * FROM pending2 WHERE username = \"" . mysql_escape_string($username) . "\"";
+	$getsubs2 = mysql_query($getsubs);
+	$i=0;
+	while ($getsubs3[$i] = mysql_fetch_array($getsubs2))
+	{
+		$subs[$i] = array('url' => $getsubs3[$i]['url'], 'key' => $getsubs3[$i]['key']);
+
+		$i++;
+	}
+
+	$subs['size'] = $i;
+	return $subs;
+}
+
+function instaDisc_generateSubscriptionActivation($username, $url)
+{
+	$key = md5(rand(1,65536));
+
+	$inspending = "INSERT INTO pending2 (username, url, key) VALUES (\"" . mysql_escape_string($username) . "\", \"" . mysql_escape_string($url) . "\", \"" . mysql_escape_string($key) . "\")";
+	$inspending2 = mysql_query($inspending);
+
+	return $key;
+}
+
+function instaDisc_deleteSubscription($username, $url)
+{
+	$delsub = "DELETE FROM subscriptions WHERE username = \"" . mysql_escape_string($username) . "\" AND url = \"" . mysql_escape_string($url) . "\")";
+	$delsub2 = mysql_query($delsub);
+
+	return true;
+}
+
+function instaDisc_cancelSubscription($username, $url)
+{
+	$delsub = "DELETE FROM pending2 WHERE username = \"" . mysql_escape_string($username) . "\" AND url = \"" . mysql_escape_string($url) . "\")";
+	$delsub2 = mysql_query($delsub);
+
+	return true;
+}
+
 ?>
