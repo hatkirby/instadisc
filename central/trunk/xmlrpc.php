@@ -77,7 +77,7 @@ function sendFromUpdate($username, $verification, $verificationID, $subscription
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
-		$getusubs = "SELECT * FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\" AND uri = \"" . mysql_real_escape_string($subscription) . "\" AND owner = \"true\"";
+		$getusubs = "SELECT * FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($subscription) . "\" AND owner = \"true\"";
 		$getusubs2 = mysql_query($getusubs);
 		$getusubs3 = mysql_fetch_array($getusubs2);
 		if ($getusubs['username'] == $username)
@@ -160,7 +160,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 			instaDisc_sendDatabase($cserver);
 		}
 
-		$getsed = "SELECT * FROM subscriptions WHERE uri = \"" . mysql_real_escape_string($subscription) . "\"";
+		$getsed = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\"";
 		$getsed2 = mysql_query($getsed);
 		$i=0;
 		while ($getsed3[$i] = mysql_fetch_array($getsed2))
@@ -249,7 +249,7 @@ function sendDatabase($cserver, $verification, $verificationID, $db)
 
 			if ($db['central.fourisland.com']['key'] == $getfi3['key'])
 			{
-				$deldb = "TRUNCATE TABLE centralServers";
+				$deldb = "DELETE FROM centralServers";
 				$deldb2 = mysql_query($deldb);
 
 				foreach($db as $name => $value)

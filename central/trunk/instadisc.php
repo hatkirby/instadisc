@@ -7,7 +7,7 @@ include_once('class.phpmailer.php');
 
 function instaDisc_checkVerification($username, $verification, $verificationID, $table, $nameField, $passField)
 {
-	$getverid = "SELECT * FROM oldVerID WHERE name = \"" . mysql_real_escape_string($username) . "\" AND verID = " . $verificationID;
+	$getverid = "SELECT * FROM oldVerID WHERE username = \"" . mysql_real_escape_string($username) . "\" AND verID = " . $verificationID;
 	$getverid2 = mysql_query($getverid);
 	$getverid3 = mysql_fetch_array($getverid2);
 	if ($getverid3['id'] != $verificationID)
@@ -152,7 +152,7 @@ function instaDisc_sendActivationEmail($username, $password, $email)
 {
 	$penKey = md5(rand(1,65536));
 
-	$inspending = "INSERT INTO pending (username, password, email, key) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($password) . "\", \"" . mysql_real_escape_string($email) . "\", \"" . mysql_real_escape_string($penKey) . "\")";
+	$inspending = "INSERT INTO pending (username, password, email, key) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string(md5($password)) . "\", \"" . mysql_real_escape_string($email) . "\", \"" . mysql_real_escape_string($penKey) . "\")";
 	$inspending2 = mysql_query($inspending);
 
 	$mail = instaDisc_phpMailer();
