@@ -321,28 +321,52 @@ function instaDisc_listPendingSubscriptions($username)
 
 function instaDisc_generateSubscriptionActivation($username, $url)
 {
-	$key = md5(rand(1,65536));
+	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+	$getuser2 = mysql_query($getuser);
+	$getuser3 = mysql_fetch_array($getuser2);
+	if ($getuser3['username'] == $username)
+	{
+		$key = md5(rand(1,65536));
 
-	$inspending = "INSERT INTO pending2 (username, url, key) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($url) . "\", \"" . mysql_real_escape_string($key) . "\")";
-	$inspending2 = mysql_query($inspending);
+		$inspending = "INSERT INTO pending2 (username, url, key) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($url) . "\", \"" . mysql_real_escape_string($key) . "\")";
+		$inspending2 = mysql_query($inspending);
 
-	return $key;
+		return $key;
+	}
+
+	return false;
 }
 
 function instaDisc_deleteSubscription($username, $url)
 {
-	$delsub = "DELETE FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\")";
-	$delsub2 = mysql_query($delsub);
+	$getsub = "SELECT * FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\")";
+	$getsub2 = mysql_query($getsub);
+	$getsub3 = mysql_fetch_array($getsub2);
+	if ($getsub3['username'] == $username)
+	{
+		$delsub = "DELETE FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\")";
+		$delsub2 = mysql_query($delsub);
 
-	return true;
+		return true;
+	}
+
+	return false;
 }
 
 function instaDisc_cancelSubscription($username, $url)
 {
-	$delsub = "DELETE FROM pending2 WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\")";
-	$delsub2 = mysql_query($delsub);
+	$getsub = "SELECT * FROM pending2 WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\")";
+	$getsub2 = mysql_query($getsub);
+	$getsub3 = mysql_fetch_array($getsub2);
+	if ($getsub3['username'] == $username)
+	{
+		$delsub = "DELETE FROM pending2 WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\")";
+		$delsub2 = mysql_query($delsub);
 
-	return true;
+		return true;
+	}
+
+	return false;
 }
 
 ?>
