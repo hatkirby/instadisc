@@ -7,12 +7,12 @@ include_once('class.phpmailer.php');
 
 function instaDisc_checkVerification($username, $verification, $verificationID, $table, $nameField, $passField)
 {
-	$getverid = "SELECT * FROM oldVerID WHERE name = \"" . mysql_escape_string($username) . "\" AND verID = " . $verificationID;
+	$getverid = "SELECT * FROM oldVerID WHERE name = \"" . mysql_real_escape_string($username) . "\" AND verID = " . $verificationID;
 	$getverid2 = mysql_query($getverid);
 	$getverid3 = mysql_fetch_array($getverid2);
 	if ($getverid3['id'] != $verificationID)
 	{
-		$getitem = "SELECT * FROM " . $table . " WHERE " . $nameField . " = \"" . mysql_escape_string($username) . "\"";
+		$getitem = "SELECT * FROM " . $table . " WHERE " . $nameField . " = \"" . mysql_real_escape_string($username) . "\"";
 		$getitem2 = mysql_query($getitem);
 		$getitem3 = mysql_fetch_array($getitem2);
 		if ($getitem3[$nameField] == $username)
@@ -21,16 +21,16 @@ function instaDisc_checkVerification($username, $verification, $verificationID, 
 
 			if (md5($test) == $verification)
 			{
-				$cntverid = "SELECT COUNT(*) FROM oldVerID WHERE username = \"" . mysql_escape_string($username) . "\"";
+				$cntverid = "SELECT COUNT(*) FROM oldVerID WHERE username = \"" . mysql_real_escape_string($username) . "\"";
 				$cntverid2 = mysql_query($cntverid);
 				$cntverid3 = mysql_fetch_array($cntverid2);
 				if ($cntverid3[0] >= intval(instaDisc_getConfig('verIDBufferSize')))
 				{
-					$delverid = "DELETE FROM oldVerID WHERE username = \"" . mysql_escape_string($username) . "\"";
+					$delverid = "DELETE FROM oldVerID WHERE username = \"" . mysql_real_escape_string($username) . "\"";
 					$delverid2 = mysql_query($delverid);
 				}
 
-				$insverid = "INSERT INTO oldVerID (name, verID) VALUES (\"" . mysql_escape_string($username) . "\", " . $verificationID . ")";
+				$insverid = "INSERT INTO oldVerID (name, verID) VALUES (\"" . mysql_real_escape_string($username) . "\", " . $verificationID . ")";
 				$insverid2 = mysql_query($insverid);
 
 				return true;
@@ -43,12 +43,12 @@ function instaDisc_checkVerification($username, $verification, $verificationID, 
 
 function instaDisc_sendItem($username, $id)
 {
-	$getitem = "SELECT * FROM inbox WHERE username = \"" . mysql_escape_string($username) . "\" AND itemID = " . $id;
+	$getitem = "SELECT * FROM inbox WHERE username = \"" . mysql_real_escape_string($username) . "\" AND itemID = " . $id;
 	$getitem2 = mysql_query($getitem);
 	$getitem3 = mysql_fetch_array($getitem2);
 	if ($getitem3['username'] == $username)
 	{
-		$getuser = "SELECT * FROM users WHERE username = \"" . mysql_escape_string($username) . "\"";
+		$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
 		$getuser2 = mysql_query($getuser);
 		$getuser3 = mysql_fetch_array($getuser2);
 
@@ -97,7 +97,7 @@ function instaDisc_sendDatabase($cserver)
 	}
 
 	$cserver2 = $_SERVER['HTTP_HOST'];
-	$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_escape_string($cserver2) . "\"";
+	$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver2) . "\"";
 	$getuk2 = mysql_query($getuk);
 	$getuk3 = mysql_fetch_array($getuk2);
 
@@ -113,16 +113,16 @@ function instaDisc_sendDatabase($cserver)
 
 function instaDisc_addItem($username, $subscription, $title, $author, $url, $semantics)
 {
-	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_escape_string($username) . "\"";
+	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
 	$getuser2 = mysql_query($getuser);
 	$getuser3 = mysql_fetch_array($getuser2);
 	if ($getuser3['username'] == $username)
 	{
 		$itemID = $getuser3['nextItemID'];
-		$setuser = "UPDATE users SET nextItemID = nextItemID+1 WHERE username = \"" . mysql_escape_string($username) . "\"";
+		$setuser = "UPDATE users SET nextItemID = nextItemID+1 WHERE username = \"" . mysql_real_escape_string($username) . "\"";
 		$setuser2 = mysql_query($setuser);
 
-		$insitem = "INSERT INTO inbox (username, itemID, subscription, title, author, url, semantics) VALUES (\"" . mysql_escape_string($username) . "\", " . $itemID . ", \"" . mysql_escape_string($subscription) . "\", \"" . mysql_escape_string($title) . "\", \"" . mysql_escape_string($author) . "\", \"" . mysql_escape_string($url) . "\", \"" . mysql_escape_string(serialize($semantics)) . "\")";
+		$insitem = "INSERT INTO inbox (username, itemID, subscription, title, author, url, semantics) VALUES (\"" . mysql_real_escape_string($username) . "\", " . $itemID . ", \"" . mysql_real_escape_string($subscription) . "\", \"" . mysql_real_escape_string($title) . "\", \"" . mysql_real_escape_string($author) . "\", \"" . mysql_real_escape_string($url) . "\", \"" . mysql_real_escape_string(serialize($semantics)) . "\")";
 		$insitem2 = mysql_query($insitem);
 
 		instaDisc_sendItem($username, $itemID);
@@ -152,7 +152,7 @@ function instaDisc_sendActivationEmail($username, $password, $email)
 {
 	$penKey = md5(rand(1,65536));
 
-	$inspending = "INSERT INTO pending (username, password, email, key) VALUES (\"" . mysql_escape_string($username) . "\", \"" . mysql_escape_string($password) . "\", \"" . mysql_escape_string($email) . "\", \"" . mysql_escape_string($penKey) . "\")";
+	$inspending = "INSERT INTO pending (username, password, email, key) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($password) . "\", \"" . mysql_real_escape_string($email) . "\", \"" . mysql_real_escape_string($penKey) . "\")";
 	$inspending2 = mysql_query($inspending);
 
 	$mail = instaDisc_phpMailer();
@@ -165,15 +165,15 @@ function instaDisc_sendActivationEmail($username, $password, $email)
 
 function instaDisc_activateAccount($username, $penKey)
 {
-	$getuser = "SELECT * FROM pending WHERE username = \"" . mysql_escape_string($username) . "\" AND key = \"" . mysql_escape_string($penKey) . "\"";
+	$getuser = "SELECT * FROM pending WHERE username = \"" . mysql_real_escape_string($username) . "\" AND key = \"" . mysql_real_escape_string($penKey) . "\"";
 	$getuser2 = mysql_query($getuser);
 	$getuser3 = mysql_fetch_array($getuser2);
 	if ($getuser3['username'] == $username)
 	{
-		$insuser = "INSERT INTO users (username, password, email) VALUES (\"" . mysql_escape_string($username) . "\", \"" . mysql_escape_string($password) . "\", \"" . mysql_escape_string($email) . "\")";
+		$insuser = "INSERT INTO users (username, password, email) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($password) . "\", \"" . mysql_real_escape_string($email) . "\")";
 		$insuser2 = mysql_query($insuser);
 
-		$delpending = "DELETE FROM pending WHERE username = \"" . mysql_escape_string($username) . "\"";
+		$delpending = "DELETE FROM pending WHERE username = \"" . mysql_real_escape_string($username) . "\"";
 		$delpending2 = mysql_query($delpending);
 
 		$mail = instaDisc_phpMailer();
@@ -189,12 +189,12 @@ function instaDisc_activateAccount($username, $penKey)
 
 function instaDisc_deactivateAccount($username, $penKey)
 {
-	$getuser = "SELECT * FROM pending WHERE username = \"" . mysql_escape_string($username) . "\" AND key = \"" . mysql_escape_string($penKey) . "\"";
+	$getuser = "SELECT * FROM pending WHERE username = \"" . mysql_real_escape_string($username) . "\" AND key = \"" . mysql_real_escape_string($penKey) . "\"";
 	$getuser2 = mysql_query($getuser);
 	$getuser3 = mysql_fetch_array($getuser2);
 	if ($getuser3['username'] == $username)
 	{
-		$delpending = "DELETE FROM pending WHERE username = \"" . mysql_escape_string($username) . "\"";
+		$delpending = "DELETE FROM pending WHERE username = \"" . mysql_real_escape_string($username) . "\"";
 		$delpending2 = mysql_query($delpending);
 
 		return true;
@@ -210,18 +210,18 @@ function instaDisc_verifyUser($username, $password)
 
 function instaDisc_deleteAccount($username)
 {
-	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_escape_string($username) . "\"";
+	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
 	$getuser2 = mysql_query($getuser);
 	$getuser3 = mysql_fetch_array($getuser2);
 	if ($getuser3['username'] == $username)
 	{
-		$deluser = "DELETE FROM users WHERE username = \"" . mysql_escape_string($username) . "\"";
+		$deluser = "DELETE FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
 		$deluser2 = mysql_query($deluser);
 
-		$delsubs = "DELETE FROM subscriptions WHERE username = \"" . mysql_escape_string($username) . "\"";
+		$delsubs = "DELETE FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\"";
 		$delsubs2 = mysql_query($delsubs);
 
-		$delitems = "DELETE FROM inbox WHERE username = \"" . mysql_escape_string($username) . "\"";
+		$delitems = "DELETE FROM inbox WHERE username = \"" . mysql_real_escape_string($username) . "\"";
 		$delitems2 = mysql_query($delitems);
 
 		return true;
@@ -232,7 +232,7 @@ function instaDisc_deleteAccount($username)
 
 function instaDisc_getConfig($key)
 {
-	$getconfig = "SELECT * FROM config WHERE name = \"" . mysql_escape_string($key) . "\"";
+	$getconfig = "SELECT * FROM config WHERE name = \"" . mysql_real_escape_string($key) . "\"";
 	$getconfig2 = mysql_query($getconfig);
 	$getconfig3 = mysql_fetch_array($getconfig2);
 
@@ -241,7 +241,7 @@ function instaDisc_getConfig($key)
 
 function instaDisc_listSubscriptions($username)
 {
-	$getsubs = "SELECT * FROM subscriptions WHERE username = \"" . mysql_escape_string($username) . "\" AND owner = \"true\"";
+	$getsubs = "SELECT * FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\" AND owner = \"true\"";
 	$getsubs2 = mysql_query($getsubs);
 	$i=0;
 	while ($getsubs3[$i] = mysql_fetch_array($getsubs2))
@@ -257,12 +257,12 @@ function instaDisc_listSubscriptions($username)
 
 function instaDisc_addSubscription($username, $url)
 {
-	$getcode = "SELECT * FROM pending2 WHERE username = \"" . mysql_escape_string($username) . "\" AND url = \"" . mysql_escape_string($url) . "\"";
+	$getcode = "SELECT * FROM pending2 WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\"";
 	$getcode2 = mysql_query($getcode);
 	$getcode3 = mysql_fetch_array($getcode2);
 	if ($getcode3['username'] == $username)
 	{
-		$delcode = "DELETE FROM pending2 WHERE username = \"" . mysql_escape_string($username) . "\" AND url = \"" . mysql_escape_string($url) . "\"";
+		$delcode = "DELETE FROM pending2 WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\"";
 		$delcode2 = mysql_query($delcode);
 
 		$c = curl_init();
@@ -289,7 +289,7 @@ function instaDisc_addSubscription($username, $url)
 					{
 						if ($header['Key'] == $getcode3['code'])
 						{
-							$inssub = "INSERT INTO subscriptions (username,url,owner) VALUES (\"" . mysql_escape_string($username) . "\", \"" . mysql_escape_string($header['Subscription']) . "\", \"true\")";
+							$inssub = "INSERT INTO subscriptions (username,url,owner) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($header['Subscription']) . "\", \"true\")";
 							$inssub2 = mysql_query($inssub);
 
 							return true;
@@ -305,7 +305,7 @@ function instaDisc_addSubscription($username, $url)
 
 function instaDisc_listPendingSubscriptions($username)
 {
-	$getsubs = "SELECT * FROM pending2 WHERE username = \"" . mysql_escape_string($username) . "\"";
+	$getsubs = "SELECT * FROM pending2 WHERE username = \"" . mysql_real_escape_string($username) . "\"";
 	$getsubs2 = mysql_query($getsubs);
 	$i=0;
 	while ($getsubs3[$i] = mysql_fetch_array($getsubs2))
@@ -323,7 +323,7 @@ function instaDisc_generateSubscriptionActivation($username, $url)
 {
 	$key = md5(rand(1,65536));
 
-	$inspending = "INSERT INTO pending2 (username, url, key) VALUES (\"" . mysql_escape_string($username) . "\", \"" . mysql_escape_string($url) . "\", \"" . mysql_escape_string($key) . "\")";
+	$inspending = "INSERT INTO pending2 (username, url, key) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($url) . "\", \"" . mysql_real_escape_string($key) . "\")";
 	$inspending2 = mysql_query($inspending);
 
 	return $key;
@@ -331,7 +331,7 @@ function instaDisc_generateSubscriptionActivation($username, $url)
 
 function instaDisc_deleteSubscription($username, $url)
 {
-	$delsub = "DELETE FROM subscriptions WHERE username = \"" . mysql_escape_string($username) . "\" AND url = \"" . mysql_escape_string($url) . "\")";
+	$delsub = "DELETE FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\")";
 	$delsub2 = mysql_query($delsub);
 
 	return true;
@@ -339,7 +339,7 @@ function instaDisc_deleteSubscription($username, $url)
 
 function instaDisc_cancelSubscription($username, $url)
 {
-	$delsub = "DELETE FROM pending2 WHERE username = \"" . mysql_escape_string($username) . "\" AND url = \"" . mysql_escape_string($url) . "\")";
+	$delsub = "DELETE FROM pending2 WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\")";
 	$delsub2 = mysql_query($delsub);
 
 	return true;
