@@ -80,9 +80,9 @@ function sendFromUpdate($username, $verification, $verificationID, $subscription
 		$getusubs = "SELECT * FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($subscription) . "\" AND owner = \"true\"";
 		$getusubs2 = mysql_query($getusubs);
 		$getusubs3 = mysql_fetch_array($getusubs2);
-		if ($getusubs['username'] == $username)
+		if ($getusubs3['username'] == $username)
 		{
-			$cserver = $_SERVER['HTTP_HOST'];
+			$cserver = $_SERVER['SERVER_NAME'];
 			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver) . "\"";
 			$getuk2 = mysql_query($getuk);
 			$getuk3 = mysql_fetch_array($getuk2);
@@ -96,7 +96,7 @@ function sendFromUpdate($username, $verification, $verificationID, $subscription
 
 				$client = new xmlrpc_client($getcs3[$i]['xmlrpc']);
 				$msg = new xmlrpcmsg("InstaDisc.sendFromCentral", array(	new xmlrpcval($cserver, 'string'),
-												new xmlrpcval(md5($cserver + ":" + $getuk3['code'] + ":" + $verID), 'string'),
+												new xmlrpcval(md5($cserver . ":" . $getuk3['code'] . ":" . $verID), 'string'),
 												new xmlrpcval($verID, 'int'),
 												new xmlrpcval($subscription, 'string'),
 												new xmlrpcval($title, 'string'),
@@ -165,7 +165,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 		$i=0;
 		while ($getsed3[$i] = mysql_fetch_array($getsed2))
 		{
-			instaDisc_addItem($getsed3['username'], $subscription, $title, $author, $url, $semantics);
+			instaDisc_addItem($getsed3[$i]['username'], $subscription, $title, $author, $url, $semantics);
 			$i++;
 		}
 
