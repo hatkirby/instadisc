@@ -61,15 +61,15 @@ public class InstaDiscApp extends SingleFrameApplication {
         } catch (NullPointerException ex) {
             notInit = true;
         }
-        
+
         if (notInit) {
             Thread th = new Thread(new FirstRunWizard());
             th.start();
         } else {
-            XmlRpc xmlrpc = new XmlRpc("requestRetained");
-            xmlrpc.execute();
-            
-            if (!((args.length > 0) && (args[0].equals("-r")))) {
+            if ((args.length > 0) && (args[0].equals("-r"))) {
+                XmlRpc xmlrpc = new XmlRpc("requestRetained");
+                xmlrpc.execute();
+            } else {
                 launch(InstaDiscApp.class, args);
             }
         }
