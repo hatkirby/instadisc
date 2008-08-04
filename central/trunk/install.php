@@ -158,7 +158,7 @@ if (!isset($_GET['submit']))
 
 				$sql[0] = "INSERT INTO config (name,value) VALUES (\"mailDomain\",\"" . mysql_real_escape_string($_POST['mailDomain']) . "\")";
 				$sql[1] = "INSERT INTO config (name,value) VALUES (\"smtpHost\",\"" . mysql_real_escape_string($_POST['smtpHost']) . "\")";
-				$sql[2] = "INSERT INTO config (name,value) VALUES (\"smtpAuth\",\"" . mysql_real_escape_string($_POST['smtpAuth']) . "\")";
+				$sql[2] = "INSERT INTO config (name,value) VALUES (\"smtpAuth\",\"" . mysql_real_escape_string(($_POST['smtpAuth'] == 'on' ? 'true' : 'false')) . "\")";
 				$sql[3] = "INSERT INTO config (name,value) VALUES (\"smtpUser\",\"" . mysql_real_escape_string($_POST['smtpUser']) . "\")";
 				$sql[4] = "INSERT INTO config (name,value) VALUES (\"smtpPass\",\"" . mysql_real_escape_string($_POST['smtpPass']) . "\")";
 				$sql[5] = "INSERT INTO config (name,value) VALUES (\"siteName\",\"" . mysql_real_escape_string($_POST['siteName']) . "\")";
@@ -167,7 +167,7 @@ if (!isset($_GET['submit']))
 				$sql[8] = "INSERT INTO config (name,value) VALUES (\"verIDBufferSize\",\"100\")";
 				$sql[9] = "INSERT INTO config (name,value) VALUES (\"softwareVersion\",\"" . $softwareVersion . "\")";
 				$sql[10] = "INSERT INTO config (name,value) VALUES (\"databaseVersion\",\"1\")";
-				$sql[11] = "INSERT INTO users (username, password, email, ip) VALUES (\"" . mysql_real_escape_string($_POST['adminUser']) . "\",\"" . mysql_real_escape_string(md5($_POST['adminPass'])) . "\",\"" . mysql_real_escape_string($_POST['adminEmail']) . "\",\"" . mysql_real_escape_string($_SERVER['REMOTE_IP']) . "\")";
+				$sql[11] = "INSERT INTO users (username, password, email, ip) VALUES (\"" . mysql_real_escape_string($_POST['adminUser']) . "\",\"" . mysql_real_escape_string(md5($_POST['adminPass'])) . "\",\"" . mysql_real_escape_string($_POST['adminEmail']) . "\",\"" . mysql_real_escape_string($_SERVER['REMOTE_ADDR']) . "\")";
 				$sql[12] = "INSERT INTO centralServers (url, code, xmlrpc) VALUES (\"" . mysql_real_escape_string('central.fourisland.com') . "\",\"" . mysql_real_escape_string(md5('central.fourisland.com')) . "\",\"" . mysql_real_escape_string('http://central.fourisland.com/xmlrpc.php') . "\")";
 
 				foreach ($sql as $name => $value)
