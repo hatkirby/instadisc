@@ -125,7 +125,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 			instaDisc_sendUpdateNotice($softwareVersion);
 		} else if ($softwareVersion < instaDisc_getConfig('softwareVersion'))
 		{
-			$cserver2 = $_SERVER['HTTP_HOST'];
+			$cserver2 = $_SERVER['SERVER_NAME'];
 			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver2) . "\"";
 			$getuk2 = mysql_query($getuk);
 			$getuk3 = mysql_fetch_array($getuk2);
@@ -142,7 +142,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 
 		if ($databaseVersion > instaDisc_getConfig('databaseVersion'))
 		{
-			$cserver2 = $_SERVER['HTTP_HOST'];
+			$cserver2 = $_SERVER['SERVER_NAME'];
 			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver2) . "\"";
 			$getuk2 = mysql_query($getuk);
 			$getuk3 = mysql_fetch_array($getuk2);

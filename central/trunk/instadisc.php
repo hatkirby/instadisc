@@ -2,283 +2,371 @@
 
 /* InstaDisc Server - A Four Island Project */
 
-include('xmlrpc/xmlrpc.inc');
-include('xmlrpc/xmlrpcs.inc');
-include('db.php');
-include('instadisc.php');
+include_once('db.php');
+include_once('class.phpmailer.php');
 
-function checkRegistration($username, $verification, $verificationID)
+function instaDisc_checkVerification($username, $verification, $verificationID, $table, $nameField, $passField)
 {
-	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
+	$getverid = "SELECT * FROM oldVerID WHERE username = \"" . mysql_real_escape_string($username) . "\" AND verID = " . $verificationID;
+	$getverid2 = mysql_query($getverid);
+	$getverid3 = mysql_fetch_array($getverid2);
+	if ($getverid3['id'] != $verificationID)
 	{
-		return new xmlrpcresp(new xmlrpcval(0, "int"));
-	}
-
-	return new xmlrpcresp(new xmlrpcval(1, "int"));
-}
-
-function deleteItem($username, $verification, $verificationID, $id)
-{
-	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
-	{
-		$getitem = "SELECT * FROM inbox WHERE username = \"" . mysql_real_escape_string($username) . "\" AND itemID = " . $id;
+		$getitem = "SELECT * FROM " . $table . " WHERE " . $nameField . " = \"" . mysql_real_escape_string($username) . "\"";
 		$getitem2 = mysql_query($getitem);
 		$getitem3 = mysql_fetch_array($getitem2);
-		if ($getitem3['id'] == $id)
+		if ($getitem3[$nameField] == $username)
 		{
-			$delitem = "DELETE FROM inbox WHERE username = \"" . mysql_real_escape_string($username) . "\" AND itemID = " . $id;
-			$delitem2 = mysql_query($delitem);
+			$test = $username . ':' . $getitem3[$passField] . ':' . $verificationID;
 
-			return new xmlrpcresp(new xmlrpcval(0, "int"));
-		}
-	}
-
-	return new xmlrpcresp(new xmlrpcval(1, "int"));
-}
-
-function resendItem($username, $verification, $verificationID, $id)
-{
-	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
-	{
-		$getitem = "SELECT * FROM inbox WHERE username = \"" . mysql_real_escape_string($username) . "\" AND itemID = " . $id;
-		$getitem2 = mysql_query($getitem);
-		$getitem3 = mysql_fetch_array($getitem2);
-		if ($getitem3['id'] == $id)
-		{
-			instaDisc_sendItem($username, $id);
-
-			return new xmlrpcresp(new xmlrpcval(0, "int"));
-		}
-	}
-
-	return new xmlrpcresp(new xmlrpcval(1, "int"));
-}
-
-function requestRetained($username, $verification, $veriicationID)
-{
-	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
-	{
-		$getitems = "SELECT * FROM inbox WHERE username = \"" . mysql_real_escape_string($username) . "\"";
-		$getitems2 = mysql_query($getitems);
-		$i=0;
-		while ($getitems3[$i] = mysql_fetch_array($getitems2))
-		{
-			instaDisc_sendItem($username, $getitems3[$i]['itemID']);
-			$i++;
-		}
-
-		return new xmlrpcresp(new xmlrpcval(0, "int"));
-	}
-
-	return new xmlrpcresp(new xmlrpcval(1, "int"));
-}
-
-function sendFromUpdate($username, $verification, $verificationID, $subscription, $title, $author, $url, $semantics)
-{
-	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
-	{
-		$getusubs = "SELECT * FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($subscription) . "\" AND owner = \"true\"";
-		$getusubs2 = mysql_query($getusubs);
-		$getusubs3 = mysql_fetch_array($getusubs2);
-		if ($getusubs3['username'] == $username)
-		{
-			$cserver = $_SERVER['SERVER_NAME'];
-			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver) . "\"";
-			$getuk2 = mysql_query($getuk);
-			$getuk3 = mysql_fetch_array($getuk2);
-
-			$getcs = "SELECT * FROM centralServers";
-			$getcs2 = mysql_query($getcs);
-			$i=0;
-			while ($getcs3[$i] = mysql_fetch_array($getcs2))
+			if (md5($test) == $verification)
 			{
-				$verID = rand(1,65536);
-
-				$client = new xmlrpc_client($getcs3[$i]['xmlrpc']);
-				$msg = new xmlrpcmsg("InstaDisc.sendFromCentral", array(	new xmlrpcval($cserver, 'string'),
-												new xmlrpcval(md5($cserver . ":" . $getuk3['code'] . ":" . $verID), 'string'),
-												new xmlrpcval($verID, 'int'),
-												new xmlrpcval($subscription, 'string'),
-												new xmlrpcval($title, 'string'),
-												new xmlrpcval($author, 'string'),
-												new xmlrpcval($url, 'string'),
-												new xmlrpcval($semantics, 'array'),
-												new xmlrpcval(instaDisc_getConfig('softwareVersion'), 'int'),
-												new xmlrpcval(instaDisc_getConfig('databaseVersion'), 'int')));
-				$client->send($msg);
-				$i++;
-			}
-
-			return new xmlrpcresp(new xmlrpcval(0, "int"));
-		}
-	}
-
-	return new xmlrpcresp(new xmlrpcval(1, "int"));
-}
-
-function sendFromCentral($cserver, $verification, $verificationID, $subscription, $title, $author, $url, $semantics, $softwareVersion, $databaseVersion)
-{
-	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'code'))
-	{
-		if ($softwareVersion > instaDisc_getConfig('softwareVersion'))
-		{
-			instaDisc_sendUpdateNotice($softwareVersion);
-		} else if ($softwareVersion < instaDisc_getConfig('softwareVersion'))
-		{
-			$cserver2 = $_SERVER['HTTP_HOST'];
-			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver2) . "\"";
-			$getuk2 = mysql_query($getuk);
-			$getuk3 = mysql_fetch_array($getuk2);
-
-			$verID = rand(1,65536);
-
-			$client = new xmlrpc_client($cserver);
-			$msg = new xmlrpcmsg("InstaDisc.sendUpdateNotice", array(	new xmlrpcval($cserver2, 'string'),
-											new xmlrpcval(md5($cserver2 . ':' . $getuk3['code'] . ':' . $verID), 'string'),
-											new xmlrpcval($verID, 'int'),
-											new xmlrpcval(instaDisc_getConfig('softwareVersion'), 'int')));
-			$client->send($msg);
-		}
-
-		if ($databaseVersion > instaDisc_getConfig('databaseVersion'))
-		{
-			$cserver2 = $_SERVER['HTTP_HOST'];
-			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver2) . "\"";
-			$getuk2 = mysql_query($getuk);
-			$getuk3 = mysql_fetch_array($getuk2);
-
-			$verID = rand(1,65536);
-
-			$client = new xmlrpc_client($cserver);
-			$msg = new xmlrpcmsg("InstaDisc.askForDatabase", array(	new xmlrpcval($cserver2, 'string'),
-										new xmlrpcval(md5($cserver2 . ':' . $getuk3['code'] . ':' . $verID), 'string'),
-										new xmlrpcval($verID, 'int'),
-										new xmlrpcval(instaDisc_getConfig('databaseVersion'), 'int')));
-			$client->send($msg);
-		} else if ($databaseVersion < instaDisc_getConfig('databaseVersion'))
-		{
-			instaDisc_sendDatabase($cserver);
-		}
-
-		$getsed = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\"";
-		$getsed2 = mysql_query($getsed);
-		$i=0;
-		while ($getsed3[$i] = mysql_fetch_array($getsed2))
-		{
-			instaDisc_addItem($getsed3[$i]['username'], $subscription, $title, $author, $url, $semantics);
-			$i++;
-		}
-
-		return new xmlrpcresp(new xmlrpcval(0, "int"));
-	}
-
-	return new xmlrpcresp(new xmlrpcval(1, "int"));
-}
-
-function sendUpdateNotice($cserver, $verification, $verificationID, $softwareVersion)
-{
-	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'code'))
-	{
-		if ($softwareVersion > instaDisc_getConfig('softwareVersion'))
-		{
-			instaDisc_sendUpdateNotice($softwareVersion);
-
-			return new xmlrpcresp(new xmlrpcval(0, "int"));
-		}
-	}
-
-	return new xmlrpcresp(new xmlrpcval(1, "int"));
-}
-
-function askForDatabase($cserver, $verification, $verificationID, $databaseVersion)
-{
-	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'code'))
-	{
-		if ($databaseVersion < instaDisc_getConfig('databaseVersion'))
-		{
-			instaDisc_sendDatabase($cserver);
-
-			return new xmlrpcresp(new xmlrpcval(0, "int"));
-		}
-	}
-
-	return new xmlrpcresp(new xmlrpcval(1, "int"));
-}
-
-function deleteSubscription($username, $verification, $verificationID, $subscription)
-{
-	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
-	{
-		$getsub = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\" AND username = \"" . mysql_real_escape_string($username) . "\" AND owner = \"false\"";
-		$getsub2 = mysql_query($getsub);
-		$getsub3 = mysql_fetch_array($getsub2);
-		if ($getsub3['url'] == $subscription)	
-		{
-			$delsub = "DELETE FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\" AND username = \"" . mysql_real_escape_string($username) . "\" AND owner = \"false\"";
-			$delsub2 = mysql_query($delsub);
-
-			return new xmlrpcresp(new xmlrpcval(0, "int"));
-		}
-	}
-
-	return new xmlrpcresp(new xmlrpcval(1, "int"));
-}
-
-function addSubscription($username, $verification, $verificationID, $subscription)
-{
-	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
-	{
-		$inssub = "INSERT INTO subscriptions (url, username, owner) VALUES (\"" . mysql_real_escape_string($subscription) . "\", \"" . mysql_real_escape_string($username) . "\", \"false\")";
-		$inssub2 = mysql_query($inssub);
-
-		return new xmlrpcresp(new xmlrpcval(0, "int"));
-	}
-
-	return new xmlrpcresp(new xmlrpcval(1, "int"));
-}
-
-function sendDatabase($cserver, $verification, $verificationID, $db)
-{
-	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'code'))
-	{
-		if (isset($db['central.fourisland.com']))
-		{
-			$getfi = "SELECT * FROM centralServers WHERE url = \"central.fourisland.com\"";
-			$getfi2 = mysql_query($getfi);
-			$getfi3 = mysql_fetch_array($getfi2);
-
-			if ($db['central.fourisland.com']['code'] == $getfi3['code'])
-			{
-				$deldb = "DELETE FROM centralServers";
-				$deldb2 = mysql_query($deldb);
-
-				foreach($db as $name => $value)
+				$cntverid = "SELECT COUNT(*) FROM oldVerID WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+				$cntverid2 = mysql_query($cntverid);
+				$cntverid3 = mysql_fetch_array($cntverid2);
+				if ($cntverid3[0] >= intval(instaDisc_getConfig('verIDBufferSize')))
 				{
-					$insdb = "INSERT INTO centralServers (url, code, xmlrpc) VALUES (\"" . mysql_real_escape_string($name) . "\", \"" . mysql_real_escape_string($value['code']) . "\", \"" . mysql_real_escape_string($value['xmlrpc']) . "\")";
-					$insdb2 = mysql_query($insdb);
+					$delverid = "DELETE FROM oldVerID WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+					$delverid2 = mysql_query($delverid);
 				}
 
-				return new xmlrpcresp(new xmlrpcval("0", 'int'));
+				$insverid = "INSERT INTO oldVerID (name, verID) VALUES (\"" . mysql_real_escape_string($username) . "\", " . $verificationID . ")";
+				$insverid2 = mysql_query($insverid);
+
+				return true;
 			}
 		}
 	}
 
-	return new xmlrpcresp(new xmlrpcval(1, "int"));
+	return false;
 }
 
-$s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function" => "checkRegistration"),
-				"InstaDisc.deleteItem" => array("function" => "deleteItem"),
-				"InstaDisc.resendItem" => array("function" => "resendItem"),
-				"InstaDisc.requestRetained" => array("function" => "requestRetained"),
-				"InstaDisc.sendFromUpdate" => array("function" => "sendFromUpdate"),
-				"InstaDisc.sendFromCentral" => array("function" => "sendFromCentral"),
-				"InstaDisc.sendUpdateNotice" => array("function" => "sendUpdateNotice"),
-				"InstaDisc.askForDatabase" => array("function" => "askForDatabase"),
-				"InstaDisc.deleteSubscription" => array("function" => "deleteSubscription"),
-				"InstaDisc.addSubscription" => array("function" => "addSubscription"),
-				"InstaDisc.sendDatabase" => array("function" => "sendDatabase")
-			),0);
-$s->functions_parameters_type = 'phpvals';
-$s->service();
+function instaDisc_sendItem($username, $id)
+{
+	$getitem = "SELECT * FROM inbox WHERE username = \"" . mysql_real_escape_string($username) . "\" AND itemID = " . $id;
+	$getitem2 = mysql_query($getitem);
+	$getitem3 = mysql_fetch_array($getitem2);
+	if ($getitem3['username'] == $username)
+	{
+		$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+		$getuser2 = mysql_query($getuser);
+		$getuser3 = mysql_fetch_array($getuser2);
+
+		$fp = fsockopen($getuser3['ip'], 4444, $errno, $errstr);
+		if ($fp)
+		{
+			$verID = rand(1,65536);
+
+			$out = 'ID: ' . $id . "\r\n";
+			$out .= 'Verification: ' . md5($username . ':' . $getuser3['password'] . ':' . $verID) . "\r\n";
+			$out .= 'Verification-ID: ' . $verID . "\r\n";
+			$out .= 'Subscription: ' . $getitem3['subscription'] . "\r\n";
+			$out .= 'Title: ' . $getitem3['title'] . "\r\n";
+			$out .= 'Author: ' . $getitem3['author'] . "\r\n";
+			$out .= 'URL: ' . $getitem3['url'] . "\r\n";
+			$out .= "\r\n\r\n";
+
+			fwrite($fp, $out);
+			fclose($fp);
+		}
+	}
+}
+
+function instaDisc_sendUpdateNotice($softwareVersion)
+{
+	$username = instaDisc_getConfig('owner');
+	$subscription = 'http://' . $_SERVER['HTTP_HOST'];
+	$title = 'Update your software to ' . $software;
+	$author = 'Hatkirby';
+	$url = 'http://fourisland.com/projects/instadisc/wiki/CentralSoftwareUpdate';
+	$semantics = array();
+
+	instaDisc_addItem($username, $subscription, $title, $author, $url, $semantics);
+}
+
+function instaDisc_sendDatabase($cserver)
+{
+	$getdb = "SELECT * FROM centralServers";
+	$getdb2 = mysql_query($getdb);
+	$i=0;
+	while ($getdb3[$i] = mysql_fetch_array($getdb2))
+	{
+		$db[$getdb3[$i]['url']]['code'] = $getdb3[$i]['code'];
+		$db[$getdb3[$i]['url']]['xmlrpc'] = $getdb3[$i]['xmlrpc'];
+		$i++;
+	}
+
+	$cserver2 = $_SERVER['HTTP_HOST'];
+	$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver2) . "\"";
+	$getuk2 = mysql_query($getuk);
+	$getuk3 = mysql_fetch_array($getuk2);
+
+	$verID = rand(1,65536);
+
+	$client = new xmlrpc_client($cserver);
+	$msg = new xmlrpcmsg("InstaDisc.sendDatabase", array(	new xmlrpcval($cserver2, 'string'),
+								new xmlrpcval(md5($cserver2 . ":" . $getuk3['code'] . ":" . $verID), 'string'),
+								new xmlrpcval($verID, 'int'),
+								new xmlrpcval($db, 'array')));
+	$client->send($msg);
+}
+
+function instaDisc_addItem($username, $subscription, $title, $author, $url, $semantics)
+{
+	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+	$getuser2 = mysql_query($getuser);
+	$getuser3 = mysql_fetch_array($getuser2);
+	if ($getuser3['username'] == $username)
+	{
+		$itemID = $getuser3['nextItemID'];
+		$setuser = "UPDATE users SET nextItemID = nextItemID+1 WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+		$setuser2 = mysql_query($setuser);
+
+		$insitem = "INSERT INTO inbox (username, itemID, subscription, title, author, url, semantics) VALUES (\"" . mysql_real_escape_string($username) . "\", " . $itemID . ", \"" . mysql_real_escape_string($subscription) . "\", \"" . mysql_real_escape_string($title) . "\", \"" . mysql_real_escape_string($author) . "\", \"" . mysql_real_escape_string($url) . "\", \"" . mysql_real_escape_string(serialize($semantics)) . "\")";
+		$insitem2 = mysql_query($insitem);
+
+		instaDisc_sendItem($username, $itemID);
+	}
+}
+
+function instaDisc_phpMailer()
+{
+	$mail = new PHPMailer();
+	$mail->IsSMTP();
+	$mail->From = 'instadisc@' . instaDisc_getConfig('mailDomain');
+	$mail->FromName = 'InstaDisc';
+	$mail->Host = instaDisc_getConfig('smtpHost');
+	if (instaDisc_getConfig('smtpAuth') == 'true')
+	{
+		$mail->SMTPAuth = true;
+		$mail->Username = instaDisc_getConfig('smtpUser');
+		$mail->Password = instaDisc_getConfig('smtpPass');
+	}
+	$mail->Helo = $_SERVER['HTTP_HOST'];
+	$mail->ClearAddresses();
+
+	return $mail;
+}
+
+function instaDisc_sendActivationEmail($username, $password, $email)
+{
+	$penKey = md5(rand(1,65536));
+
+	$inspending = "INSERT INTO pending (username, password, email, code) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string(md5($password)) . "\", \"" . mysql_real_escape_string($email) . "\", \"" . mysql_real_escape_string($penKey) . "\")";
+	$inspending2 = mysql_query($inspending);
+
+	$mail = instaDisc_phpMailer();
+	$mail->AddAddress($email, $username);
+	$mail->Subject = 'InstaDisc Account Verification';
+	$mail->Body = "Hello, someone has recently registered an account at " . $_SERVER['HTTP_HOST'] . " with your email address. If that was you, and your chosen username IS " . $username . ", then copy the account verification code below to our Account Verification page, enter your username and press Activate!\r\n\r\n" . $penKey . "\r\n\r\nIf that was not you, copy the above code to our Account Verification page, enter the above username, and click Delete.";
+
+	return $mail->Send();
+}
+
+function instaDisc_activateAccount($username, $penKey)
+{
+	$getuser = "SELECT * FROM pending WHERE username = \"" . mysql_real_escape_string($username) . "\" AND code = \"" . mysql_real_escape_string($penKey) . "\"";
+	$getuser2 = mysql_query($getuser);
+	$getuser3 = mysql_fetch_array($getuser2);
+	if ($getuser3['username'] == $username)
+	{
+		$insuser = "INSERT INTO users (username, password, email) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($getuser3['password']) . "\", \"" . mysql_real_escape_string($getuser3['email']) . "\")";
+		$insuser2 = mysql_query($insuser);
+
+		$delpending = "DELETE FROM pending WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+		$delpending2 = mysql_query($delpending);
+
+		$mail = instaDisc_phpMailer();
+		$mail->AddAddress($getuser3['email'], $username);
+		$mail->Subject = 'Welcome to InstaDisc!';
+		$mail->Body = "Welcome to InstaDisc! Thank you for registering at " . instaDisc_getConfig('siteName') . " Central Server, we hope you enjoy our service! Now, when you download an InstaDisc Client, it will ask you for the following information which you will need to enter into it for it to work:\r\n\r\nUsername: " . $username . "\r\nPassword: (you should know this, it's not displayed here for security reasons)\r\nCentral Server URL: " . instaDisc_getConfig("xmlrpcURL") . "\r\n\r\nOnce again, thank you for choosing " . instaDisc_getConfig("siteName") . "!";
+
+		return $mail->Send();
+	} else {
+		return false;
+	}
+}
+
+function instaDisc_deactivateAccount($username, $penKey)
+{
+	$getuser = "SELECT * FROM pending WHERE username = \"" . mysql_real_escape_string($username) . "\" AND code = \"" . mysql_real_escape_string($penKey) . "\"";
+	$getuser2 = mysql_query($getuser);
+	$getuser3 = mysql_fetch_array($getuser2);
+	if ($getuser3['username'] == $username)
+	{
+		$delpending = "DELETE FROM pending WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+		$delpending2 = mysql_query($delpending);
+
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function instaDisc_verifyUser($username, $password)
+{
+	return instaDisc_checkVerification($username, md5($username . ':' . md5($password) . ':0'), 0, 'users', 'username', 'password');
+}
+
+function instaDisc_deleteAccount($username)
+{
+	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+	$getuser2 = mysql_query($getuser);
+	$getuser3 = mysql_fetch_array($getuser2);
+	if ($getuser3['username'] == $username)
+	{
+		$deluser = "DELETE FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+		$deluser2 = mysql_query($deluser);
+
+		$delsubs = "DELETE FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+		$delsubs2 = mysql_query($delsubs);
+
+		$delitems = "DELETE FROM inbox WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+		$delitems2 = mysql_query($delitems);
+
+		return true;
+	}
+
+	return false;
+}
+
+function instaDisc_getConfig($key)
+{
+	$getconfig = "SELECT * FROM config WHERE name = \"" . mysql_real_escape_string($key) . "\"";
+	$getconfig2 = mysql_query($getconfig);
+	$getconfig3 = mysql_fetch_array($getconfig2);
+
+	return $getconfig3['value'];
+}
+
+function instaDisc_listSubscriptions($username)
+{
+	$getsubs = "SELECT * FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\" AND owner = \"true\"";
+	$getsubs2 = mysql_query($getsubs);
+	$i=0;
+	while ($getsubs3[$i] = mysql_fetch_array($getsubs2))
+	{
+		$subs[$i] = $getsubs3[$i]['url'];
+
+		$i++;
+	}
+
+	$subs['size'] = $i;
+	return $subs;
+}
+
+function instaDisc_addSubscription($username, $url)
+{
+	$getcode = "SELECT * FROM pending2 WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\"";
+	$getcode2 = mysql_query($getcode);
+	$getcode3 = mysql_fetch_array($getcode2);
+	if ($getcode3['username'] == $username)
+	{
+		$delcode = "DELETE FROM pending2 WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\"";
+		$delcode2 = mysql_query($delcode);
+
+		$c = curl_init();
+		curl_setopt($c, CURLOPT_URL, $url);
+		curl_setopt($c, CURLOPT_HEADER, false);
+		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+		$page_data = curl_exec($c);
+		curl_close($c);
+
+		$headers = split("\n", $page_date);
+		foreach ($headers as $name => $value)
+		{
+			$header = split(": ", $value);
+			$headerMap[$header[0]] = $header[1];
+		}
+
+		if (isset($header['Subscription']))
+		{
+			if (isset($header['Title']))
+			{
+				if (isset($header['Category']))
+				{
+					if (isset($header['Key']))
+					{
+						if ($header['Key'] == $getcode3['code'])
+						{
+							$inssub = "INSERT INTO subscriptions (username,url,owner) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($header['Subscription']) . "\", \"true\")";
+							$inssub2 = mysql_query($inssub);
+
+							return true;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+function instaDisc_listPendingSubscriptions($username)
+{
+	$getsubs = "SELECT * FROM pending2 WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+	$getsubs2 = mysql_query($getsubs);
+	$i=0;
+	while ($getsubs3[$i] = mysql_fetch_array($getsubs2))
+	{
+		$subs[$i] = array('url' => $getsubs3[$i]['url'], 'code' => $getsubs3[$i]['code']);
+
+		$i++;
+	}
+
+	$subs['size'] = $i;
+	return $subs;
+}
+
+function instaDisc_generateSubscriptionActivation($username, $url)
+{
+	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+	$getuser2 = mysql_query($getuser);
+	$getuser3 = mysql_fetch_array($getuser2);
+	if ($getuser3['username'] == $username)
+	{
+		$key = md5(rand(1,65536));
+
+		$inspending = "INSERT INTO pending2 (username, url, code) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($url) . "\", \"" . mysql_real_escape_string($key) . "\")";
+		$inspending2 = mysql_query($inspending);
+
+		return $key;
+	}
+
+	return false;
+}
+
+function instaDisc_deleteSubscription($username, $url)
+{
+	$getsub = "SELECT * FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\")";
+	$getsub2 = mysql_query($getsub);
+	$getsub3 = mysql_fetch_array($getsub2);
+	if ($getsub3['username'] == $username)
+	{
+		$delsub = "DELETE FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\")";
+		$delsub2 = mysql_query($delsub);
+
+		return true;
+	}
+
+	return false;
+}
+
+function instaDisc_cancelSubscription($username, $url)
+{
+	$getsub = "SELECT * FROM pending2 WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\")";
+	$getsub2 = mysql_query($getsub);
+	$getsub3 = mysql_fetch_array($getsub2);
+	if ($getsub3['username'] == $username)
+	{
+		$delsub = "DELETE FROM pending2 WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\")";
+		$delsub2 = mysql_query($delsub);
+
+		return true;
+	}
+
+	return false;
+}
 
 ?>
