@@ -54,7 +54,7 @@ function resendItem($username, $verification, $verificationID, $id)
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
-function requestRetained($username, $verification, $veriicationID)
+function requestRetained($username, $verification, $verificationID)
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
