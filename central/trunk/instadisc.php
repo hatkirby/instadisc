@@ -30,7 +30,7 @@ function instaDisc_checkVerification($username, $verification, $verificationID, 
 					$delverid2 = mysql_query($delverid);
 				}
 
-				$insverid = "INSERT INTO oldVerID (name, verID) VALUES (\"" . mysql_real_escape_string($username) . "\", " . $verificationID . ")";
+				$insverid = "INSERT INTO oldVerID (username, verID) VALUES (\"" . mysql_real_escape_string($username) . "\", " . $verificationID . ")";
 				$insverid2 = mysql_query($insverid);
 
 				return true;
