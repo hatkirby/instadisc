@@ -24,7 +24,7 @@ function deleteItem($username, $verification, $verificationID, $id)
 		$getitem = "SELECT * FROM inbox WHERE username = \"" . mysql_real_escape_string($username) . "\" AND itemID = " . $id;
 		$getitem2 = mysql_query($getitem);
 		$getitem3 = mysql_fetch_array($getitem2);
-		if ($getitem3['id'] == $id)
+		if ($getitem3['itemID'] == $id)
 		{
 			$delitem = "DELETE FROM inbox WHERE username = \"" . mysql_real_escape_string($username) . "\" AND itemID = " . $id;
 			$delitem2 = mysql_query($delitem);
@@ -43,7 +43,7 @@ function resendItem($username, $verification, $verificationID, $id)
 		$getitem = "SELECT * FROM inbox WHERE username = \"" . mysql_real_escape_string($username) . "\" AND itemID = " . $id;
 		$getitem2 = mysql_query($getitem);
 		$getitem3 = mysql_fetch_array($getitem2);
-		if ($getitem3['id'] == $id)
+		if ($getitem3['itemID'] == $id)
 		{
 			instaDisc_sendItem($username, $id);
 
