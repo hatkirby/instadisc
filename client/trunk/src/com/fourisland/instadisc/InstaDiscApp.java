@@ -66,10 +66,10 @@ public class InstaDiscApp extends SingleFrameApplication {
             Thread th = new Thread(new FirstRunWizard());
             th.start();
         } else {
-            if ((args.length > 0) && (args[0].equals("-r"))) {
-                XmlRpc xmlrpc = new XmlRpc("requestRetained");
-                xmlrpc.execute();
-            } else {
+            XmlRpc xmlrpc = new XmlRpc("requestRetained");
+            xmlrpc.execute();
+            
+            if (!((args.length > 0) && (args[0].equals("-r")))) {
                 launch(InstaDiscApp.class, args);
             }
         }
