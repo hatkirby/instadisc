@@ -91,7 +91,7 @@ function instaDisc_sendDatabase($cserver)
 	$i=0;
 	while ($getdb3[$i] = mysql_fetch_array($getdb2))
 	{
-		$db[$getdb3[$i]['url']]['key'] = $getdb3[$i]['key'];
+		$db[$getdb3[$i]['url']]['code'] = $getdb3[$i]['code'];
 		$db[$getdb3[$i]['url']]['xmlrpc'] = $getdb3[$i]['xmlrpc'];
 		$i++;
 	}
@@ -105,7 +105,7 @@ function instaDisc_sendDatabase($cserver)
 
 	$client = new xmlrpc_client($cserver);
 	$msg = new xmlrpcmsg("InstaDisc.sendDatabase", array(	new xmlrpcval($cserver2, 'string'),
-								new xmlrpcval(md5($cserver2 + ":" + $getuk3['key'] + ":" + $verID), 'string'),
+								new xmlrpcval(md5($cserver2 + ":" + $getuk3['code'] + ":" + $verID), 'string'),
 								new xmlrpcval($verID, 'int'),
 								new xmlrpcval($db, 'array')));
 	$client->send($msg);
@@ -152,7 +152,7 @@ function instaDisc_sendActivationEmail($username, $password, $email)
 {
 	$penKey = md5(rand(1,65536));
 
-	$inspending = "INSERT INTO pending (username, password, email, key) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string(md5($password)) . "\", \"" . mysql_real_escape_string($email) . "\", \"" . mysql_real_escape_string($penKey) . "\")";
+	$inspending = "INSERT INTO pending (username, password, email, code) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string(md5($password)) . "\", \"" . mysql_real_escape_string($email) . "\", \"" . mysql_real_escape_string($penKey) . "\")";
 	$inspending2 = mysql_query($inspending);
 
 	$mail = instaDisc_phpMailer();
@@ -165,7 +165,7 @@ function instaDisc_sendActivationEmail($username, $password, $email)
 
 function instaDisc_activateAccount($username, $penKey)
 {
-	$getuser = "SELECT * FROM pending WHERE username = \"" . mysql_real_escape_string($username) . "\" AND key = \"" . mysql_real_escape_string($penKey) . "\"";
+	$getuser = "SELECT * FROM pending WHERE username = \"" . mysql_real_escape_string($username) . "\" AND code = \"" . mysql_real_escape_string($penKey) . "\"";
 	$getuser2 = mysql_query($getuser);
 	$getuser3 = mysql_fetch_array($getuser2);
 	if ($getuser3['username'] == $username)
@@ -189,7 +189,7 @@ function instaDisc_activateAccount($username, $penKey)
 
 function instaDisc_deactivateAccount($username, $penKey)
 {
-	$getuser = "SELECT * FROM pending WHERE username = \"" . mysql_real_escape_string($username) . "\" AND key = \"" . mysql_real_escape_string($penKey) . "\"";
+	$getuser = "SELECT * FROM pending WHERE username = \"" . mysql_real_escape_string($username) . "\" AND code = \"" . mysql_real_escape_string($penKey) . "\"";
 	$getuser2 = mysql_query($getuser);
 	$getuser3 = mysql_fetch_array($getuser2);
 	if ($getuser3['username'] == $username)
@@ -310,7 +310,7 @@ function instaDisc_listPendingSubscriptions($username)
 	$i=0;
 	while ($getsubs3[$i] = mysql_fetch_array($getsubs2))
 	{
-		$subs[$i] = array('url' => $getsubs3[$i]['url'], 'key' => $getsubs3[$i]['key']);
+		$subs[$i] = array('url' => $getsubs3[$i]['url'], 'code' => $getsubs3[$i]['code']);
 
 		$i++;
 	}
@@ -328,7 +328,7 @@ function instaDisc_generateSubscriptionActivation($username, $url)
 	{
 		$key = md5(rand(1,65536));
 
-		$inspending = "INSERT INTO pending2 (username, url, key) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($url) . "\", \"" . mysql_real_escape_string($key) . "\")";
+		$inspending = "INSERT INTO pending2 (username, url, code) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($url) . "\", \"" . mysql_real_escape_string($key) . "\")";
 		$inspending2 = mysql_query($inspending);
 
 		return $key;

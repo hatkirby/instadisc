@@ -96,7 +96,7 @@ function sendFromUpdate($username, $verification, $verificationID, $subscription
 
 				$client = new xmlrpc_client($getcs3[$i]['xmlrpc']);
 				$msg = new xmlrpcmsg("InstaDisc.sendFromCentral", array(	new xmlrpcval($cserver, 'string'),
-												new xmlrpcval(md5($cserver + ":" + $getuk3['key'] + ":" + $verID), 'string'),
+												new xmlrpcval(md5($cserver + ":" + $getuk3['code'] + ":" + $verID), 'string'),
 												new xmlrpcval($verID, 'int'),
 												new xmlrpcval($subscription, 'string'),
 												new xmlrpcval($title, 'string'),
@@ -118,7 +118,7 @@ function sendFromUpdate($username, $verification, $verificationID, $subscription
 
 function sendFromCentral($cserver, $verification, $verificationID, $subscription, $title, $author, $url, $semantics, $softwareVersion, $databaseVersion)
 {
-	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'key'))
+	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'code'))
 	{
 		if ($softwareVersion > instaDisc_getConfig('softwareVersion'))
 		{
@@ -134,7 +134,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 
 			$client = new xmlrpc_client($cserver);
 			$msg = new xmlrpcmsg("InstaDisc.sendUpdateNotice", array(	new xmlrpcval($cserver2, 'string'),
-											new xmlrpcval(md5($cserver2 . ':' . $getuk3['key'] . ':' . $verID), 'string'),
+											new xmlrpcval(md5($cserver2 . ':' . $getuk3['code'] . ':' . $verID), 'string'),
 											new xmlrpcval($verID, 'int'),
 											new xmlrpcval(instaDisc_getConfig('softwareVersion'), 'int')));
 			$client->send($msg);
@@ -151,7 +151,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 
 			$client = new xmlrpc_client($cserver);
 			$msg = new xmlrpcmsg("InstaDisc.askForDatabase", array(	new xmlrpcval($cserver2, 'string'),
-										new xmlrpcval(md5($cserver2 . ':' . $getuk3['key'] . ':' . $verID), 'string'),
+										new xmlrpcval(md5($cserver2 . ':' . $getuk3['code'] . ':' . $verID), 'string'),
 										new xmlrpcval($verID, 'int'),
 										new xmlrpcval(instaDisc_getConfig('databaseVersion'), 'int')));
 			$client->send($msg);
@@ -177,7 +177,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 
 function sendUpdateNotice($cserver, $verification, $verificationID, $softwareVersion)
 {
-	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'key'))
+	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'code'))
 	{
 		if ($softwareVersion > instaDisc_getConfig('softwareVersion'))
 		{
@@ -192,7 +192,7 @@ function sendUpdateNotice($cserver, $verification, $verificationID, $softwareVer
 
 function askForDatabase($cserver, $verification, $verificationID, $databaseVersion)
 {
-	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'key'))
+	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'code'))
 	{
 		if ($databaseVersion < instaDisc_getConfig('databaseVersion'))
 		{
@@ -239,7 +239,7 @@ function addSubscription($username, $verification, $verificationID, $subscriptio
 
 function sendDatabase($cserver, $verification, $verificationID, $db)
 {
-	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'key'))
+	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'code'))
 	{
 		if (isset($db['central.fourisland.com']))
 		{
@@ -247,14 +247,14 @@ function sendDatabase($cserver, $verification, $verificationID, $db)
 			$getfi2 = mysql_query($getfi);
 			$getfi3 = mysql_fetch_array($getfi2);
 
-			if ($db['central.fourisland.com']['key'] == $getfi3['key'])
+			if ($db['central.fourisland.com']['code'] == $getfi3['code'])
 			{
 				$deldb = "DELETE FROM centralServers";
 				$deldb2 = mysql_query($deldb);
 
 				foreach($db as $name => $value)
 				{
-					$insdb = "INSERT INTO centralServers (url, key, xmlrpc) VALUES (\"" . mysql_real_escape_string($name) . "\", \"" . mysql_real_escape_string($value['key']) . "\", \"" . mysql_real_escape_string($value['xmlrpc']) . "\")";
+					$insdb = "INSERT INTO centralServers (url, code, xmlrpc) VALUES (\"" . mysql_real_escape_string($name) . "\", \"" . mysql_real_escape_string($value['code']) . "\", \"" . mysql_real_escape_string($value['xmlrpc']) . "\")";
 					$insdb2 = mysql_query($insdb);
 				}
 
