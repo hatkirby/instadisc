@@ -105,7 +105,7 @@ function instaDisc_sendDatabase($cserver)
 
 	$client = new xmlrpc_client($cserver);
 	$msg = new xmlrpcmsg("InstaDisc.sendDatabase", array(	new xmlrpcval($cserver2, 'string'),
-								new xmlrpcval(md5($cserver2 + ":" + $getuk3['code'] + ":" + $verID), 'string'),
+								new xmlrpcval(md5($cserver2 . ":" . $getuk3['code'] . ":" . $verID), 'string'),
 								new xmlrpcval($verID, 'int'),
 								new xmlrpcval($db, 'array')));
 	$client->send($msg);
