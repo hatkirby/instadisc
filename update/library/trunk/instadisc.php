@@ -16,7 +16,7 @@ function instaDisc_sendItem($title, $author, $url, $semantics)
 
 	$client = new xmlrpc_client($idusCentralServer);
 	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($idusUsername, 'string'),
-								new xmlrpcval(md5($idusUsername + ":" . md5($idusPassword) . ":" . $verID), 'string'),
+								new xmlrpcval(md5($idusUsername . ":" . md5($idusPassword) . ":" . $verID), 'string'),
 								new xmlrpcval($verID, 'int'),
 								new xmlrpcval($idusSubscriptionURI, 'string'),
 								new xmlrpcval($title, 'string'),
