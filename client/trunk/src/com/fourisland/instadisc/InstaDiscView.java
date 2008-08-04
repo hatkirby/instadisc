@@ -115,6 +115,9 @@ public class InstaDiscView extends FrameView {
         InstaDiscThread idt = new InstaDiscThread();
         Thread idtt = new Thread(idt);
         idtt.start();
+        
+        XmlRpc xmlrpc = new XmlRpc("requestRetained");
+        xmlrpc.execute();
     }
 
     @Action
