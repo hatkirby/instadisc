@@ -4,7 +4,7 @@
  */
 package com.fourisland.instadisc;
 
-import com.fourisland.instadisc.Database.Item;
+import com.fourisland.instadisc.Item.Item;
 import com.fourisland.instadisc.Database.Wrapper;
 import com.fourisland.instadisc.Item.Categories.Category;
 import java.awt.Component;
