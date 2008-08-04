@@ -26,7 +26,6 @@ public class Wrapper {
     public static EntityStore es = null;
     public static PrimaryIndex<Integer, OldVerID> oldVerID;
     public static PrimaryIndex<String, IDConfig> idConfig;
-    public static PrimaryIndex<Integer, Item> item;
     public static PrimaryIndex<String, Subscription> subscription;
     public static PrimaryIndex<Integer, Filter> filter;
 
@@ -49,7 +48,6 @@ public class Wrapper {
         try {
             oldVerID = es.getPrimaryIndex(Integer.class, OldVerID.class);
             idConfig = es.getPrimaryIndex(String.class, IDConfig.class);
-            item = es.getPrimaryIndex(Integer.class, Item.class);
             subscription = es.getPrimaryIndex(String.class, Subscription.class);
             filter = es.getPrimaryIndex(Integer.class, Filter.class);
         } catch (DatabaseException ex) {
@@ -133,63 +131,6 @@ public class Wrapper {
                 oldVerID.put(temp);
             } catch (DatabaseException ex) {
                 Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    public static void addItem(Item m_item) {
-        synchronized (item) {
-            try {
-                item.put(m_item);
-            } catch (DatabaseException ex) {
-                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    public static int countItem() {
-        synchronized (item) {
-            try {
-                return (int) item.count();
-            } catch (DatabaseException ex) {
-                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
-                return 0;
-            }
-        }
-    }
-
-    public static void dropFromTopItem() {
-        synchronized (item) {
-            try {
-                Integer[] keySet = (Integer[]) item.map().keySet().toArray();
-                item.delete(keySet[0]);
-            } catch (DatabaseException ex) {
-                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    public static Item[] getAllItem() {
-        synchronized (item) {
-            try {
-                Iterator<Item> i = item.entities().iterator();
-                Item[] temp = new Item[0];
-                int len = 0;
-
-                while (i.hasNext()) {
-                    Item[] temp2 = new Item[len + 1];
-                    int j = 0;
-                    for (j = 0; j < len; j++) {
-                        temp2[j] = temp[j];
-                    }
-                    temp2[len] = i.next();
-                    temp = temp2;
-                }
-
-                return temp;
-            } catch (DatabaseException ex) {
-                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
-                return new Item[0];
             }
         }
     }

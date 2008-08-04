@@ -3,7 +3,7 @@
  */
 package com.fourisland.instadisc;
 
-import com.fourisland.instadisc.Database.Item;
+import com.fourisland.instadisc.Item.Item;
 import com.fourisland.instadisc.Database.Wrapper;
 import com.fourisland.instadisc.Item.Categories.InstaDiscIcon;
 import java.awt.AWTException;
@@ -94,11 +94,10 @@ public class InstaDiscView extends FrameView {
                 }
             }
         });
-        
+
         this.getFrame().setIconImage(new ImageIcon(InstaDiscIcon.instadiscicon).getImage());
-        
-        if (SystemTray.isSupported())
-        {
+
+        if (SystemTray.isSupported()) {
             try {
                 TrayIcon ti = new TrayIcon(new ImageIcon(InstaDiscIcon.instadisciconmiddle).getImage(), "InstaDisc");
                 SystemTray.getSystemTray().add(ti);
@@ -108,14 +107,15 @@ public class InstaDiscView extends FrameView {
             }
         }
 
-        jList1.setCellRenderer(new IDItemListCellRenderer());
+        lm.ensureCapacity(10);
+        lm.clear();
         jList1.setModel(lm);
-        refreshItemPane();
+        jList1.setCellRenderer(new IDItemListCellRenderer());
 
         InstaDiscThread idt = new InstaDiscThread();
         Thread idtt = new Thread(idt);
         idtt.start();
-        
+
         XmlRpc xmlrpc = new XmlRpc("requestRetained");
         xmlrpc.execute();
     }
@@ -168,6 +168,11 @@ public class InstaDiscView extends FrameView {
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jList1MouseClicked(evt);
+            }
+        });
+        jList1.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                jList1ComponentShown(evt);
             }
         });
         jScrollPane1.setViewportView(jList1);
@@ -338,6 +343,10 @@ public class InstaDiscView extends FrameView {
         xmlrpc.execute();
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
+    private void jList1ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jList1ComponentShown
+        jList1.repaint();
+    }//GEN-LAST:event_jList1ComponentShown
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList jList1;
     private javax.swing.JMenu jMenu1;
@@ -363,12 +372,15 @@ public class InstaDiscView extends FrameView {
     private JDialog aboutBox;
     private DefaultListModel lm = new DefaultListModel();
 
-    public void refreshItemPane() {
-        lm.clear();
-        Item[] items = Wrapper.getAllItem();
-        int i = 0;
-        for (i = 0; i < items.length; i++) {
-            lm.addElement(items[i]);
+    public void addItemPane(Item item) {
+        if (lm.size() >= Integer.decode(Wrapper.getConfig("itemBufferSize"))) {
+            while (lm.size() >= Integer.decode(Wrapper.getConfig("itemBufferSize"))) {
+                lm.remove(0);
+            }
         }
+
+        lm.addElement(item);
+        jList1.setModel(lm);
+        jList1.repaint();
     }
 }
