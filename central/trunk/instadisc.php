@@ -170,7 +170,7 @@ function instaDisc_activateAccount($username, $penKey)
 	$getuser3 = mysql_fetch_array($getuser2);
 	if ($getuser3['username'] == $username)
 	{
-		$insuser = "INSERT INTO users (username, password, email) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($password) . "\", \"" . mysql_real_escape_string($email) . "\")";
+		$insuser = "INSERT INTO users (username, password, email) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($getuser3['password']) . "\", \"" . mysql_real_escape_string($getuser3['email']) . "\")";
 		$insuser2 = mysql_query($insuser);
 
 		$delpending = "DELETE FROM pending WHERE username = \"" . mysql_real_escape_string($username) . "\"";
