@@ -160,7 +160,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 			instaDisc_sendDatabase($cserver);
 		}
 
-		$getsed = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\"";
+		$getsed = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\" AND owner = \"false\"";
 		$getsed2 = mysql_query($getsed);
 		$i=0;
 		while ($getsed3[$i] = mysql_fetch_array($getsed2))
