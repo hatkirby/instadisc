@@ -130,16 +130,16 @@ function id_settings_page()
 </FORM></DIV><?php
 }
 
-add_action('publish_post','sendPost');
-
 include('xmlrpc/xmlrpc.inc');
+
+add_action('publish_post','sendPost');
 
 function sendPost($id)
 {
 	$post = get_post($id);
 	$title = $post->post_title;
 	$author = $post->post_author;
-	$url = $post->guid;
+	$url = get_permalink($id);
 
 	$verID = rand(1,65536);
 
@@ -148,6 +148,30 @@ function sendPost($id)
 								new xmlrpcval(md5(get_option('instaDisc_blogPost_centralServer_username') . ':' . md5(get_option('instaDisc_blogPost_centralServer_password')) . ':' . $verID), 'string'),
 								new xmlrpcval($verID, 'int'),
 								new xmlrpcval(get_option('siteurl') . '/', 'string'),
+								new xmlrpcval($title, 'string'),
+								new xmlrpcval($author, 'string'),
+								new xmlrpcval($url, 'string'),
+								new xmlrpcval(array(), 'array')));
+	$client->send($msg);
+}
+
+add_action('comment_post','sendComment');
+
+function sendComment($id)
+{
+	$comment = get_comment($id);
+	$post = get_post($comment->comment_post_ID);
+	$title = $post->post_title;
+	$author = $comment->comment_author;
+	$url = get_permalink($comment->comment_post_ID) . "#comments";
+
+	$verID = rand(1,65536);
+
+	$client = new xmlrpc_client(get_option('instaDisc_comment_centralServer'));
+	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval(get_option('instaDisc_comment_centralServer_username'), 'string'),
+								new xmlrpcval(md5(get_option('instaDisc_comment_centralServer_username') . ':' . md5(get_option('instaDisc_comment_centralServer_password')) . ':' . $verID), 'string'),
+								new xmlrpcval($verID, 'int'),
+								new xmlrpcval(get_option('siteurl') . '/comments/', 'string'),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
