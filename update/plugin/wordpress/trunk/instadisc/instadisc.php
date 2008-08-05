@@ -25,6 +25,11 @@ Author URI: http://fourisland.com
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+if (get_option('instaDisc_subscription_title') === FALSE)
+{
+	add_option('instaDisc_subscription_title',get_option('blogname'));
+}
+
 add_action('admin_menu', 'am_pages');
 
 function am_pages()
