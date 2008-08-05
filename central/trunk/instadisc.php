@@ -33,6 +33,12 @@ function instaDisc_checkVerification($username, $verification, $verificationID, 
 				$insverid = "INSERT INTO oldVerID (username, verID) VALUES (\"" . mysql_real_escape_string($username) . "\", " . $verificationID . ")";
 				$insverid2 = mysql_query($insverid);
 
+				if (($table == 'users') && ($getitem3['ip'] != $_SERVER['REMOTE_ADDR']))
+				{
+					$setuser = "UPDATE users SET ip = \"" . $_SERVER['REMOTE_ADDR'] . "\" WHERE id = " . $getitem3['id'];
+					$setuser2 = mysql_query($setuser);
+				}
+
 				return true;
 			}
 		}
