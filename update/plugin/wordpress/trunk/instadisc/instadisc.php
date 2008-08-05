@@ -58,6 +58,20 @@ function id_settings_page()
  </TD>
 </TR>
 <TR VALIGN="top">
+ <TH SCOPE="row"><LABEL>Central Server Username</LABEL>
+ <TD>
+  <INPUT TYPE="text" NAME="instaDisc_blogPost_centralServer_username" VALUE="<?php echo(get_option('instaDisc_blogPost_centralServer_username')); ?>" SIZE="40">
+  <BR>This is the username you signed up with at your central server, and the one that you will/have register(ed) this subscription under.
+ </TD>
+</TR>
+<TR VALIGN="top">
+ <TH SCOPE="row"><LABEL>Central Server Password</LABEL>
+ <TD>
+  <INPUT TYPE="password" NAME="instaDisc_blogPost_centralServer_password" VALUE="<?php echo(get_option('instaDisc_blogPost_centralServer_password')); ?>" SIZE="40">
+  <BR>This is the password for the user above
+ </TD>
+</TR>
+<TR VALIGN="top">
  <TH SCOPE="row"><LABEL>Central Server Activation Key</LABEL>
  <TD>
   <INPUT TYPE="text" NAME="instaDisc_blogPost_centralServer_activationKey" VALUE="<?php echo(get_option('instaDisc_blogPost_centralServer_activationKey')); ?>" SIZE="40">
@@ -82,6 +96,20 @@ function id_settings_page()
  </TD>
 </TR>
 <TR VALIGN="top">
+ <TH SCOPE="row"><LABEL>Central Server Username</LABEL>
+ <TD>
+  <INPUT TYPE="text" NAME="instaDisc_comment_centralServer_username" VALUE="<?php echo(get_option('instaDisc_comment_centralServer_username')); ?>" SIZE="40">
+  <BR>This is the username you signed up with at your central server, and the one that you will/have register(ed) this subscription under.
+ </TD>
+</TR>
+<TR VALIGN="top">
+ <TH SCOPE="row"><LABEL>Central Server Password</LABEL>
+ <TD>
+  <INPUT TYPE="password" NAME="instaDisc_comment_centralServer_password" VALUE="<?php echo(get_option('instaDisc_comment_centralServer_password')); ?>" SIZE="40">
+  <BR>This is the password for the user above
+ </TD>
+</TR>
+<TR VALIGN="top">
  <TH SCOPE="row"><LABEL>Central Server Activation Key</LABEL>
  <TD>
   <INPUT TYPE="text" NAME="instaDisc_comment_centralServer_activationKey" VALUE="<?php echo(get_option('instaDisc_comment_centralServer_activationKey')); ?>" SIZE="40">
@@ -97,9 +125,34 @@ function id_settings_page()
 </TR>
 </TABLE>
 <INPUT TYPE="hidden" NAME="action" VALUE="update">
-<INPUT TYPE="hidden" NAME="page_options" VALUE="instaDisc_subscription_title,instadisc_blogPost_centralServer_activationKey,instaDisc_blogPost_centralServer,instaDisc_comment_centralServer_activationKey,instaDisc_comment_centralServer">
+<INPUT TYPE="hidden" NAME="page_options" VALUE="instaDisc_subscription_title,instadisc_blogPost_centralServer_activationKey,instaDisc_blogPost_centralServer,instaDisc_comment_centralServer_activationKey,instaDisc_comment_centralServer,instaDisc_blogPost_centralServer_username,instaDisc_blogPost_centralServer_password,instaDisc_comment_centralServer_username,instaDisc_comment_centralServer_passsword">
 <P CLASS="submit"><INPUT TYPE="submit" NAME="Submit" VALUE="<?php _e('Save Changes') ?>"></P>
 </FORM></DIV><?php
+}
+
+add_action('publish_post','sendPost');
+
+include('xmlrpc/xmlrpc.inc');
+
+function sendPost($id)
+{
+	$post = get_post($id);
+	$title = $post->post_title;
+	$author = $post->post_author;
+	$url = $post->guid;
+
+	$verID = rand(1,65536);
+
+	$client = new xmlrpc_client(get_option('instaDisc_blogPost_centralServer'));
+	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval(get_option('instaDisc_blogPost_centralServer_username'), 'string'),
+								new xmlrpcval(md5(get_option('instaDisc_blogPost_centralServer_username') . ':' . md5(get_option('instaDisc_blogPost_centralServer_password')) . ':' . $verID), 'string'),
+								new xmlrpcval($verID, 'int'),
+								new xmlrpcval(get_option('siteurl') . '/', 'string'),
+								new xmlrpcval($title, 'string'),
+								new xmlrpcval($author, 'string'),
+								new xmlrpcval($url, 'string'),
+								new xmlrpcval(array(), 'array')));
+	$client->send($msg);
 }
 
 ?>
