@@ -1,0 +1,91 @@
+<?php
+/*
+Plugin Name: InstaDisc Update Server
+Plugin URI: http://fourisland.com/projects/instadisc/wiki/Update_Wordpress_Plugin
+Description: This plugin provides two InstaDisc feeds for your Wordpress blog, a post subscription and a comment subscription.
+Version: 1.0
+Author: Starla Insigna
+Author URI: http://fourisland.com
+*/
+
+/*  Copyright 2008  Starla Insigna  (email : hatkirby@fourisland.com)
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+add_action('admin_menu', 'am_pages');
+
+function am_pages()
+{
+	add_options_page('InstaDisc Settings', 'InstaDisc', 8, 'instadisc', 'id_settings_page');
+}
+
+function id_settings_page()
+{
+?><DIV CLASS="wrap"><H2>InstaDisc Settings</H2>
+<FORM METHOD="post" ACTION="options.php"><?php
+	wp_nonce_field('update-options');
+?>
+<H3>General</H3>
+<TABLE CLASS="form-table">
+<TR VALIGN="top">
+ <TH SCOPE="row"><LABEL>Subscription Title Prefix</LABEL>
+ <TD>
+  <INPUT TYPE="text" NAME="instaDisc_subscription_title" VALUE="<?php echo(get_option('instaDisc_subscription_title')); ?>" SIZE="40">
+  <BR>Because you have two subscriptions (blog posts and comments), you can specify a prefix to go before both subscriptions' titles. So, if the prefix was "Four Island", the blog post's title would be "Four Island" and the comments' would be "Four Island Comments".
+ </TD>
+</TR>
+</TABLE>
+<H3>Blog Posts Subscription</H3>
+<TABLE CLASS="form-table">
+<TR VALIGN="top">
+ <TH SCOPE="row"><LABEL>Central Server Activation Key</LABEL>
+ <TD>
+  <INPUT TYPE="text" NAME="instaDisc_blogPost_centralServer_activationKey" VALUE="<?php echo(get_option('instaDisc_blogPost_centralServer_activationKey')); ?>" SIZE="40">
+  <BR>When activating your subscription with a Central Server, it will require you to add an "activation key" to your "Subscription File" so as to prove that you actually do own the subscription.
+ </TD>
+</TR>
+<TR VALIGN="top">
+ <TH SCOPE="row"><LABEL>Central Server URL</LABEL>
+ <TD>
+  <INPUT TYPE="text" NAME="instaDisc_blogPost_centralServer" VALUE="<?php echo(get_option('instaDisc_blogPost_centralServer')); ?>" SIZE="40">
+  <BR>Both after registration and after activation, the Central Server you are using should tell you it's XML-RPC URL (usually a URL containing the string "xmlrpc.php"). Copy that URL into this field.
+ </TD>
+</TR>
+</TABLE>
+<H3>Comments Subscription</H3>
+<TABLE CLASS="form-table">
+<TR VALIGN="top">
+ <TH SCOPE="row"><LABEL>Central Server Activation Key</LABEL>
+ <TD>
+  <INPUT TYPE="text" NAME="instaDisc_comment_centralServer_activationKey" VALUE="<?php echo(get_option('instaDisc_comment_centralServer_activationKey')); ?>" SIZE="40">
+  <BR>When activating your subscription with a Central Server, it will require you to add an "activation key" to your "Subscription File" so as to prove that you actually do own the subscription.
+ </TD>
+</TR>
+<TR VALIGN="top">
+ <TH SCOPE="row"><LABEL>Central Server URL</LABEL>
+ <TD>
+  <INPUT TYPE="text" NAME="instaDisc_comment_centralServer" VALUE="<?php echo(get_option('instaDisc_comment_centralServer')); ?>" SIZE="40">
+  <BR>Both after registration and after activation, the Central Server you are using should tell you it's XML-RPC URL (usually a URL containing the string "xmlrpc.php"). Copy that URL into this field.
+ </TD>
+</TR>
+</TABLE>
+<INPUT TYPE="hidden" NAME="action" VALUE="update">
+<INPUT TYPE="hidden" NAME="page_options" VALUE="instaDisc_subscription_title,instadisc_blogPost_centralServer_activationKey,instaDisc_blogPost_centralServer,instaDisc_comment_centralServer_activationKey,instaDisc_comment_centralServer">
+<P CLASS="submit"><INPUT TYPE="submit" NAME="Submit" VALUE="<?php _e('Save Changes') ?>"></P>
+</FORM></DIV><?php
+}
+
+?>
