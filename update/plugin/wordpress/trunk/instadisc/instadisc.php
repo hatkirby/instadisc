@@ -51,6 +51,13 @@ function id_settings_page()
 <H3>Blog Posts Subscription</H3>
 <TABLE CLASS="form-table">
 <TR VALIGN="top">
+ <TH SCOPE="row"><LABEL>Subscription File URL</LABEL>
+ <TD>
+  <INPUT TYPE="text" NAME="instaDisc_blogPost_sfurl" VALUE="<?php echo(get_option('siteurl') . '/wp-content/plugins/instadisc/subscription.php'); ?>" SIZE="40">
+  <BR>This is the URL that you advertise, the URL people use to subscribe to your subscription.
+ </TD>
+</TR>
+<TR VALIGN="top">
  <TH SCOPE="row"><LABEL>Central Server Activation Key</LABEL>
  <TD>
   <INPUT TYPE="text" NAME="instaDisc_blogPost_centralServer_activationKey" VALUE="<?php echo(get_option('instaDisc_blogPost_centralServer_activationKey')); ?>" SIZE="40">
@@ -67,6 +74,13 @@ function id_settings_page()
 </TABLE>
 <H3>Comments Subscription</H3>
 <TABLE CLASS="form-table">
+<TR VALIGN="top">
+ <TH SCOPE="row"><LABEL>Subscription File URL</LABEL>
+ <TD>
+  <INPUT TYPE="text" NAME="instaDisc_comment_sfurl" VALUE="<?php echo(get_option('siteurl') . '/wp-content/plugins/instadisc/subscription.php?comment='); ?>" SIZE="40">
+  <BR>This is the URL that you advertise, the URL people use to subscribe to your subscription.
+ </TD>
+</TR>
 <TR VALIGN="top">
  <TH SCOPE="row"><LABEL>Central Server Activation Key</LABEL>
  <TD>
