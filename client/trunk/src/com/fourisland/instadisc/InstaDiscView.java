@@ -115,6 +115,8 @@ public class InstaDiscView extends FrameView {
 
         XmlRpc xmlrpc = new XmlRpc("requestRetained");
         xmlrpc.execute();
+
+        updateTimer();
     }
 
     @Action
@@ -367,10 +369,35 @@ public class InstaDiscView extends FrameView {
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
     private JDialog aboutBox;
+    private Timer ipCheckTimer;
 
     public void refreshItemPane() {
         Item items[] = Wrapper.getAllItem();
         jList1.setListData(items);
         jList1.repaint();
+    }
+
+    public void updateTimer() {
+        int delay = 0;
+
+        if (ipCheckTimer.isRunning()) {
+            ipCheckTimer.stop();
+        }
+
+        if (Wrapper.getConfig("ipCheckUnit").equals("day")) {
+            delay = 1000 * 60 * 60 * 24 * Integer.decode(Wrapper.getConfig("ipCheckValue"));
+        } else if (Wrapper.getConfig("ipCheckUnit").equals("hour")) {
+            delay = 1000 * 60 * 60 * Integer.decode(Wrapper.getConfig("ipCheckValue"));
+        }
+
+        ipCheckTimer = new Timer(delay, new ActionListener() {
+
+            public void actionPerformed(ActionEvent arg0) {
+                XmlRpc xmlrpc = new XmlRpc("checkRegistration");
+                xmlrpc.execute();
+            }
+        });
+
+        ipCheckTimer.start();
     }
 }
