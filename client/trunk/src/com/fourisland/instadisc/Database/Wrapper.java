@@ -12,6 +12,7 @@ import com.sleepycat.persist.EntityStore;
 import com.sleepycat.persist.PrimaryIndex;
 import com.sleepycat.persist.StoreConfig;
 import java.io.File;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -169,26 +170,16 @@ public class Wrapper {
 
     public static Subscription[] getAllSubscription() {
         synchronized (subscription) {
-            try {
-                Iterator<Subscription> i = subscription.entities().iterator();
-                Subscription[] temp = new Subscription[0];
-                int len = 0;
-
-                while (i.hasNext()) {
-                    Subscription[] temp2 = new Subscription[len + 1];
-                    int j = 0;
-                    for (j = 0; j < len; j++) {
-                        temp2[j] = temp[j];
-                    }
-                    temp2[len] = i.next();
-                    temp = temp2;
-                }
-
-                return temp;
-            } catch (DatabaseException ex) {
-                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
-                return new Subscription[0];
+            Collection vals = subscription.map().values();
+            Subscription subs[] = new Subscription[vals.size()];
+            Iterator<Subscription> i = vals.iterator();
+            int j=0;
+            while (i.hasNext())
+            {
+                subs[j] = i.next();
+                j++;
             }
+            return subs;
         }
     }
 
@@ -240,26 +231,16 @@ public class Wrapper {
 
     public static Filter[] getAllFilter() {
         synchronized (filter) {
-            try {
-                Iterator<Filter> i = filter.entities().iterator();
-                Filter[] temp = new Filter[0];
-                int len = 0;
-
-                while (i.hasNext()) {
-                    Filter[] temp2 = new Filter[len + 1];
-                    int j = 0;
-                    for (j = 0; j < len; j++) {
-                        temp2[j] = temp[j];
-                    }
-                    temp2[len] = i.next();
-                    temp = temp2;
-                }
-
-                return temp;
-            } catch (DatabaseException ex) {
-                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
-                return new Filter[0];
+            Collection vals = filter.map().values();
+            Filter fils[] = new Filter[vals.size()];
+            Iterator<Filter> i = vals.iterator();
+            int j=0;
+            while (i.hasNext())
+            {
+                fils[j] = i.next();
+                j++;
             }
+            return fils;
         }
     }
 }
