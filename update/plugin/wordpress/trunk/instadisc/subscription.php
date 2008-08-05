@@ -11,7 +11,6 @@ if (isset($_GET['comment']))
 
 	echo('Title: ');
 	echo(get_option('instaDisc_subscription_title'));
-	echo(' Comments');
 	echo("\n");
 
 	echo('Category: blog-comment');
