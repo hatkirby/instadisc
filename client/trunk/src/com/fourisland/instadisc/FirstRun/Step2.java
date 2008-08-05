@@ -168,6 +168,8 @@ public class Step2 extends javax.swing.JDialog {
                             Wrapper.setConfig("itemBufferSize", "10");
                             Wrapper.setConfig("verIDBufferSize", "100");
                             Wrapper.setConfig("nextFilterID", "0");
+                            Wrapper.setConfig("ipCheckValue", "1");
+                            Wrapper.setConfig("ipCheckUnit", "day");
                             Wrapper.setConfig("initCheck", "done");
                             
                             StepEndResults.ok = true;
