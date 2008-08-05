@@ -9,6 +9,7 @@ package com.fourisland.instadisc;
 import com.fourisland.instadisc.Database.Subscription;
 import com.fourisland.instadisc.Database.Wrapper;
 import com.fourisland.instadisc.Item.SubscriptionFile;
+import java.util.Arrays;
 import javax.swing.DefaultListModel;
 
 /**
@@ -23,7 +24,6 @@ public class ManageSubscriptionsForm extends javax.swing.JDialog {
         initComponents();
         
         jList1.setCellRenderer(new IDSubscriptionListCellRenderer());
-        jList1.setModel(lm);
         refreshSubscriptionPane();
     }
     
@@ -156,14 +156,12 @@ public class ManageSubscriptionsForm extends javax.swing.JDialog {
     DefaultListModel lm = new DefaultListModel();
     
     public void refreshSubscriptionPane() {
-        lm.clear();
         Subscription[] subscriptions = Wrapper.getAllSubscription();
-        int i = 0;
-        for (i = 0; i < subscriptions.length; i++) {
-            lm.addElement(subscriptions[i]);
-        }
+        System.out.println(Arrays.deepToString(subscriptions));
+        jList1.setListData(subscriptions);
+        jList1.repaint();
         
-        jList1.setEnabled(!lm.isEmpty());
-        jButton1.setEnabled(!lm.isEmpty());
+        jList1.setEnabled((subscriptions.length != 0));
+        jButton1.setEnabled((subscriptions.length != 0));
     }
 }
