@@ -41,10 +41,9 @@ function id_settings_page()
 <H3>General</H3>
 <TABLE CLASS="form-table">
 <TR VALIGN="top">
- <TH SCOPE="row"><LABEL>Subscription Title Prefix</LABEL>
+ <TH SCOPE="row"><LABEL>Subscription Title</LABEL>
  <TD>
   <INPUT TYPE="text" NAME="instaDisc_subscription_title" VALUE="<?php echo(get_option('instaDisc_subscription_title')); ?>" SIZE="40">
-  <BR>Because you have two subscriptions (blog posts and comments), you can specify a prefix to go before both subscriptions' titles. So, if the prefix was "Four Island", the blog post's title would be "Four Island" and the comments' would be "Four Island Comments".
  </TD>
 </TR>
 </TABLE>
@@ -125,7 +124,7 @@ function id_settings_page()
 </TR>
 </TABLE>
 <INPUT TYPE="hidden" NAME="action" VALUE="update">
-<INPUT TYPE="hidden" NAME="page_options" VALUE="instaDisc_subscription_title,instadisc_blogPost_centralServer_activationKey,instaDisc_blogPost_centralServer,instaDisc_comment_centralServer_activationKey,instaDisc_comment_centralServer,instaDisc_blogPost_centralServer_username,instaDisc_blogPost_centralServer_password,instaDisc_comment_centralServer_username,instaDisc_comment_centralServer_passsword">
+<INPUT TYPE="hidden" NAME="page_options" VALUE="instaDisc_subscription_title,instadisc_blogPost_centralServer_activationKey,instaDisc_blogPost_centralServer,instaDisc_comment_centralServer_activationKey,instaDisc_comment_centralServer,instaDisc_blogPost_centralServer_username,instaDisc_blogPost_centralServer_password,instaDisc_comment_centralServer_username,instaDisc_comment_centralServer_password">
 <P CLASS="submit"><INPUT TYPE="submit" NAME="Submit" VALUE="<?php _e('Save Changes') ?>"></P>
 </FORM></DIV><?php
 }
@@ -138,7 +137,8 @@ function sendPost($id)
 {
 	$post = get_post($id);
 	$title = $post->post_title;
-	$author = $post->post_author;
+	$author = get_userdata($post->post_author);
+	$authorName = $author->display_name;
 	$url = get_permalink($id);
 
 	$verID = rand(1,65536);
@@ -149,7 +149,7 @@ function sendPost($id)
 								new xmlrpcval($verID, 'int'),
 								new xmlrpcval(get_option('siteurl') . '/', 'string'),
 								new xmlrpcval($title, 'string'),
-								new xmlrpcval($author, 'string'),
+								new xmlrpcval($authorName, 'string'),
 								new xmlrpcval($url, 'string'),
 								new xmlrpcval(array(), 'array')));
 	$client->send($msg);
