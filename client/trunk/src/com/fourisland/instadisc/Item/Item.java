@@ -19,75 +19,8 @@ import java.util.HashMap;
 public class Item {
 
     HashMap<String, String> headerMap;
-    private Integer id;
-    private String subscription;
-    private String title;
-    private String author;
-    private String url;
-    private HashMap<String, String> semantics;
-
-    public Item() {
-        semantics = new HashMap<String, String>();
-    }
-
-    public Integer getID() {
-        return id;
-    }
-
-    public String getSubscription() {
-        return subscription;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getURL() {
-        return url;
-    }
-
-    public HashMap<String, String> getSemantics() {
-        return semantics;
-    }
-
-    public void setID(Integer id) {
-        this.id = id;
-    }
-
-    public void setSubscription(String subscription) {
-        this.subscription = subscription;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public void setURL(String url) {
-        this.url = url;
-    }
-
-    public void setSemantics(HashMap<String, String> semantics) {
-        this.semantics = semantics;
-    }
-
-    public String getSemantics(String key) {
-        return semantics.get(key);
-    }
-
-    public void putSemantics(String key, String value) {
-        semantics.put(key, value);
-    }
 
     public Item(HashMap<String, String> headerMap) {
-        this();
         this.headerMap = headerMap;
     }
 
@@ -97,12 +30,19 @@ public class Item {
             XmlRpc xmlrpc = new XmlRpc("deleteItem");
             xmlrpc.addParam(Integer.decode(headerMap.get("ID")));
             xmlrpc.execute();
+            
+            if (Wrapper.countItem() >= Integer.decode(Wrapper.getConfig("itemBufferSize"))) {
+                while (Wrapper.countItem() >= Integer.decode(Wrapper.getConfig("itemBufferSize"))) {
+                    Wrapper.dropFromTopItem();
+                }
+            }
 
-            setID(Integer.decode(headerMap.get("ID")));
-            setSubscription(headerMap.get("Subscription"));
-            setTitle(headerMap.get("Title"));
-            setAuthor(headerMap.get("Author"));
-            setURL(headerMap.get("URL"));
+            com.fourisland.instadisc.Database.Item item = new com.fourisland.instadisc.Database.Item();
+            item.setID(Integer.decode(headerMap.get("ID")));
+            item.setSubscription(headerMap.get("Subscription"));
+            item.setTitle(headerMap.get("Title"));
+            item.setAuthor(headerMap.get("Author"));
+            item.setURL(headerMap.get("URL"));
 
             HashMap<String, String> temp = new HashMap<String, String>(headerMap);
             temp.remove("ID");
@@ -112,9 +52,11 @@ public class Item {
             temp.remove("Title");
             temp.remove("Author");
             temp.remove("URL");
-            setSemantics(temp);
+            item.setSemantics(temp);
+            
+            Wrapper.addItem(item);
 
-            ((InstaDiscView) InstaDiscApp.getApplication().getMainView()).addItemPane(this);
+            ((InstaDiscView) InstaDiscApp.getApplication().getMainView()).refreshItemPane();
 
             if (SystemTray.isSupported()) {
                 InstaDiscApp.ti.displayMessage("New item recieved!", Wrapper.getSubscription(headerMap.get("Subscription")).getTitle() + ", " + headerMap.get("Title") + " by " + headerMap.get("Author"), MessageType.INFO);

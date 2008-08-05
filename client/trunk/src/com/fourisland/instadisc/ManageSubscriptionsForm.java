@@ -153,11 +153,8 @@ public class ManageSubscriptionsForm extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
     
-    DefaultListModel lm = new DefaultListModel();
-    
     public void refreshSubscriptionPane() {
         Subscription[] subscriptions = Wrapper.getAllSubscription();
-        System.out.println(Arrays.deepToString(subscriptions));
         jList1.setListData(subscriptions);
         jList1.repaint();
         
