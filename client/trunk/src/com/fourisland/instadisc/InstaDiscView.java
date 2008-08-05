@@ -3,7 +3,7 @@
  */
 package com.fourisland.instadisc;
 
-import com.fourisland.instadisc.Item.Item;
+import com.fourisland.instadisc.Database.Item;
 import com.fourisland.instadisc.Database.Wrapper;
 import com.fourisland.instadisc.Item.Categories.InstaDiscIcon;
 import java.awt.AWTException;
@@ -21,7 +21,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -107,10 +106,8 @@ public class InstaDiscView extends FrameView {
             }
         }
 
-        lm.ensureCapacity(10);
-        lm.clear();
-        jList1.setModel(lm);
         jList1.setCellRenderer(new IDItemListCellRenderer());
+        refreshItemPane();
 
         InstaDiscThread idt = new InstaDiscThread();
         Thread idtt = new Thread(idt);
@@ -370,17 +367,10 @@ public class InstaDiscView extends FrameView {
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
     private JDialog aboutBox;
-    private DefaultListModel lm = new DefaultListModel();
 
-    public void addItemPane(Item item) {
-        if (lm.size() >= Integer.decode(Wrapper.getConfig("itemBufferSize"))) {
-            while (lm.size() >= Integer.decode(Wrapper.getConfig("itemBufferSize"))) {
-                lm.remove(0);
-            }
-        }
-
-        lm.addElement(item);
-        jList1.setModel(lm);
+    public void refreshItemPane() {
+        Item items[] = Wrapper.getAllItem();
+        jList1.setListData(items);
         jList1.repaint();
     }
 }

@@ -14,6 +14,7 @@ import com.sleepycat.persist.StoreConfig;
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,6 +30,7 @@ public class Wrapper {
     public static PrimaryIndex<String, IDConfig> idConfig;
     public static PrimaryIndex<String, Subscription> subscription;
     public static PrimaryIndex<Integer, Filter> filter;
+    public static PrimaryIndex<Integer, Item> item;
 
     public static void init(String loc) {
 
@@ -51,6 +53,7 @@ public class Wrapper {
             idConfig = es.getPrimaryIndex(String.class, IDConfig.class);
             subscription = es.getPrimaryIndex(String.class, Subscription.class);
             filter = es.getPrimaryIndex(Integer.class, Filter.class);
+            item = es.getPrimaryIndex(Integer.class, Item.class);
         } catch (DatabaseException ex) {
             Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -173,9 +176,8 @@ public class Wrapper {
             Collection vals = subscription.map().values();
             Subscription subs[] = new Subscription[vals.size()];
             Iterator<Subscription> i = vals.iterator();
-            int j=0;
-            while (i.hasNext())
-            {
+            int j = 0;
+            while (i.hasNext()) {
                 subs[j] = i.next();
                 j++;
             }
@@ -234,13 +236,53 @@ public class Wrapper {
             Collection vals = filter.map().values();
             Filter fils[] = new Filter[vals.size()];
             Iterator<Filter> i = vals.iterator();
-            int j=0;
-            while (i.hasNext())
-            {
+            int j = 0;
+            while (i.hasNext()) {
                 fils[j] = i.next();
                 j++;
             }
             return fils;
+        }
+    }
+
+    public static Integer countItem() {
+        synchronized (item) {
+            return item.map().size();
+        }
+    }
+
+    public static void dropFromTopItem() {
+        synchronized (item) {
+            try {
+                Iterator<Entry<Integer, Item>> i = item.map().entrySet().iterator();
+                item.delete(i.next().getKey());
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public static Item[] getAllItem() {
+        synchronized (item) {
+            Collection vals = item.map().values();
+            Item items[] = new Item[vals.size()];
+            Iterator<Item> i = vals.iterator();
+            int j = 0;
+            while (i.hasNext()) {
+                items[j] = i.next();
+                j++;
+            }
+            return items;
+        }
+    }
+
+    public static void addItem(Item i) {
+        synchronized (item) {
+            try {
+                item.put(i);
+            } catch (DatabaseException ex) {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 }
