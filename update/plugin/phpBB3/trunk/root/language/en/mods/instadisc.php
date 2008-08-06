@@ -36,6 +36,11 @@ $lang = array_merge($lang, array(
 	'INSTADISC'		=> 'InstaDisc',
 	'INSTADISC_EXPLAIN'	=> 'Welcome to the InstaDisc Update Server admin panel. To set up your subscriptions, you have to do a few things. For more information, see',
 	'INSTADISC_LINK_TEXT'	=> 'the InstaDisc phpBB3 plugin page',
+
+	'SUBSCRIPTION'		=> 'Subscription',
+	'SUBSCRIPTION_TITLE'	=> 'Subscription Title',
+
+	'CENTRAL_SERVER'	=> 'Central Server',
 ));
 			
 ?>

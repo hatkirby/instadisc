@@ -25,19 +25,23 @@ class acp_instadisc
 		// Set up the page
 		$this->tpl_name		= 'acp_instadisc';
 		$this->page_title	= 'ACP_INSTADISC';
-
-		// Set up general vars
-		$greeter	= request_var('hello', '', true);
 		$submit		= isset($_POST['submit']) ? true : false;
-		$hello		= 'Starla';
 
 		if ($submit)
 		{
-			trigger_error(sprintf($user->lang['SAY_HELLO'], $greeter, $hello) . adm_back_link($this->u_action), E_USER_WARNING);
+			// Add config to the database
+			set_config('id_subscription_title', $_POST['subscription_title']);
+			set_config('id_central_server', $_POST['central_server']);
+
+			trigger_error('The changes you made to your InstaDisc settings have been saved!' . adm_back_link($this->u_action), E_USER_NOTICE);
 		} else {
+			$idst	= isset($config['id_subscription_title']) ? $config['id_subscription_title'] : $config['sitename'];
+			$idcs	= isset($config['id_central_server']) ? $config['id_central_server'] : '';
+
 			$template->assign_vars(array(
-				'S_HELLO'	=> $hello,
-				'S_SUBMIT'	=> $this->u_action
+				'S_SUBSCRIPTION_TITLE'	=> $idst,
+				'S_CENTRAL_SERVER'	=> $idcs,
+				'S_SUBMIT'		=> $this->u_action
 			));
 		}
 	}
