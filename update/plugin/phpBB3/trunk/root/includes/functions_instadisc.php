@@ -33,7 +33,7 @@ function sendItem($title, $userID, $url, $fourm)
 	$db->sql_freeresult($getuser2);
 	$author = $getuser3['username'];
 
-	$url = str_replace($phpbb_root_path, generate_board_url() . '/', $url);
+	$url = html_entity_decode(str_replace($phpbb_root_path, generate_board_url() . '/', $url));
 
 	$da = array('forum_id' => $fourm);
 	$getfourm = "SELECT * FROM " . FORUMS_TABLE . " WHERE " . $db->sql_build_array('SELECT', $da);
