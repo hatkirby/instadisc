@@ -378,16 +378,18 @@ public class InstaDiscView extends FrameView {
     }
 
     public void updateTimer() {
-        int delay = 0;
+        int delay = (1000 * 60 * 60);
 
-        if (ipCheckTimer.isRunning()) {
+        try {
             ipCheckTimer.stop();
+        } catch (NullPointerException ex) {
+
         }
 
         if (Wrapper.getConfig("ipCheckUnit").equals("day")) {
-            delay = 1000 * 60 * 60 * 24 * Integer.decode(Wrapper.getConfig("ipCheckValue"));
+            delay *= (24 * Integer.decode(Wrapper.getConfig("ipCheckValue")));
         } else if (Wrapper.getConfig("ipCheckUnit").equals("hour")) {
-            delay = 1000 * 60 * 60 * Integer.decode(Wrapper.getConfig("ipCheckValue"));
+            delay *= Integer.decode(Wrapper.getConfig("ipCheckValue"));
         }
 
         ipCheckTimer = new Timer(delay, new ActionListener() {
