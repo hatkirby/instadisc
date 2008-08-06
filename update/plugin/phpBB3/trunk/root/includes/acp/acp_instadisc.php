@@ -32,15 +32,26 @@ class acp_instadisc
 			// Add config to the database
 			set_config('id_subscription_title', $_POST['subscription_title']);
 			set_config('id_central_server', $_POST['central_server']);
+			set_config('id_username', $_POST['central_server_username']);
+			set_config('id_password', $_POST['central_server_password']);
+			set_config('id_activation_key', $_POST['central_server_activation']);
 
 			trigger_error('The changes you made to your InstaDisc settings have been saved!' . adm_back_link($this->u_action), E_USER_NOTICE);
 		} else {
 			$idst	= isset($config['id_subscription_title']) ? $config['id_subscription_title'] : $config['sitename'];
 			$idcs	= isset($config['id_central_server']) ? $config['id_central_server'] : '';
+			$idun	= isset($config['id_username']) ? $config['id_username'] : '';
+			$idps	= isset($config['id_password']) ? $config['id_password'] : '';
+			$idak	= isset($config['id_activation_key']) ? $config['id_activation_key'] : '';
+			$idsf	= $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/subscription.php';
 
 			$template->assign_vars(array(
 				'S_SUBSCRIPTION_TITLE'	=> $idst,
 				'S_CENTRAL_SERVER'	=> $idcs,
+				'S_USERNAME'		=> $idun,
+				'S_PASSWORD'		=> $idps,
+				'S_ACTIVATION'		=> $idak,
+				'S_SUBSCRIPTION_FILE'	=> $idsf,
 				'S_SUBMIT'		=> $this->u_action
 			));
 		}
