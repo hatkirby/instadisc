@@ -58,7 +58,7 @@ function instaDisc_sendItem($username, $id)
 		$getuser2 = mysql_query($getuser);
 		$getuser3 = mysql_fetch_array($getuser2);
 
-		$fp = fsockopen($getuser3['ip'], 4444, $errno, $errstr);
+		$fp = @fsockopen($getuser3['ip'], 4444, $errno, $errstr);
 		if ($fp)
 		{
 			$verID = rand(1,65536);
@@ -71,7 +71,8 @@ function instaDisc_sendItem($username, $id)
 			$out .= 'Author: ' . $getitem3['author'] . "\r\n";
 			$out .= 'URL: ' . $getitem3['url'] . "\r\n";
 
-			foreach (deserialize($getitem3['semantics']) as $name => $value)
+			$semantics = deserialize($getitem3['semantics']);
+			foreach ($semantics as $name => $value)
 			{
 				$out .= $name . ': ' . $value . "\r\n";
 			}
@@ -80,6 +81,10 @@ function instaDisc_sendItem($username, $id)
 
 			fwrite($fp, $out);
 			fclose($fp);
+
+			return true;
+		} else {
+			return false;
 		}
 	}
 }
