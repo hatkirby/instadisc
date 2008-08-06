@@ -21,10 +21,17 @@ include($phpbb_root_path . 'includes/xmlrpc/xmlrpc.inc');
 /**
 * Send an InstaDisc Item
 */
-function sendItem($title, $author, $url, $fourm)
+function sendItem($title, $userID, $url, $fourm)
 {
 	global $config, $db, $phpbb_root_path;
 	$verID = rand(1,65536);
+
+	$da = array('user_id' => $userID);
+	$getuser = "SELECT * FROM " . USERS_TABLE . " WHERE " . $db->sql_build_array('SELECT', $da);
+	$getuser2 = $db->sql_query($getuser);
+	$getuser3 = $db->sql_fetchrow($getuser2);
+	$db->sql_freeresult($getuser2);
+	$author = $getuser3['username'];
 
 	$url = str_replace($phpbb_root_path, generate_board_url() . '/', $url);
 
@@ -44,7 +51,6 @@ function sendItem($title, $author, $url, $fourm)
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
 								new xmlrpcval(serialize($semantics), 'string')));
-	$client->setDebug(4);
 	$client->send($msg);
 }
 
