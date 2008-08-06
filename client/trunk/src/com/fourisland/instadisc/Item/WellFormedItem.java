@@ -5,6 +5,7 @@
 package com.fourisland.instadisc.Item;
 
 import com.fourisland.instadisc.Database.Filter;
+import com.fourisland.instadisc.Database.Subscription;
 import com.fourisland.instadisc.Database.Wrapper;
 import com.fourisland.instadisc.Item.Categories.Category;
 import com.fourisland.instadisc.XmlRpc;
@@ -162,7 +163,10 @@ public class WellFormedItem {
     private boolean checkForSubscription() {
         boolean good = Wrapper.existsSubscription(aThis.headerMap.get("Subscription"));
         if (!good) {
-            SubscriptionFile.deleteSubscription(Wrapper.getSubscription(aThis.headerMap.get("Subscription")), false);
+            Subscription s = new Subscription();
+            s.setURL(aThis.headerMap.get("Subscription"));
+            
+            SubscriptionFile.deleteSubscription(s, false);
         }
         return good;
     }
