@@ -94,7 +94,7 @@ class HandleItemThread implements Runnable {
                 try {
                     String[] nameVal = headers[i].split(": ");
                     String name = nameVal[0];
-                    String value = nameVal[1].trim();
+                    String value = nameVal[1].trim().replace("__INSTADISC__", ": ");
                     headerMap.put(name, value);
                 } catch (Exception ex) {
                     break;
