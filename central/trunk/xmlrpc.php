@@ -63,7 +63,10 @@ function requestRetained($username, $verification, $verificationID)
 		$i=0;
 		while ($getitems3[$i] = mysql_fetch_array($getitems2))
 		{
-			instaDisc_sendItem($username, $getitems3[$i]['itemID']);
+			if (!instaDisc_sendItem($username, $getitems3[$i]['itemID']))
+			{
+				return new xmlrpcresp(new xmlrpcval(1, "int"));
+			}
 			$i++;
 		}
 
