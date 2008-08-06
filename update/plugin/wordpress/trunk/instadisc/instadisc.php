@@ -156,7 +156,7 @@ function sendPost($id)
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($authorName, 'string'),
 								new xmlrpcval($url, 'string'),
-								new xmlrpcval(array(), 'array')));
+								new xmlrpcval(serialize(array()), 'string')));
 	$client->send($msg);
 }
 
@@ -180,7 +180,7 @@ function sendComment($id)
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
-								new xmlrpcval(array(), 'array')));
+								new xmlrpcval(serialize(array()), 'string')));
 	$client->send($msg);
 }
 
