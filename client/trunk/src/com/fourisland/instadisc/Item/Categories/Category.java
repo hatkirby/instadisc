@@ -31,6 +31,9 @@ public class Category {
         } else if (category.equals("instadisc"))
         {
             return new ImageIcon(InstaDiscIcon.instadiscicon);
+        } else if (category.equals("email"))
+        {
+            return new ImageIcon(Email.email);
         }
         return null;
     }
