@@ -71,7 +71,7 @@ function instaDisc_sendItem($username, $id)
 			$out .= 'Author: ' . $getitem3['author'] . "\r\n";
 			$out .= 'URL: ' . $getitem3['url'] . "\r\n";
 
-			$semantics = deserialize($getitem3['semantics']);
+			$semantics = unserialize($getitem3['semantics']);
 			foreach ($semantics as $name => $value)
 			{
 				$out .= $name . ': ' . $value . "\r\n";
