@@ -43,7 +43,7 @@ class acp_instadisc
 			$idun	= isset($config['id_username']) ? $config['id_username'] : '';
 			$idps	= isset($config['id_password']) ? $config['id_password'] : '';
 			$idak	= isset($config['id_activation_key']) ? $config['id_activation_key'] : '';
-			$idsf	= $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/subscription.php';
+			$idsf	= $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/instadisc.php';
 
 			$template->assign_vars(array(
 				'S_SUBSCRIPTION_TITLE'	=> $idst,
