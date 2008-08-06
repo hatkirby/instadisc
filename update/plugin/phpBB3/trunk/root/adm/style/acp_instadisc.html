@@ -8,12 +8,18 @@
 <A HREF="http://fourisland.com/projects/instadisc/wiki/Update/phpBB3">{L_INSTADISC_LINK_TEXT}</A>
 </P>
 								
-<form id="acp_hello" method="post" action="{U_ACTION}">
+<form id="acp_instadisc" method="post" action="{U_ACTION}">
 	<fieldset>
-		<legend>{L_HELLO} &nbsp;{S_HELLO}</legend>
+		<legend>{L_INSTADISC} &nbsp;{L_SUBSCRIPTION}</legend>
 		<dl>
-			<dt><label for="hello">{L_HELLO_WHO}:</label></dt>
-			<dd><input name="hello" type="text" id="hello" maxlength="255" /></dd>
+			<dt><label for="subscription_title">{L_SUBSCRIPTION_TITLE}:</label></dt>
+			<dd><input name="subscription_title" type="text" id="subscription_title" maxlength="255" VALUE="{S_SUBSCRIPTION_TITLE}" SIZE="40"/></dd>
+		</DL>
+		<DL>
+			<dt><label for="central_server">{L_CENTRAL_SERVER}:</label><BR>
+				<SPAN>This is the Central Server's XML-RPC URL. They should have provided this for you in an email and also on their site. </SPAN>
+				</dt>
+			<dd><input name="central_server" type="text" id="central_server" maxlength="255" VALUE="{S_CENTRAL_SERVER}" SIZE="40"/></dd>
 		</dl>
 											
 	</fieldset>
