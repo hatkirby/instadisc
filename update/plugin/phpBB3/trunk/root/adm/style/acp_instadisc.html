@@ -16,12 +16,39 @@
 			<dd><input name="subscription_title" type="text" id="subscription_title" maxlength="255" VALUE="{S_SUBSCRIPTION_TITLE}" SIZE="40"/></dd>
 		</DL>
 		<DL>
+			<DT>
+				<LABEL FOR="subscription_file">{L_SUBSCRIPTION_FILE}</LABEL>
+				<BR><SPAN>This is the URL of your subscription file</SPAN>
+			</DT>
+			<DD>{S_SUBSCRIPTION_FILE}</DD>
+		</DL>
+		<DL>
 			<dt><label for="central_server">{L_CENTRAL_SERVER}:</label><BR>
 				<SPAN>This is the Central Server's XML-RPC URL. They should have provided this for you in an email and also on their site. </SPAN>
 				</dt>
 			<dd><input name="central_server" type="text" id="central_server" maxlength="255" VALUE="{S_CENTRAL_SERVER}" SIZE="40"/></dd>
 		</dl>
-											
+		<DL>
+			<DT>
+				<LABEL FOR="central_server_username">{L_USERNAME}</LABEL>
+				<BR><SPAN>Enter the username you registered for at your Central Server</SPAN>
+			</DT>
+			<DD><INPUT NAME="central_server_username" TYPE="text" ID="central_server_username" MAXLENGTH="255" VALUE="{S_USERNAME}" SIZE="40"></DD>
+		</DL>
+		<DL>
+			<DT>
+				<LABEL FOR="central_server_password">{L_PASSWORD}</LABEL>
+				<BR><SPAN>Enter the password to go with the username above</SPAN>
+			</DT>
+			<DD><INPUT NAME="central_server_password" TYPE="password" ID="central_server_password" MAXLENGTH="255" VALUE="{S_PASSWORD}" SIZE="40"></DD>
+		</DL>
+		<DL>
+			<DT>
+				<LABEL FOR="central_server_activation">{L_ACTIVATION}</LABEL>
+				<BR><SPAN>After submitting your subscription for sponsership at your Central Server, it should provide you with an Activation Key</SPAN>
+			</DT>
+			<DD><INPUT NAME="central_server_activation" TYPE="text" ID="central_server_activation" MAXLENGTH="255" VALUE="{S_ACTIVATION}" SIZE="40"></DD>
+		</DL>
 	</fieldset>
 	<p class="submit-buttons">
 		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;

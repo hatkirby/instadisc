@@ -39,8 +39,12 @@ $lang = array_merge($lang, array(
 
 	'SUBSCRIPTION'		=> 'Subscription',
 	'SUBSCRIPTION_TITLE'	=> 'Subscription Title',
+	'SUBSCRIPTION_FILE'	=> 'Subscription File URL',
 
 	'CENTRAL_SERVER'	=> 'Central Server',
+	'USERNAME'		=> 'Username',
+	'PASSWORD'		=> 'Password',
+	'ACTIVATION'		=> 'Activation Key',
 ));
 			
 ?>
