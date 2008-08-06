@@ -63,17 +63,20 @@ function instaDisc_sendItem($username, $id)
 		{
 			$verID = rand(1,65536);
 
+			$title = str_replace(': ', '__INSTADISC__', $getitem3['title']);
+
 			$out = 'ID: ' . $id . "\r\n";
 			$out .= 'Verification: ' . md5($username . ':' . $getuser3['password'] . ':' . $verID) . "\r\n";
 			$out .= 'Verification-ID: ' . $verID . "\r\n";
 			$out .= 'Subscription: ' . $getitem3['subscription'] . "\r\n";
-			$out .= 'Title: ' . $getitem3['title'] . "\r\n";
+			$out .= 'Title: ' . $title . "\r\n";
 			$out .= 'Author: ' . $getitem3['author'] . "\r\n";
 			$out .= 'URL: ' . $getitem3['url'] . "\r\n";
 
 			$semantics = unserialize($getitem3['semantics']);
 			foreach ($semantics as $name => $value)
 			{
+				$value = str_replace(': ', '__INSTADISC__', $value);
 				$out .= $name . ': ' . $value . "\r\n";
 			}
 
