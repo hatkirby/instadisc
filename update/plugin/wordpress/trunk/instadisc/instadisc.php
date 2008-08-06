@@ -57,7 +57,7 @@ function id_settings_page()
 <TR VALIGN="top">
  <TH SCOPE="row"><LABEL>Subscription File URL</LABEL>
  <TD>
-  <INPUT TYPE="text" NAME="instaDisc_blogPost_sfurl" VALUE="<?php echo(get_option('siteurl') . '/wp-content/plugins/instadisc/subscription.php'); ?>" SIZE="40">
+  <?php echo(get_option('siteurl') . '/wp-content/plugins/instadisc/subscription.php'); ?>
   <BR>This is the URL that you advertise, the URL people use to subscribe to your subscription.
  </TD>
 </TR>
@@ -95,7 +95,7 @@ function id_settings_page()
 <TR VALIGN="top">
  <TH SCOPE="row"><LABEL>Subscription File URL</LABEL>
  <TD>
-  <INPUT TYPE="text" NAME="instaDisc_comment_sfurl" VALUE="<?php echo(get_option('siteurl') . '/wp-content/plugins/instadisc/subscription.php?comment='); ?>" SIZE="40">
+  <?php echo(get_option('siteurl') . '/wp-content/plugins/instadisc/subscription.php?comment='); ?>
   <BR>This is the URL that you advertise, the URL people use to subscribe to your subscription.
  </TD>
 </TR>
