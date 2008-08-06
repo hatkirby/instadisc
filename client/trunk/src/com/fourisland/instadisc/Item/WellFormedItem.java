@@ -40,22 +40,54 @@ public class WellFormedItem {
         return good;
     }
 
-    private boolean checkForFilterInvalidation() {
+    private boolean checkForEqualFilters() {
         boolean good = true;
-        
+
         Filter[] filters = Wrapper.getAllFilter();
         int i = 0;
         for (i = 0; i < filters.length; i++) {
             if (filters[i].getSubscription().equals(aThis.headerMap.get("Subscription"))) {
-                if (filters[i].getEqual())
-                {
-                    good = (good ? (!aThis.headerMap.get(filters[i].getField()).equals(filters[i].getTest())) : false);
-                } else {
-                    good = (good ? (aThis.headerMap.get(filters[i].getField()).equals(filters[i].getTest())) : false);
+                if (filters[i].getEqual()) {
+                    good = (good ? aThis.headerMap.get(filters[i].getField()).contains(filters[i].getTest()) : false);
                 }
             }
         }
-        
+
+        return good;
+    }
+
+    private boolean checkForFilterInvalidation() {
+        boolean good = true;
+        good = (good ? checkForEqualFilters() : false);
+        good = (good ? checkForInequalFilters() : false);
+
+        if (!good) {
+            XmlRpc xmlrpc = new XmlRpc("deleteItem");
+            xmlrpc.addParam(Integer.decode(aThis.headerMap.get("ID")));
+            xmlrpc.execute();
+        }
+
+        return good;
+    }
+
+    private boolean checkForInequalFilters() {
+        boolean good = true;
+        boolean start = false;
+
+        Filter[] filters = Wrapper.getAllFilter();
+        int i = 0;
+        for (i = 0; i < filters.length; i++) {
+            if (filters[i].getSubscription().equals(aThis.headerMap.get("Subscription"))) {
+                if (!filters[i].getEqual()) {
+                    if (!start) {
+                        good = false;
+                        start = true;
+                    }
+                    good = (good ? true : !aThis.headerMap.get(filters[i].getField()).contains(filters[i].getTest()));
+                }
+            }
+        }
+
         return good;
     }
 
@@ -107,9 +139,8 @@ public class WellFormedItem {
     private boolean checkForRequiredHeader(String string) {
         return checkForRequiredHeader(aThis.headerMap, string);
     }
-    
-    public static boolean checkForRequiredHeader(HashMap<String, String> headerMap, String string)
-    {
+
+    public static boolean checkForRequiredHeader(HashMap<String, String> headerMap, String string) {
         return headerMap.containsKey(string);
     }
 
@@ -117,7 +148,7 @@ public class WellFormedItem {
         try {
             URL url = new URL(aThis.headerMap.get("URL"));
             URI subUrl = new URI(aThis.headerMap.get("Subscription"));
-            
+
             return url.getHost().equals(subUrl.getHost());
         } catch (URISyntaxException ex) {
             Logger.getLogger(WellFormedItem.class.getName()).log(Level.SEVERE, null, ex);
@@ -130,8 +161,7 @@ public class WellFormedItem {
 
     private boolean checkForSubscription() {
         boolean good = Wrapper.existsSubscription(aThis.headerMap.get("Subscription"));
-        if (!good)
-        {
+        if (!good) {
             SubscriptionFile.deleteSubscription(Wrapper.getSubscription(aThis.headerMap.get("Subscription")), false);
         }
         return good;

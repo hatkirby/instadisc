@@ -162,6 +162,7 @@ public class ManageFiltersForm extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
         refreshFilterPane();
+        jList2.setSelectedIndex(0);
     }//GEN-LAST:event_jList1ValueChanged
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -173,9 +174,11 @@ public class ManageFiltersForm extends javax.swing.JDialog {
         try {
             if (filter.getID() == -65536) {
                 jButton1.setText("Add");
+                jButton1.setEnabled(true);
                 jButton2.setEnabled(false);
             } else {
                 jButton1.setText("Edit");
+                jButton1.setEnabled(true);
                 jButton2.setEnabled(true);
             }
         } catch (Exception ex) {
