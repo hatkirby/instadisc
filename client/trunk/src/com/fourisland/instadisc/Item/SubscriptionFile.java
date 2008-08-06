@@ -8,6 +8,7 @@ import com.fourisland.instadisc.Database.Filter;
 import com.fourisland.instadisc.Database.Subscription;
 import com.fourisland.instadisc.Database.Wrapper;
 import com.fourisland.instadisc.XmlRpc;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -31,28 +32,26 @@ public class SubscriptionFile {
             HttpURLConnection urc = (HttpURLConnection) url.openConnection();
             Thread th = new Thread(new SubscriptionFileThread(urc, status));
             th.start();
+        } catch (FileNotFoundException ex) {
+            status.setText("Error: Subscription File doesn't exist");
         } catch (IOException ex) {
             Logger.getLogger(SubscriptionFile.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public static void deleteSubscription(Subscription s, boolean deleteFromData)
-    {
-        if (deleteFromData)
-        {
+
+    public static void deleteSubscription(Subscription s, boolean deleteFromData) {
+        if (deleteFromData) {
             Wrapper.deleteSubscription(s.getURL());
         }
-        
+
         XmlRpc xmlrpc = new XmlRpc("deleteSubscription");
         xmlrpc.addParam(s.getURL());
         xmlrpc.execute();
-        
-        int i=0;
+
+        int i = 0;
         Filter f[] = Wrapper.getAllFilter();
-        for (i=0;i<f.length;i++)
-        {
-            if (f[i].getSubscription().equals(s.getURL()))
-            {
+        for (i = 0; i < f.length; i++) {
+            if (f[i].getSubscription().equals(s.getURL())) {
                 Wrapper.deleteFilter(f[i].getID());
             }
         }
