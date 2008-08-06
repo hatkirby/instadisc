@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.0.xsd">
+	<header>
+		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+
+		<title lang="en">InstaDisc</title>
+
+		<description lang="en">This is an InstaDisc Update Server implementation plugin for phpBB3 which allows you to send out InstaDisc items whenever someone posts</description>
+
+		<author-group>
+			<author>
+				<realname>Starla Insigna</realname>
+				<username>hatkirby</username>
+				<homepage>http://fourisland.com/</homepage>
+			</author>
+		</author-group>
+
+		<mod-version>1.0.0</mod-version>
+
+		<installation>
+			<level>easy</level>
+			<time>300</time>
+			<target-version>3.0.2</target-version>
+		</installation>
+	</header>
+
+	<action-group>
+		<copy>
+			<file from="root/instadisc.php" to="instadisc.php" />
+			<file from="root/adm/style/acp_instadisc.html" to="adm/style/acp_instadisc.html" />
+			<file from="root/includes/functions_instadisc.php" to="includes/functions_instadisc.php" />
+			<file from="root/includes/acp/acp_instadisc.php" to="includes/acp/acp_instadisc.php" />
+			<file from="root/includes/acp/info/acp_instadisc.php" to="includes/acp/info/acp_instadisc.php" />
+			<file from="root/language/en/mods/instadisc.php" to="language/en/mods/instadisc.php" />
+			<file from="root/styles/prosilver/template/instadisc.html" to="styles/prosilver/template/instadisc.html" />
+		</copy>
+
+		<open src="includes/functions_posting.php">
+			<edit>
+				<find><![CDATA[if (!defined('IN_PHPBB'))
+{
+	exit;
+}]]></find>
+
+				<action type="after-add"><![CDATA[
+/* Start: InstaDisc Plugin */
+include($phpbb_root_path . 'includes/functions_instadisc.' . $phpEx);
+/* End: InstaDisc Plugin */]]></action>
+			</edit>
+
+			<edit>
+				<find>return $url;</find>
+
+				<action type="before-add"><![CDATA[/* Start: InstaDisc Plugin */
+if (($post_mode == 'post') || ($post_mode == 'reply'))
+{
+	sendItem($subject, (int) $user->data['user_id'], $url, $data['forum_id']);
+}
+/* End: InstaDisc Plugin */
+
+]]></action>
+			</edit>
+		</open>
+
+		<diy-instructions lang="en">Go to http://fourisland.com/projects/instadisc/wiki/Update/phpBB3 for help on setting up your subscriptions.</diy-instructions>
+	</action-group>
+</mod>
