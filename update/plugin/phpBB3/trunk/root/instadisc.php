@@ -28,8 +28,9 @@ $template->set_filenames(array(
 );
 
 $template->assign_vars(array(
-	'S_SUBSCRIPTION'	=> ($config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/'),
+	'S_SUBSCRIPTION'	=> (generate_board_url() . '/'),
 	'S_TITLE'		=> $config['id_subscription_title'],
+	'S_KEY'			=> $config['id_activation_key'],
 ));
 
 page_footer();
