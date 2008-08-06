@@ -70,6 +70,12 @@ function instaDisc_sendItem($username, $id)
 			$out .= 'Title: ' . $getitem3['title'] . "\r\n";
 			$out .= 'Author: ' . $getitem3['author'] . "\r\n";
 			$out .= 'URL: ' . $getitem3['url'] . "\r\n";
+
+			foreach (deserialize($getitem3['semantics']) as $name => $value)
+			{
+				$out .= $name . ': ' . $value . "\r\n";
+			}
+
 			$out .= "\r\n\r\n";
 
 			fwrite($fp, $out);
@@ -128,7 +134,7 @@ function instaDisc_addItem($username, $subscription, $title, $author, $url, $sem
 		$setuser = "UPDATE users SET nextItemID = nextItemID+1 WHERE username = \"" . mysql_real_escape_string($username) . "\"";
 		$setuser2 = mysql_query($setuser);
 
-		$insitem = "INSERT INTO inbox (username, itemID, subscription, title, author, url, semantics) VALUES (\"" . mysql_real_escape_string($username) . "\", " . $itemID . ", \"" . mysql_real_escape_string($subscription) . "\", \"" . mysql_real_escape_string($title) . "\", \"" . mysql_real_escape_string($author) . "\", \"" . mysql_real_escape_string($url) . "\", \"" . mysql_real_escape_string(serialize($semantics)) . "\")";
+		$insitem = "INSERT INTO inbox (username, itemID, subscription, title, author, url, semantics) VALUES (\"" . mysql_real_escape_string($username) . "\", " . $itemID . ", \"" . mysql_real_escape_string($subscription) . "\", \"" . mysql_real_escape_string($title) . "\", \"" . mysql_real_escape_string($author) . "\", \"" . mysql_real_escape_string($url) . "\", \"" . mysql_real_escape_string($semantics) . "\")";
 		$insitem2 = mysql_query($insitem);
 
 		instaDisc_sendItem($username, $itemID);
