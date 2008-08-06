@@ -22,7 +22,7 @@ function instaDisc_sendItem($title, $author, $url, $semantics)
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
-								new xmlrpcval($semantics, 'array')));
+								new xmlrpcval(serialize($semantics), 'string')));
 	$client->send($msg);
 }
 
