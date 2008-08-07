@@ -8,6 +8,8 @@ $idusUsername = ''; // Set this to the username you've registered
 $idusPassword = ''; // Set this to the password you've registered
 $idusCentralServer = ''; // Set this to the Central Server you've signed up with
 $idusSubscriptionURI = ''; // Set this to your unique URI
+$idusSubscriptionTitle = ''; // Set this to your Subscription's title
+$idusSubscriptionCategory = ''; // Set this to the category your subscription uses
 $idusEncryptionPassword = ''; // If creating a password-protected subscription, enter your password here
 
 function instaDisc_sendItem($title, $author, $url, $semantics)
