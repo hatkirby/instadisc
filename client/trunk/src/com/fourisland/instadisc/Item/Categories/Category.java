@@ -34,6 +34,9 @@ public class Category {
         } else if (category.equals("email"))
         {
             return new ImageIcon(Email.email);
+        } else if (category.equals("vcs-rev"))
+        {
+            return new ImageIcon(Vcsrev.vcsrev);
         }
         return null;
     }
@@ -62,4 +65,10 @@ public class Category {
         }
     }
     
+    public static boolean checkForLegalCategory(HashMap<String, String> headerMap)
+    {
+        String category = Wrapper.getSubscription(headerMap.get("Subscription")).getCategory();
+        Icon i = iconFromCategory(category);
+        return (i != null);
+    }
 }
