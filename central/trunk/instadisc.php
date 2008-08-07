@@ -127,7 +127,8 @@ function instaDisc_sendDatabase($cserver)
 	$msg = new xmlrpcmsg("InstaDisc.sendDatabase", array(	new xmlrpcval($cserver2, 'string'),
 								new xmlrpcval(md5($cserver2 . ":" . $getuk3['code'] . ":" . $verID), 'string'),
 								new xmlrpcval($verID, 'int'),
-								new xmlrpcval($db, 'array')));
+								new xmlrpcval(serialize($db), 'string'),
+								new xmlrpcval(instaDisc_getConfig('databaseVersion'), 'string')));
 	$client->send($msg);
 }
 
