@@ -33,7 +33,7 @@ public class WellFormedItem {
         boolean good = true;
         good = (good ? checkForRequiredHeaders() : false);
         good = (good ? checkForSubscription() : false);
-        good = (good ? checkForLegalCategory() : false);
+        good = (good ? Category.checkForLegalCategory(aThis.headerMap) : false);
         good = (good ? Category.checkForRequiredSemantics(aThis.headerMap) : false);
         good = (good ? checkForProperVerification() : false);
         good = (good ? checkForFilterInvalidation() : false);
@@ -89,16 +89,6 @@ public class WellFormedItem {
             }
         }
 
-        return good;
-    }
-
-    private boolean checkForLegalCategory() {
-        boolean good = false;
-        good = checkForLegalCategory("blog-post", good);
-        good = checkForLegalCategory("blog-comment", good);
-        good = checkForLegalCategory("forum-post", good);
-        good = checkForLegalCategory("instadisc", good);
-        good = checkForLegalCategory("email", good);
         return good;
     }
 
