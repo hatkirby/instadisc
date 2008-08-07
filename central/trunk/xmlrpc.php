@@ -231,19 +231,26 @@ function addSubscription($username, $verification, $verificationID, $subscriptio
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
-		$inssub = "INSERT INTO subscriptions (url, username, owner) VALUES (\"" . mysql_real_escape_string($subscription) . "\", \"" . mysql_real_escape_string($username) . "\", \"false\")";
-		$inssub2 = mysql_query($inssub);
+		$getsub = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\" AND username = \"" . mysql_real_escape_string($username) . "\" AND owner = \"false\"";
+		$getsub2 = mysql_query($getsub);
+		$getsub3 = mysql_fetch_array($getsub2);
+		if ($getsub3['url'] == $subscription)	
+		{
+			$inssub = "INSERT INTO subscriptions (url, username, owner) VALUES (\"" . mysql_real_escape_string($subscription) . "\", \"" . mysql_real_escape_string($username) . "\", \"false\")";
+			$inssub2 = mysql_query($inssub);
 
-		return new xmlrpcresp(new xmlrpcval(0, "int"));
+			return new xmlrpcresp(new xmlrpcval(0, "int"));
+		}
 	}
 
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
-function sendDatabase($cserver, $verification, $verificationID, $db)
+function sendDatabase($cserver, $verification, $verificationID, $db, $databaseVersion)
 {
 	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'code'))
 	{
+		$db = unserialize($db);
 		if (isset($db['central.fourisland.com']))
 		{
 			$getfi = "SELECT * FROM centralServers WHERE url = \"central.fourisland.com\"";
@@ -260,6 +267,9 @@ function sendDatabase($cserver, $verification, $verificationID, $db)
 					$insdb = "INSERT INTO centralServers (url, code, xmlrpc) VALUES (\"" . mysql_real_escape_string($name) . "\", \"" . mysql_real_escape_string($value['code']) . "\", \"" . mysql_real_escape_string($value['xmlrpc']) . "\")";
 					$insdb2 = mysql_query($insdb);
 				}
+
+				$setconfig = "UPDATE config SET value = " . $databaseVersion . " WHERE name = \"databaseVersion\"";
+				$setconfig2 = mysql_query($setconfig);
 
 				return new xmlrpcresp(new xmlrpcval("0", 'int'));
 			}
