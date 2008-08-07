@@ -163,7 +163,7 @@ function instaDisc_phpMailer()
 		$mail->Username = instaDisc_getConfig('smtpUser');
 		$mail->Password = instaDisc_getConfig('smtpPass');
 	}
-	$mail->Helo = $_SERVER['HTTP_HOST'];
+	$mail->Helo = $_SERVER['SERVER_NAME'];
 	$mail->ClearAddresses();
 
 	return $mail;
@@ -181,7 +181,8 @@ function instaDisc_sendActivationEmail($username, $password, $email)
 	$mail->Subject = 'InstaDisc Account Verification';
 	$mail->Body = "Hello, someone has recently registered an account at " . $_SERVER['HTTP_HOST'] . " with your email address. If that was you, and your chosen username IS " . $username . ", then copy the account verification code below to our Account Verification page, enter your username and press Activate!\r\n\r\n" . $penKey . "\r\n\r\nIf that was not you, copy the above code to our Account Verification page, enter the above username, and click Delete.";
 
-	return $mail->Send();
+	$mail->Send();
+	return ($mail->IsError() ? $mail->ErrorInfo : true); //$mail->Send();
 }
 
 function instaDisc_activateAccount($username, $penKey)
