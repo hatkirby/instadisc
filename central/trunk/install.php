@@ -88,11 +88,6 @@ if (!isset($_GET['submit']))
 			break;
 
 		case 2:
-			if ($_POST['mailDomain'] == '')
-			{
-				addError($numOfErrors, $errors, 'mailDomain', 'Mail Domain is a required field');
-			}
-
 			if ($_POST['smtpHost'] == '')
 			{
 				addError($numOfErrors, $errors, 'smtpHost', 'SMTP Host is a required field');
@@ -111,75 +106,71 @@ if (!isset($_GET['submit']))
 				}
 			}
 
-			if ($_POST['siteName'] == '')
-			{
-				addError($numOfErrors, $errors, 'siteName', 'Site Name is a required field');
-			}
-
-			if ($_POST['xmlrpcURL'] == '')
-			{
-				addError($numOfErrors, $errors, 'xmlrpcURL', 'XML-RPC URL is a required field');
-			} else {
-				include_once('xmlrpc/xmlrpc.inc');
-
-				$client = new xmlrpc_client($_POST['xmlrpcURL']);
-				$msg = new xmlrpcmsg('system.listMethods');
-				$r = $client->send($msg);
-				if (stripos($r->faultString(),'Connect error') !== FALSE)
-				{
-					addError($numOfErrors, $errors, 'xmlrpcURL', $r->faultString());
-				}
-			}
-
-			if ($_POST['adminUser'] == '')
-			{
-				addError($numOfErrors, $errors, 'adminUser', 'Admin Username is a required field');
-			}
-
-			if ($_POST['adminPass'] == '')
-			{
-				addError($numOfErrors, $errors, 'adminPass', 'Admin Password is a required field');
-			}
-
-			if ($_POST['adminEmail'] == '')
-			{
-				addError($numOfErrors, $errors, 'adminEmail', 'Admin Email is a required field');
-			}
-
 			if ($numOfErrors > 0)
 			{
 				showHeader('2');
 				showStepTwo($_POST['mailDomain'], $_POST['smtpHost'], ($_POST['smtpAuth'] == 'on' ? ' CHECKED' : ''), $_POST['smtpUser'], $_POST['smtpPass'], $_POST['siteName'], $_POST['xmlrpcURL'], $_POST['adminUser'], $_POST['adminPass'], $_POST['adminEmail'], $errors);
 			} else {
-				include_once('config.php');
-
-				mysql_connect($dbhost, $dbuser, $dbpass);
-				mysql_select_db($dbname);
-
-				$sql[0] = "INSERT INTO config (name,value) VALUES (\"mailDomain\",\"" . mysql_real_escape_string($_POST['mailDomain']) . "\")";
-				$sql[1] = "INSERT INTO config (name,value) VALUES (\"smtpHost\",\"" . mysql_real_escape_string($_POST['smtpHost']) . "\")";
-				$sql[2] = "INSERT INTO config (name,value) VALUES (\"smtpAuth\",\"" . mysql_real_escape_string(($_POST['smtpAuth'] == 'on' ? 'true' : 'false')) . "\")";
-				$sql[3] = "INSERT INTO config (name,value) VALUES (\"smtpUser\",\"" . mysql_real_escape_string($_POST['smtpUser']) . "\")";
-				$sql[4] = "INSERT INTO config (name,value) VALUES (\"smtpPass\",\"" . mysql_real_escape_string($_POST['smtpPass']) . "\")";
-				$sql[5] = "INSERT INTO config (name,value) VALUES (\"siteName\",\"" . mysql_real_escape_string($_POST['siteName']) . "\")";
-				$sql[6] = "INSERT INTO config (name,value) VALUES (\"xmlrpcURL\",\"" . mysql_real_escape_string($_POST['xmlrpcURL']) . "\")";
-				$sql[7] = "INSERT INTO config (name,value) VALUES (\"owner\",\"" . mysql_real_escape_string($_POST['adminUser']) . "\")";
-				$sql[8] = "INSERT INTO config (name,value) VALUES (\"verIDBufferSize\",\"100\")";
-				$sql[9] = "INSERT INTO config (name,value) VALUES (\"softwareVersion\",\"" . $softwareVersion . "\")";
-				$sql[10] = "INSERT INTO config (name,value) VALUES (\"databaseVersion\",\"1\")";
-				$sql[11] = "INSERT INTO users (username, password, email, ip) VALUES (\"" . mysql_real_escape_string($_POST['adminUser']) . "\",\"" . mysql_real_escape_string(md5($_POST['adminPass'])) . "\",\"" . mysql_real_escape_string($_POST['adminEmail']) . "\",\"" . mysql_real_escape_string($_SERVER['REMOTE_ADDR']) . "\")";
-				$sql[12] = "INSERT INTO centralServers (url, code, xmlrpc) VALUES (\"" . mysql_real_escape_string('central.fourisland.com') . "\",\"" . mysql_real_escape_string(md5('central.fourisland.com')) . "\",\"" . mysql_real_escape_string('http://central.fourisland.com/xmlrpc.php') . "\")";
-
-				foreach ($sql as $name => $value)
+			        $mail = new PHPMailer();
+			        $mail->IsSMTP();
+			        $mail->From = 'instadisc@' . $_POST['mailDomain'];
+			        $mail->FromName = 'InstaDisc';
+			        $mail->Host = $_POST['smtpHost'];
+			        if ($_POST['smtpAuth'] == 'on')
+			        {
+			                $mail->SMTPAuth = true;
+			                $mail->Username = $_POST['smtpUser'];
+			                $mail->Password = $_POST['smtpPass'];
+			        }
+			        $mail->Helo = $_SERVER['HTTP_HOST'];
+			        $mail->ClearAddresses();
+				$mail->AddAddress("test@fourisland.com");
+				$mail->Subject = 'Test Email';
+				$mail->Body = 'Please discard this email.';
+				$mail->Send();
+				if ($mail->IsError())
 				{
-					if (!trim($value) == '')
+					addError($numOfErrors, $errors, '', $mail->ErrorInfo);
+				}
+
+				if ($_POST['mailDomain'] == '')
+				{
+					addError($numOfErrors, $errors, 'mailDomain', 'Mail Domain is a required field');
+				}
+
+				if ($_POST['siteName'] == '')
+				{
+					addError($numOfErrors, $errors, 'siteName', 'Site Name is a required field');
+				}
+
+				if ($_POST['xmlrpcURL'] == '')
+				{
+					addError($numOfErrors, $errors, 'xmlrpcURL', 'XML-RPC URL is a required field');
+				} else {
+					include_once('xmlrpc/xmlrpc.inc');
+
+					$client = new xmlrpc_client($_POST['xmlrpcURL']);
+					$msg = new xmlrpcmsg('system.listMethods');
+					$r = $client->send($msg);
+					if (stripos($r->faultString(),'Connect error') !== FALSE)
 					{
-						$sql2 = @mysql_query($value);
-						if (!$sql2)
-						{
-							addError($numOfErrors, $errors, '', "MySQL error \"" . mysql_error() . "\" while filling database");
-						}
+						addError($numOfErrors, $errors, 'xmlrpcURL', $r->faultString());
 					}
+				}
+
+				if ($_POST['adminUser'] == '')
+				{
+					addError($numOfErrors, $errors, 'adminUser', 'Admin Username is a required field');
+				}
+
+				if ($_POST['adminPass'] == '')
+				{
+					addError($numOfErrors, $errors, 'adminPass', 'Admin Password is a required field');
+				}
+
+				if ($_POST['adminEmail'] == '')
+				{
+					addError($numOfErrors, $errors, 'adminEmail', 'Admin Email is a required field');
 				}
 
 				if ($numOfErrors > 0)
@@ -187,8 +178,45 @@ if (!isset($_GET['submit']))
 					showHeader('2');
 					showStepTwo($_POST['mailDomain'], $_POST['smtpHost'], ($_POST['smtpAuth'] == 'on' ? ' CHECKED' : ''), $_POST['smtpUser'], $_POST['smtpPass'], $_POST['siteName'], $_POST['xmlrpcURL'], $_POST['adminUser'], $_POST['adminPass'], $_POST['adminEmail'], $errors);
 				} else {
-					showHeader('3');
-					showStepThree();
+					include_once('config.php');
+
+					mysql_connect($dbhost, $dbuser, $dbpass);
+					mysql_select_db($dbname);
+
+					$sql[0] = "INSERT INTO config (name,value) VALUES (\"mailDomain\",\"" . mysql_real_escape_string($_POST['mailDomain']) . "\")";
+					$sql[1] = "INSERT INTO config (name,value) VALUES (\"smtpHost\",\"" . mysql_real_escape_string($_POST['smtpHost']) . "\")";
+					$sql[2] = "INSERT INTO config (name,value) VALUES (\"smtpAuth\",\"" . mysql_real_escape_string(($_POST['smtpAuth'] == 'on' ? 'true' : 'false')) . "\")";
+					$sql[3] = "INSERT INTO config (name,value) VALUES (\"smtpUser\",\"" . mysql_real_escape_string($_POST['smtpUser']) . "\")";
+					$sql[4] = "INSERT INTO config (name,value) VALUES (\"smtpPass\",\"" . mysql_real_escape_string($_POST['smtpPass']) . "\")";
+					$sql[5] = "INSERT INTO config (name,value) VALUES (\"siteName\",\"" . mysql_real_escape_string($_POST['siteName']) . "\")";
+					$sql[6] = "INSERT INTO config (name,value) VALUES (\"xmlrpcURL\",\"" . mysql_real_escape_string($_POST['xmlrpcURL']) . "\")";
+					$sql[7] = "INSERT INTO config (name,value) VALUES (\"owner\",\"" . mysql_real_escape_string($_POST['adminUser']) . "\")";
+					$sql[8] = "INSERT INTO config (name,value) VALUES (\"verIDBufferSize\",\"100\")";
+					$sql[9] = "INSERT INTO config (name,value) VALUES (\"softwareVersion\",\"" . $softwareVersion . "\")";
+					$sql[10] = "INSERT INTO config (name,value) VALUES (\"databaseVersion\",\"1\")";
+					$sql[11] = "INSERT INTO users (username, password, email, ip) VALUES (\"" . mysql_real_escape_string($_POST['adminUser']) . "\",\"" . mysql_real_escape_string(md5($_POST['adminPass'])) . "\",\"" . mysql_real_escape_string($_POST['adminEmail']) . "\",\"" . mysql_real_escape_string($_SERVER['REMOTE_ADDR']) . "\")";
+					$sql[12] = "INSERT INTO centralServers (url, code, xmlrpc) VALUES (\"" . mysql_real_escape_string('central.fourisland.com') . "\",\"" . mysql_real_escape_string(md5('central.fourisland.com')) . "\",\"" . mysql_real_escape_string('http://central.fourisland.com/xmlrpc.php') . "\")";
+
+					foreach ($sql as $name => $value)
+					{
+						if (!trim($value) == '')
+						{
+							$sql2 = @mysql_query($value);
+							if (!$sql2)
+							{
+								addError($numOfErrors, $errors, '', "MySQL error \"" . mysql_error() . "\" while filling database");
+							}
+						}
+					}
+
+					if ($numOfErrors > 0)
+					{
+						showHeader('2');
+						showStepTwo($_POST['mailDomain'], $_POST['smtpHost'], ($_POST['smtpAuth'] == 'on' ? ' CHECKED' : ''), $_POST['smtpUser'], $_POST['smtpPass'], $_POST['siteName'], $_POST['xmlrpcURL'], $_POST['adminUser'], $_POST['adminPass'], $_POST['adminEmail'], $errors);
+					} else {
+						showHeader('3');
+						showStepThree();
+					}
 				}
 			}
 

@@ -180,9 +180,9 @@ function instaDisc_sendActivationEmail($username, $password, $email)
 	$mail->AddAddress($email, $username);
 	$mail->Subject = 'InstaDisc Account Verification';
 	$mail->Body = "Hello, someone has recently registered an account at " . $_SERVER['HTTP_HOST'] . " with your email address. If that was you, and your chosen username IS " . $username . ", then copy the account verification code below to our Account Verification page, enter your username and press Activate!\r\n\r\n" . $penKey . "\r\n\r\nIf that was not you, copy the above code to our Account Verification page, enter the above username, and click Delete.";
-
 	$mail->Send();
-	return ($mail->IsError() ? $mail->ErrorInfo : true); //$mail->Send();
+
+	return ($mail->IsError() ? $mail->ErrorInfo : true);
 }
 
 function instaDisc_activateAccount($username, $penKey)
@@ -202,8 +202,9 @@ function instaDisc_activateAccount($username, $penKey)
 		$mail->AddAddress($getuser3['email'], $username);
 		$mail->Subject = 'Welcome to InstaDisc!';
 		$mail->Body = "Welcome to InstaDisc! Thank you for registering at " . instaDisc_getConfig('siteName') . " Central Server, we hope you enjoy our service! Now, when you download an InstaDisc Client, it will ask you for the following information which you will need to enter into it for it to work:\r\n\r\nUsername: " . $username . "\r\nPassword: (you should know this, it's not displayed here for security reasons)\r\nCentral Server URL: " . instaDisc_getConfig("xmlrpcURL") . "\r\n\r\nOnce again, thank you for choosing " . instaDisc_getConfig("siteName") . "!";
+		$mail->Send();
 
-		return $mail->Send();
+		return ($mail->IsError() ? $mail->ErrorInfo : true);
 	} else {
 		return false;
 	}
