@@ -13,12 +13,4 @@ if ($idusActivationKey != '')
 	echo('Key: ' . $idusActivationKey . "\n");
 }
 
-if ($idusEncryptionPassword != '')
-{
-	$verID = rand(1,65536);
-
-	echo('Verification: ' . md5(':' . md5($idusEncryptionPassword) . ':' . $verID) . "\n");
-	echo('Verification-ID: ' . $verID . "\n");
-}
-
 ?>
