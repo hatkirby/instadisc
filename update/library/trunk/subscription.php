@@ -4,13 +4,15 @@
 
 include('instadisc.php'); // Make sure that if you move me away from instadisc.php that you update this include!
 
-echo('Subscription: ' . $idusSubscriptionURI . "\n");
-echo('Title: ' . $idusSubscriptionTitle . "\n");
-echo('Category: ' . $idusSubscriptionCategory . "\n");
+$id = (isset($_GET['id']) ? $_GET['id'] : 0);
 
-if ($idusActivationKey != '')
+echo('Subscription: ' . $idusSubscriptionURI[$id] . "\n");
+echo('Title: ' . $idusSubscriptionTitle[$id] . "\n");
+echo('Category: ' . $idusSubscriptionCategory[$id] . "\n");
+
+if ($idusActivationKey[$id] != '')
 {
-	echo('Key: ' . $idusActivationKey . "\n");
+	echo('Key: ' . $idusActivationKey[$id] . "\n");
 }
 
 ?>
