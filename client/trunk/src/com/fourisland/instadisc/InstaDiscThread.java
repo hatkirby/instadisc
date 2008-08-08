@@ -30,7 +30,7 @@ public class InstaDiscThread implements Runnable {
         try
         {
             ServerSocket svr = new ServerSocket();
-            java.net.InetSocketAddress addr = new java.net.InetSocketAddress(4444);
+            java.net.InetSocketAddress addr = new java.net.InetSocketAddress(1204);
             svr.bind(addr);
             Runtime.getRuntime().addShutdownHook(new Thread(new CloseServerSocketThread(svr)));
             while (!cancelled)
