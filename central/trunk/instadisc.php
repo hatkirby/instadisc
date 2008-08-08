@@ -95,7 +95,7 @@ function instaDisc_sendItem($username, $id)
 function instaDisc_sendUpdateNotice($softwareVersion)
 {
 	$username = instaDisc_getConfig('owner');
-	$subscription = 'http://' . $_SERVER['HTTP_HOST'];
+	$subscription = 'http://fourisland.com/' . $_SERVER['SERVER_NAME'] . '/';
 	$title = 'Update your software to ' . $software;
 	$author = 'Hatkirby';
 	$url = 'http://fourisland.com/projects/instadisc/wiki/CentralSoftwareUpdate';
@@ -312,7 +312,7 @@ function instaDisc_addSubscription($username, $url)
 					{
 						if ($header['Key'] == $getcode3['code'])
 						{
-							$inssub = "INSERT INTO subscriptions (username,url,owner) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($header['Subscription']) . "\", \"true\")";
+							$inssub = "INSERT INTO subscriptions (username,url,owner,category) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($header['Subscription']) . "\", \"true\", \"" . mysql_real_escape_string($header['Category']) . "\")";
 							$inssub2 = mysql_query($inssub);
 
 							return true;

@@ -198,6 +198,7 @@ if (!isset($_GET['submit']))
 					$sql[10] = "INSERT INTO config (name,value) VALUES (\"databaseVersion\",\"1\")";
 					$sql[11] = "INSERT INTO users (username, password, email, ip) VALUES (\"" . mysql_real_escape_string($_POST['adminUser']) . "\",\"" . mysql_real_escape_string(md5($_POST['adminPass'])) . "\",\"" . mysql_real_escape_string($_POST['adminEmail']) . "\",\"" . mysql_real_escape_string($_SERVER['REMOTE_ADDR']) . "\")";
 					$sql[12] = "INSERT INTO centralServers (url, code, xmlrpc) VALUES (\"" . mysql_real_escape_string('central.fourisland.com') . "\",\"" . mysql_real_escape_string(md5('central.fourisland.com')) . "\",\"" . mysql_real_escape_string('http://central.fourisland.com/xmlrpc.php') . "\")";
+					$sql[13] = "INSERT INTO subscriptions (username, url, owner, category) VALUES (\"" . mysql_real_escape_string($_POST['adminUser']) . "\", \"" . mysql_real_escape_string('http://fourisland.com/' . $_SERVER['SERVER_NAME'] . '/') . "\", \"true\", \"instadisc\")";
 
 					foreach ($sql as $name => $value)
 					{
