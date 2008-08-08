@@ -121,6 +121,7 @@ class SubscriptionFileThread implements Runnable {
 
                         XmlRpc xmlrpc = new XmlRpc("addSubscription");
                         xmlrpc.addParam(headerMap.get("Subscription"));
+                        xmlrpc.addParam(headerMap.get("Category"));
                         xmlrpc.execute();
 
                         status.setText("You've sucessfully subscribed to that website");
