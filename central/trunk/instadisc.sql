@@ -108,6 +108,7 @@ CREATE TABLE IF NOT EXISTS `subscriptions` (
   `username` varchar(255) NOT NULL,
   `url` varchar(255) NOT NULL,
   `owner` varchar(5) NOT NULL,
+  `category` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 

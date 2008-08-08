@@ -80,7 +80,7 @@ function sendFromUpdate($username, $verification, $verificationID, $subscription
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
-		$getusubs = "SELECT * FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($subscription) . "\" AND owner = \"true\"";
+		$getusubs = "SELECT * FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($subscription) . "\" AND owner = \"true\" AND category <> \"instadisc\"";
 		$getusubs2 = mysql_query($getusubs);
 		$getusubs3 = mysql_fetch_array($getusubs2);
 		if ($getusubs3['username'] == $username)
@@ -163,7 +163,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 			instaDisc_sendDatabase($cserver);
 		}
 
-		$getsed = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\" AND owner = \"false\"";
+		$getsed = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\" AND owner = \"false\" AND category <> \"instadisc\"";
 		$getsed2 = mysql_query($getsed);
 		$i=0;
 		while ($getsed3[$i] = mysql_fetch_array($getsed2))
@@ -227,7 +227,7 @@ function deleteSubscription($username, $verification, $verificationID, $subscrip
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
-function addSubscription($username, $verification, $verificationID, $subscription)
+function addSubscription($username, $verification, $verificationID, $subscription, $category)
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
@@ -236,7 +236,7 @@ function addSubscription($username, $verification, $verificationID, $subscriptio
 		$getsub3 = mysql_fetch_array($getsub2);
 		if ($getsub3['url'] == $subscription)	
 		{
-			$inssub = "INSERT INTO subscriptions (url, username, owner) VALUES (\"" . mysql_real_escape_string($subscription) . "\", \"" . mysql_real_escape_string($username) . "\", \"false\")";
+			$inssub = "INSERT INTO subscriptions (url, username, owner, category) VALUES (\"" . mysql_real_escape_string($subscription) . "\", \"" . mysql_real_escape_string($username) . "\", \"false\", \"" . mysql_real_escape_string($category) . "\")";
 			$inssub2 = mysql_query($inssub);
 
 			return new xmlrpcresp(new xmlrpcval(0, "int"));
