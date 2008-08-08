@@ -348,11 +348,7 @@ function showStepTwo($mailDomain, $smtpHost, $smtpAuth, $smtpUser, $smtpPass, $s
 
 function showStepThree()
 {
-?>Congradulations! You've successfully set up your InstaDisc Central Server's database! Now, the next step for you is to 
-implement the functions in instadisc.php into your web application. See <A 
-HREF="http://fourisland.com/projects/instadisc/wiki/BecomingACentralServer">Becoming A Central Server</A>. Also, it would 
-be smart to subscribe to your InstaDisc Update Notice Subscription, which will notify you if your Central Server's software gets 
-out of date. Here's the URL: http://fourisland.com/<?php echo($_SERVER['SERVER_NAME'] . '/');
+?>Congradulations! You've successfully set up your InstaDisc Central Server's database! Now, the next step for you is to implement the functions in instadisc.php into your web application. See <A HREF="http://fourisland.com/projects/instadisc/wiki/BecomingACentralServer">Becoming A Central Server</A>. Also, it would be smart to subscribe to your InstaDisc Update Notice Subscription, which will notify you if your Central Server's software gets out of date. It's the subscription.php file in this directory. Please subscribe to it, thanks!<?php
 }
 
 function ifErrors($errors, $id)
