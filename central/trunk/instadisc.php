@@ -58,7 +58,7 @@ function instaDisc_sendItem($username, $id)
 		$getuser2 = mysql_query($getuser);
 		$getuser3 = mysql_fetch_array($getuser2);
 
-		$fp = @fsockopen($getuser3['ip'], 4444, $errno, $errstr);
+		$fp = @fsockopen($getuser3['ip'], 1204, $errno, $errstr);
 		if ($fp)
 		{
 			$verID = rand(1,65536);
