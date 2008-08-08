@@ -2,6 +2,8 @@
 
 /* InstaDisc Server - A Four Island Project */
 
+include('class.phpmailer.php');
+
 $softwareVersion = 1;
 
 if (!isset($_GET['submit']))
@@ -345,7 +347,7 @@ function showStepTwo($mailDomain, $smtpHost, $smtpAuth, $smtpUser, $smtpPass, $s
 
 function showStepThree()
 {
-?>Congradulations! You've successfully set up your InstaDisc Central Server's database! Now, the next step for you is to implement the functions in instadisc.php into your web application. Read README.txt for more information.<?php
+?>Congradulations! You've successfully set up your InstaDisc Central Server's database! Now, the next step for you is to implement the functions in instadisc.php into your web application. See <A HREF="http://fourisland.com/projects/instadisc/wiki/BecomingACentralServer">Becoming A Central Server</A>.<?php
 }
 
 function ifErrors($errors, $id)
