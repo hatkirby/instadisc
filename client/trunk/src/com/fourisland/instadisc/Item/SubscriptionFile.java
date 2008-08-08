@@ -28,19 +28,23 @@ public class SubscriptionFile {
 
     public SubscriptionFile(URL url, JLabel status) {
         status.setText("Checking....");
-        try {
+        try
+        {
             HttpURLConnection urc = (HttpURLConnection) url.openConnection();
             Thread th = new Thread(new SubscriptionFileThread(urc, status));
             th.start();
-        } catch (FileNotFoundException ex) {
+        } catch (FileNotFoundException ex)
+        {
             status.setText("Error: Subscription File doesn't exist");
-        } catch (IOException ex) {
+        } catch (IOException ex)
+        {
             Logger.getLogger(SubscriptionFile.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public static void deleteSubscription(Subscription s, boolean deleteFromData) {
-        if (deleteFromData) {
+        if (deleteFromData)
+        {
             Wrapper.deleteSubscription(s.getURL());
         }
 
@@ -50,8 +54,10 @@ public class SubscriptionFile {
 
         int i = 0;
         Filter f[] = Wrapper.getAllFilter();
-        for (i = 0; i < f.length; i++) {
-            if (f[i].getSubscription().equals(s.getURL())) {
+        for (i = 0; i < f.length; i++)
+        {
+            if (f[i].getSubscription().equals(s.getURL()))
+            {
                 Wrapper.deleteFilter(f[i].getID());
             }
         }
@@ -70,49 +76,61 @@ class SubscriptionFileThread implements Runnable {
 
     public void run() {
         InputStream is = null;
-        try {
+        try
+        {
             is = urc.getInputStream();
             int[] buffer = new int[1000];
             int rs = 0;
             int i = 0;
 
-            while (rs != -1) {
-                try {
+            while (rs != -1)
+            {
+                try
+                {
                     rs = is.read();
 
-                    if (rs != -1) {
+                    if (rs != -1)
+                    {
                         buffer[i] = rs;
                     }
                     i++;
-                } catch (IOException ex) {
+                } catch (IOException ex)
+                {
                     Logger.getLogger(SubscriptionFileThread.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
             StringBuilder result = new StringBuilder();
             int j = 0;
-            for (j = 0; j < i; j++) {
+            for (j = 0; j < i; j++)
+            {
                 result.append(Character.toString((char) buffer[j]));
             }
 
             String[] headers = result.toString().split("\n");
             HashMap<String, String> headerMap = new HashMap<String, String>();
             i = 0;
-            while (1 == 1) {
-                try {
+            while (1 == 1)
+            {
+                try
+                {
                     String[] nameVal = headers[i].split(": ");
                     String name = nameVal[0];
                     String value = nameVal[1].trim();
                     headerMap.put(name, value);
-                } catch (Exception ex) {
+                } catch (Exception ex)
+                {
                     break;
                 }
                 i++;
             }
 
-            if (headerMap.containsKey("Subscription")) {
-                if (headerMap.containsKey("Title")) {
-                    if (headerMap.containsKey("Category")) {
+            if (headerMap.containsKey("Subscription"))
+            {
+                if (headerMap.containsKey("Title"))
+                {
+                    if (headerMap.containsKey("Category"))
+                    {
                         Subscription s = new Subscription();
                         s.setURL(headerMap.get("Subscription"));
                         s.setTitle(headerMap.get("Title"));
@@ -134,12 +152,19 @@ class SubscriptionFileThread implements Runnable {
             } else {
                 status.setText("Error: Subscription file is not well-formed");
             }
-        } catch (IOException ex) {
+        } catch (FileNotFoundException ex)
+        {
+            status.setText("Error: Subscription File doesn't exist");
+        } catch (IOException ex)
+        {
             Logger.getLogger(SubscriptionFileThread.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
+        } finally
+        {
+            try
+            {
                 is.close();
-            } catch (IOException ex) {
+            } catch (IOException ex)
+            {
                 Logger.getLogger(SubscriptionFileThread.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
