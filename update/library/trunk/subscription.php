@@ -15,4 +15,12 @@ if ($idusActivationKey[$id] != '')
 	echo('Key: ' . $idusActivationKey[$id] . "\n");
 }
 
+if ($idusEncryptionKey[$id] != '')
+{
+	$verID = rand(1,65536);
+
+	echo('Verification: ' . md5($idusSubscriptionTitle[$id] . ':' . md5($idusEncryptionKey[$id]) . ':' . $verID) . "\n");
+	echo('Verification-ID: ' . $verID . "\n");
+}
+
 ?>
