@@ -7,15 +7,28 @@ package com.fourisland.instadisc.Item;
 import com.fourisland.instadisc.Database.Filter;
 import com.fourisland.instadisc.Database.Subscription;
 import com.fourisland.instadisc.Database.Wrapper;
+import com.fourisland.instadisc.Functions;
 import com.fourisland.instadisc.Item.Categories.Category;
 import com.fourisland.instadisc.XmlRpc;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  *
@@ -33,12 +46,81 @@ public class WellFormedItem {
         boolean good = true;
         good = (good ? checkForRequiredHeaders() : false);
         good = (good ? checkForSubscription() : false);
+        good = (good ? checkForEncryption() : false);
         good = (good ? Category.checkForLegalCategory(aThis.headerMap) : false);
         good = (good ? Category.checkForRequiredSemantics(aThis.headerMap) : false);
         good = (good ? checkForProperVerification() : false);
         good = (good ? checkForFilterInvalidation() : false);
         good = (good ? checkForSafeURL() : false);
         return good;
+    }
+
+    private boolean checkForEncryption() {
+        if (!Wrapper.getSubscription(aThis.headerMap.get("Subscription")).getPassword().equals(""))
+        {
+            try
+            {
+                Subscription s = Wrapper.getSubscription(aThis.headerMap.get("Subscription"));
+                MD5 md5 = new MD5(Functions.padright(s.getPassword(), aThis.headerMap.get("Encryption-ID"), 16).substring(0, 16));
+                String key = md5.hash().substring(0, 16);
+                String iv = Functions.reverse(key);
+
+                Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+                SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), "AES");
+                IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes());
+                cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
+
+                aThis.headerMap.put("Title", new String(cipher.doFinal(Functions.hexToBytes(aThis.headerMap.get("Title")))).trim());
+                aThis.headerMap.put("Author", new String(cipher.doFinal(Functions.hexToBytes(aThis.headerMap.get("Author")))).trim());
+                aThis.headerMap.put("URL", new String(cipher.doFinal(Functions.hexToBytes(aThis.headerMap.get("URL")))).trim());
+                
+                HashMap<String, String> temp = new HashMap<String, String>(aThis.headerMap);
+                temp.remove("ID");
+                temp.remove("Verification");
+                temp.remove("Verification-ID");
+                temp.remove("Subscription");
+                temp.remove("Title");
+                temp.remove("Author");
+                temp.remove("URL");
+                temp.remove("Encryption-ID");
+                
+                Collection<Entry<String,String>> vals = temp.entrySet();
+                Iterator<Entry<String,String>> i = vals.iterator();
+                while (i.hasNext())
+                {
+                    Entry<String,String> e = (Entry<String,String>) i.next();
+                    aThis.headerMap.put(e.getKey(), new String(cipher.doFinal(Functions.hexToBytes(e.getValue()))).trim());    
+                }
+
+                return true;
+            } catch (IllegalBlockSizeException ex)
+            {
+                Logger.getLogger(WellFormedItem.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            } catch (BadPaddingException ex)
+            {
+                Logger.getLogger(WellFormedItem.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            } catch (InvalidKeyException ex)
+            {
+                Logger.getLogger(WellFormedItem.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            } catch (InvalidAlgorithmParameterException ex)
+            {
+                Logger.getLogger(WellFormedItem.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            } catch (NoSuchAlgorithmException ex)
+            {
+                Logger.getLogger(WellFormedItem.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            } catch (NoSuchPaddingException ex)
+            {
+                Logger.getLogger(WellFormedItem.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 
     private boolean checkForEqualFilters() {
@@ -117,6 +199,7 @@ public class WellFormedItem {
 
     private boolean checkForRequiredHeaders() {
         boolean good = true;
+        
         good = (good ? checkForRequiredHeader("ID") : false);
         good = (good ? checkForRequiredHeader("Verification") : false);
         good = (good ? checkForRequiredHeader("Verification-ID") : false);
@@ -124,6 +207,12 @@ public class WellFormedItem {
         good = (good ? checkForRequiredHeader("Title") : false);
         good = (good ? checkForRequiredHeader("Author") : false);
         good = (good ? checkForRequiredHeader("URL") : false);
+        
+        if (!Wrapper.getSubscription(aThis.headerMap.get("Subscription")).getPassword().equals(""))
+        {
+            good = (good ? checkForRequiredHeader("Encryption-ID") : false);
+        }
+        
         return good;
     }
 

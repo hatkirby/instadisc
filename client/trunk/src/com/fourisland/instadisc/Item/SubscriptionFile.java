@@ -4,9 +4,11 @@
  */
 package com.fourisland.instadisc.Item;
 
+import com.fourisland.instadisc.AskForPasswordForm;
 import com.fourisland.instadisc.Database.Filter;
 import com.fourisland.instadisc.Database.Subscription;
 import com.fourisland.instadisc.Database.Wrapper;
+import com.fourisland.instadisc.Functions;
 import com.fourisland.instadisc.XmlRpc;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,6 +18,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 /**
@@ -135,14 +138,43 @@ class SubscriptionFileThread implements Runnable {
                         s.setURL(headerMap.get("Subscription"));
                         s.setTitle(headerMap.get("Title"));
                         s.setCategory(headerMap.get("Category"));
-                        Wrapper.addSubscription(s);
+                        
+                        if (Functions.xor(headerMap.containsKey("Verification"),headerMap.containsKey("Verification-ID")))
+                        {
+                            if (headerMap.containsKey("Verification"))
+                            {
+                                AskForPasswordForm afpf = new AskForPasswordForm(new JFrame(),true);
+                                afpf.setVisible(true);
+                                
+                                if (afpf.getEntered() || afpf.getPassword().equals(""))
+                                {
+                                    MD5 md5 = new MD5(afpf.getPassword());
+                                    MD5 hash = new MD5(s.getTitle() + ":" + md5.hash() + ":" + headerMap.get("Verification-ID"));
+                                    
+                                    if (hash.hash().equals(headerMap.get("Verification")))
+                                    {
+                                        s.setPassword(afpf.getPassword());
+                                    } else {
+                                        status.setText("Error: Incorrect password entered");
+                                        return;
+                                    }
+                                } else {
+                                    status.setText("Error: No password entered");
+                                    return;
+                                }
+                            } else {
+                                s.setPassword("");
+                            }
+                            
+                            Wrapper.addSubscription(s);
 
-                        XmlRpc xmlrpc = new XmlRpc("addSubscription");
-                        xmlrpc.addParam(headerMap.get("Subscription"));
-                        xmlrpc.addParam(headerMap.get("Category"));
-                        xmlrpc.execute();
+                            XmlRpc xmlrpc = new XmlRpc("addSubscription");
+                            xmlrpc.addParam(headerMap.get("Subscription"));
+                            xmlrpc.addParam(headerMap.get("Category"));
+                            xmlrpc.execute();
 
-                        status.setText("You've sucessfully subscribed to that website");
+                            status.setText("You've sucessfully subscribed to that website");
+                        }
                     } else {
                         status.setText("Error: Subscription file is not well-formed");
                     }
