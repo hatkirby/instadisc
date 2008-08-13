@@ -76,7 +76,7 @@ function requestRetained($username, $verification, $verificationID)
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
-function sendFromUpdate($username, $verification, $verificationID, $subscription, $title, $author, $url, $semantics)
+function sendFromUpdate($username, $verification, $verificationID, $subscription, $title, $author, $url, $semantics, $encryptionID)
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
@@ -106,6 +106,7 @@ function sendFromUpdate($username, $verification, $verificationID, $subscription
 												new xmlrpcval($author, 'string'),
 												new xmlrpcval($url, 'string'),
 												new xmlrpcval($semantics, 'string'),
+												new xmlrpcval($encryptionID, 'int'),
 												new xmlrpcval(instaDisc_getConfig('softwareVersion'), 'int'),
 												new xmlrpcval(instaDisc_getConfig('databaseVersion'), 'int')));
 				$client->send($msg);
@@ -119,7 +120,7 @@ function sendFromUpdate($username, $verification, $verificationID, $subscription
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
-function sendFromCentral($cserver, $verification, $verificationID, $subscription, $title, $author, $url, $semantics, $softwareVersion, $databaseVersion)
+function sendFromCentral($cserver, $verification, $verificationID, $subscription, $title, $author, $url, $semantics, $encryptionID, $softwareVersion, $databaseVersion)
 {
 	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'code'))
 	{
@@ -168,7 +169,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 		$i=0;
 		while ($getsed3[$i] = mysql_fetch_array($getsed2))
 		{
-			instaDisc_addItem($getsed3[$i]['username'], $subscription, $title, $author, $url, $semantics);
+			instaDisc_addItem($getsed3[$i]['username'], $subscription, $title, $author, $url, $semantics, $encryptionID);
 			$i++;
 		}
 
