@@ -35,7 +35,7 @@ function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 
 function instaDisc_sendEncrypted($id, $title, $author, $url, $semantics)
 {
-	global $idusEncryptionKey;
+	global $idusUsername, $idusPassword, $idusCentralServer, $idusSubscriptionURI, $idusEncryptionKey;
 
 	$encID = 0;
 	while ($encID == 0)
@@ -48,17 +48,26 @@ function instaDisc_sendEncrypted($id, $title, $author, $url, $semantics)
 	$key = substr(md5(substr(str_pad($idusEncryptionKey[$id],16,$encID),0,16)),0,16);
 
 	$td = mcrypt_module_open($cipher, "", $mode, "");
+
 	mcrypt_generic_init($td, $key, strrev($key));
 	$title = bin2hex(mcrypt_generic($td, $title));
+	mcrypt_generic_deinit($td);
+
+	mcrypt_generic_init($td, $key, strrev($key));
 	$author = bin2hex(mcrypt_generic($td, $author));
+	mcrypt_generic_deinit($td);
+
+	mcrypt_generic_init($td, $key, strrev($key));
 	$url = bin2hex(mcrypt_generic($td, $url));
+	mcrypt_generic_deinit($td);
 
 	foreach ($semantics as $name => $value)
 	{
+		mcrypt_generic_init($td, $key, strrev($key));
 		$semantics[$name] = bin2hex(mcrypt_generic($td, $value));
+		mcrypt_generic_deinit($td);
 	}
 	
-	mcrypt_generic_deinit($td);
 	mcrypt_module_close($td);
 
 	$verID = rand(1,65536);
