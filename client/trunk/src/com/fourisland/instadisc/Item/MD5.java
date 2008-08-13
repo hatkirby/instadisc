@@ -4,6 +4,7 @@
  */
 package com.fourisland.instadisc.Item;
 
+import com.fourisland.instadisc.Functions;
 import java.security.MessageDigest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,26 +44,12 @@ public class MD5 {
             byte buffer[] = md5.digest(create);
             for (i = 0; i < buffer.length; i++) {
                 String hex = Integer.toHexString(buffer[i]);
-                verify.append(pad(hex.substring(max(hex.length() - 2, 0)),"0",2));
+                verify.append(Functions.padleft(hex.substring(Functions.max(hex.length() - 2, 0)),"0",2));
             }
         } catch (Exception ex) {
             Logger.getLogger(WellFormedItem.class.getName()).log(Level.SEVERE, null, ex);
         }
         ver = "";
         return verify.toString();
-    }
-    
-    private int max(int x, int y)
-    {
-        return (x > y ? x : y);
-    }
-    
-    private String pad(String in, String pad, int len)
-    {
-        while (in.length() < len)
-        {
-            in = pad + in;
-        }
-        return in;
     }
 }

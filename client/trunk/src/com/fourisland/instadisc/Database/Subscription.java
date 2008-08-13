@@ -19,6 +19,7 @@ public class Subscription {
     private String url;
     private String category;
     private String title;
+    private String password;
     
     public String getURL()
     {
@@ -35,6 +36,11 @@ public class Subscription {
         return title;
     }
     
+    public String getPassword()
+    {
+        return password;
+    }
+    
     public void setURL(String url)
     {
         this.url = url;
@@ -48,5 +54,10 @@ public class Subscription {
     public void setTitle(String title)
     {
         this.title = title;
+    }
+    
+    public void setPassword(String password)
+    {
+        this.password = password;
     }
 }
