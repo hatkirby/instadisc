@@ -151,6 +151,7 @@ public class InstaDiscView extends FrameView {
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
+        jMenuItem6 = new javax.swing.JMenuItem();
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
         statusPanel = new javax.swing.JPanel();
         javax.swing.JSeparator statusPanelSeparator = new javax.swing.JSeparator();
@@ -256,6 +257,15 @@ public class InstaDiscView extends FrameView {
         helpMenu.setText(resourceMap.getString("helpMenu.text")); // NOI18N
         helpMenu.setName("helpMenu"); // NOI18N
 
+        jMenuItem6.setText(resourceMap.getString("jMenuItem6.text")); // NOI18N
+        jMenuItem6.setName("jMenuItem6"); // NOI18N
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        helpMenu.add(jMenuItem6);
+
         aboutMenuItem.setAction(actionMap.get("showAboutBox")); // NOI18N
         aboutMenuItem.setName("aboutMenuItem"); // NOI18N
         helpMenu.add(aboutMenuItem);
@@ -308,7 +318,12 @@ public class InstaDiscView extends FrameView {
             Item item = (Item) jList1.getSelectedValue();
 
             try {
-                java.awt.Desktop.getDesktop().browse(new URI(item.getURL()));
+                if (java.awt.Desktop.isDesktopSupported())
+                {
+                    java.awt.Desktop.getDesktop().browse(new URI(item.getURL()));
+                } else {
+                    statusMessageLabel.setText("Error: Desktop not supported");
+                }
             } catch (IOException ex) {
                 Logger.getLogger(InstaDiscView.class.getName()).log(Level.SEVERE, null, ex);
             } catch (URISyntaxException ex) {
@@ -346,6 +361,24 @@ public class InstaDiscView extends FrameView {
         jList1.repaint();
     }//GEN-LAST:event_jList1ComponentShown
 
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        try
+        {//GEN-LAST:event_jMenuItem6ActionPerformed
+            if (java.awt.Desktop.isDesktopSupported())
+            {
+                java.awt.Desktop.getDesktop().browse(new URI("http://fourisland.com/projects/instadisc/"));
+            } else {
+                statusMessageLabel.setText("Error: Desktop not supported");
+            }
+        } catch (IOException ex)
+        {
+            Logger.getLogger(InstaDiscView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException ex)
+        {
+            Logger.getLogger(InstaDiscView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList jList1;
     private javax.swing.JMenu jMenu1;
@@ -354,6 +387,7 @@ public class InstaDiscView extends FrameView {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPanel mainPanel;
