@@ -84,9 +84,6 @@ made subject to such option by the copyright holder.
 <!--$${JNLP.RESOURCES.MAIN.JAR}-->
 <!--$${JNLP.RESOURCES.JARS}-->
     </resources>
-    <security>
-        <all-permissions/>
-    </security>
     <application-desc main-class="$${jnlp.main.class}">
 <!--$${JNLP.APPLICATION.ARGS}-->
     </application-desc>
