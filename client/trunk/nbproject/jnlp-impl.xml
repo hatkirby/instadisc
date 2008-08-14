@@ -75,6 +75,9 @@ made subject to such option by the copyright holder.
         <description>$${APPLICATION.DESC}</description>
         <description kind="short">$${APPLICATION.DESC.SHORT}</description>
         <homepage href="$${APPLICATION.HOMEPAGE}"/>
+        <shortcut>
+		<desktop/>
+	</shortcut>
 <!--$${JNLP.ICONS}-->
 <!--$${JNLP.OFFLINE.ALLOWED}-->
     </information>
