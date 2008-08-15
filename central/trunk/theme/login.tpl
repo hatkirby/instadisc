@@ -1,7 +1,7 @@
 <HTML>
 	<HEAD>
 		<TITLE><!--SITENAME--> InstaDisc Central Server</TITLE>
-		<LINK REL="stylesheet" TYPE="text/css" HREF="uniform.css">
+		<LINK REL="stylesheet" TYPE="text/css" HREF="theme/uniform.css">
 	</HEAD>
 
 	<BODY>
