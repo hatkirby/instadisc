@@ -2,7 +2,7 @@
 
 /* InstaDisc Server - A Four Island Project */
 
-include('class.phpmailer.php');
+include('includes/class.phpmailer.php');
 
 $softwareVersion = 1;
 

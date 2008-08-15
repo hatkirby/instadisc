@@ -2,8 +2,8 @@
 
 /* InstaDisc Server - A Four Island Project */
 
-include('instadisc.php');
-include('template.php');
+include('includes/instadisc.php');
+include('includes/template.php');
 
 if (!isset($_GET['submit']))
 {

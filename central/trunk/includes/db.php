@@ -20,7 +20,7 @@ if (file_exists('install.php'))
 
 session_start();
 
-include('config.php');
+include('includes/config.php');
 
 mysql_connect($dbhost, $dbuser, $dbpass);
 mysql_select_db($dbname);

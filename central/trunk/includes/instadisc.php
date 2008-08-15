@@ -2,8 +2,8 @@
 
 /* InstaDisc Server - A Four Island Project */
 
-include_once('db.php');
-include_once('class.phpmailer.php');
+include_once('includes/db.php');
+include_once('includes/class.phpmailer.php');
 
 function instaDisc_checkVerification($username, $verification, $verificationID, $table, $nameField, $passField)
 {
