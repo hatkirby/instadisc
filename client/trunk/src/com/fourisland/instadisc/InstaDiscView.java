@@ -109,7 +109,7 @@ public class InstaDiscView extends FrameView {
         jList1.setCellRenderer(new IDItemListCellRenderer());
         refreshItemPane();
 
-        InstaDiscThread idt = new InstaDiscThread();
+        InstaDiscThread idt = new InstaDiscThread(this);
         Thread idtt = new Thread(idt);
         idtt.start();
 
@@ -435,5 +435,37 @@ public class InstaDiscView extends FrameView {
         });
 
         ipCheckTimer.start();
+    }
+    
+    public synchronized void startProgress()
+    {
+        if (!busyIconTimer.isRunning()) {
+            statusAnimationLabel.setIcon(busyIcons[0]);
+            busyIconIndex = 0;
+            busyIconTimer.start();
+        }
+        progressBar.setVisible(true);
+        progressBar.setIndeterminate(true);
+    }
+    
+    public synchronized void doneProgress()
+    {
+        busyIconTimer.stop();
+        statusAnimationLabel.setIcon(idleIcon);
+        progressBar.setVisible(false);
+        progressBar.setValue(0);
+    }
+    
+    public synchronized void doText(String text)
+    {
+        statusMessageLabel.setText((text == null) ? "" : text);
+        messageTimer.restart();
+    }
+    
+    public synchronized void doProgress(Integer value)
+    {
+        progressBar.setVisible(true);
+        progressBar.setIndeterminate(false);
+        progressBar.setValue(value);
     }
 }
