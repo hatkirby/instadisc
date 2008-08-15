@@ -33,21 +33,9 @@ if (!isset($_GET['submit']))
 		$send = instaDisc_sendActivationEmail($_POST['username'], $_POST['password'], $_POST['email']);
 		if ($send === TRUE)
 		{
-?>
-<HTML>
- <HEAD>
-  <TITLE><?php echo(instaDisc_getConfig('siteName')); ?> InstaDisc Central Server</TITLE>
- </HEAD>
- <BODY>
-  <CENTER>
-   <H1>InstaDisc Registration</H1>
-
-   <P>Thank you for registering! An activation email has been sent to the address you provided. When you recieve it, copy the 
-    code inside to the <A HREF="activate.php">Activation page</A>.
-  </CENTER>
- </BODY>
-</HTML>
-<?php
+			$template = new FITemplate('registered');
+			$template->add('SITENAME', instaDisc_getConfig('siteName'));
+			$template->display();
 		} else {
 			addError($numOfErrors, $errors, '', $send);
 			showForm($_POST['username'], $_POST['password'], $_POST['email'], $errors);
@@ -57,49 +45,33 @@ if (!isset($_GET['submit']))
 
 function showForm($username, $password, $email, $errors)
 {
-?>
-<HTML>
- <HEAD>
-  <TITLE><?php echo(instaDisc_getConfig('siteName')); ?> InstaDisc Central Server</TITLE>
-  <LINK REL="stylesheet" TYPE="text/css" HREF="uniform.css">
- </HEAD>
- <BODY>
-  <CENTER>
-   <H1>InstaDisc Registration</H1>
+	$template = new FITemplate('register');
+	$template->add('SITENAME', instaDisc_getConfig('siteName'));
 
-   <P>If you would like to sign up for our InstaDisc service, please fill out the form below.
-  </CENTER>
-
-  <FORM CLASS="uniform" ACTION="./register.php?submit=" METHOD="POST">
-<?php
 	if (isset($errors[1]))
 	{
-?><DIV ID="errorMsg">Uh oh! Validation errors!<P>
-<OL><?php
+		$template->adds('ERROR', array('ex'=>'1'));
+
 		foreach ($errors as $name => $value)
 		{
-?><LI><A HREF="#error<?php echo($name); ?>"><?php echo($value['msg']); ?></A></LI><?php
+			$template->adds('ERRORS', array(	'NAME' => $name,
+								'MSG' => $value['msg']));
 		}
-?></OL></DIV><?php
 	}
-?>
-<FIELDSET CLASS="inlineLabels"><LEGEND>User Details</LEGEND>
-<DIV CLASS="ctrlHolder<?php ifErrors($errors, 'username'); ?>">
-<?php doErrors($errors, 'username'); ?> <LABEL FOR="username"><EM>*</EM> Username: </LABEL>
- <INPUT TYPE="text" ID="username" NAME="username" CLASS="textInput" VALUE="<?php echo($username); ?>">
-</DIV>
-<DIV CLASS="ctrlHolder<?php ifErrors($errors, 'password'); ?>">
-<?php doErrors($errors, 'password'); ?> <LABEL FOR="password"><EM>*</EM> Password: </LABEL>
- <INPUT TYPE="password" ID="password" NAME="password" CLASS="textInput" VALUE="<?php echo($password); ?>">
-</DIV>
-<DIV CLASS="ctrlHolder<?php ifErrors($errors, 'email'); ?>">
-<?php doErrors($errors, 'email'); ?> <LABEL FOR="email"><EM>*</EM> Email: </LABEL>
- <INPUT TYPE="text" ID="email" NAME="email" CLASS="textInput" VALUE="<?php echo($email); ?>">
-</DIV>
-</FIELDSET>
-<DIV CLASS="buttonHolder">
- <INPUT TYPE="submit" VALUE="Submit">
-</DIV></FORM><?php
+
+	$template->add('USERNAME_ERR', ifErrors($errors, 'username'));
+	$template->add('PASSWORD_ERR', ifErrors($errors, 'password'));
+	$template->add('EMAIL_ERR', ifErrors($errors, 'email'));
+
+	doErrors($template, $errors, 'username');
+	doErrors($template, $errors, 'password');
+	doErrors($template, $errors, 'email');
+
+	$template->add('USERNAME', $username);
+	$template->add('PASSWORD', $password);
+	$template->add('EMAIL', $email);
+
+	$template->display();
 }
 
 function ifErrors($errors, $id)
@@ -108,19 +80,21 @@ function ifErrors($errors, $id)
         {
                 if ($value['field'] == $id)
                 {
-                        echo(' error');
-                        return;
+                        return ' error';
                 }
         }
+
+	return '';
 }
 
-function doErrors($errors, $id)
+function doErrors($template, $errors, $id)
 {
         foreach ($errors as $name => $value)
         {
                 if ($value['field'] == $id)
                 {
-?> <P ID="error<?php echo($name); ?>" CLASS="errorField"><EM>*</EM> <?php echo($value['msg']); ?></P><?php echo("\n");
+			$template->adds(strtoupper($id) . '_ERRS', array(	'NAME' => $name,
+										'VALUE' => $value['msg']));
                 }
         }
 }
