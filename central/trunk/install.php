@@ -68,9 +68,9 @@ if (!isset($_GET['submit']))
 							}
 						}
 
-						@file_put_contents('config.php', "<?php\n\n/* InstaDisc Server - A Four Island Project */\n\n\$dbhost = \"" . $_POST['host'] . "\";\n\$dbuser = \"" . $_POST['username'] . "\";\n\$dbpass = \"" . $_POST['password'] . "\";\n\$dbname = \"" . $_POST['dbname'] . "\";\n\n?>");
+						@file_put_contents('includes/config.php', "<?php\n\n/* InstaDisc Server - A Four Island Project */\n\n\$dbhost = \"" . $_POST['host'] . "\";\n\$dbuser = \"" . $_POST['username'] . "\";\n\$dbpass = \"" . $_POST['password'] . "\";\n\$dbname = \"" . $_POST['dbname'] . "\";\n\n?>");
 
-						if (!file_exists('config.php'))
+						if (!file_exists('includes/config.php'))
 						{
 							addError($numOfErrors, $errors, '', 'Could not write config.php file, please check directory permissions');
 						}
@@ -149,7 +149,7 @@ if (!isset($_GET['submit']))
 				{
 					addError($numOfErrors, $errors, 'xmlrpcURL', 'XML-RPC URL is a required field');
 				} else {
-					include_once('xmlrpc/xmlrpc.inc');
+					include_once('includes/xmlrpc/xmlrpc.inc');
 
 					$client = new xmlrpc_client($_POST['xmlrpcURL']);
 					$msg = new xmlrpcmsg('system.listMethods');
