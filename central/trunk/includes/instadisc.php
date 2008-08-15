@@ -397,4 +397,10 @@ function instaDisc_cancelSubscription($username, $url)
 	return false;
 }
 
+function instaDisc_changePassword($username, $password)
+{
+	$setpass = "UPDATE users WHERE username = \"" . mysql_real_escape_string($username) . "\" SET password = \"" . mysql_real_escape_string(md5($password)) . "\"";
+	$setpass2 = mysql_query($setpass);
+}
+
 ?>
