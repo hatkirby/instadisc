@@ -180,7 +180,7 @@ if (!isset($_GET['submit']))
 					showHeader('2');
 					showStepTwo($_POST['mailDomain'], $_POST['smtpHost'], ($_POST['smtpAuth'] == 'on' ? ' CHECKED' : ''), $_POST['smtpUser'], $_POST['smtpPass'], $_POST['siteName'], $_POST['xmlrpcURL'], $_POST['adminUser'], $_POST['adminPass'], $_POST['adminEmail'], $errors);
 				} else {
-					include_once('config.php');
+					include_once('includes/config.php');
 
 					mysql_connect($dbhost, $dbuser, $dbpass);
 					mysql_select_db($dbname);
