@@ -150,7 +150,7 @@ public class Step2 extends javax.swing.JDialog {
                     jLabel5.setText("Error: You forgot to enter a Central Server URL");
                 } else {
                     try {
-                        URL url = new URL(jTextField3.getText());
+                        new URL(jTextField3.getText());
                         
                         MD5 md5 = new MD5(jPasswordField1.getPassword());
                         String password = md5.hash();
