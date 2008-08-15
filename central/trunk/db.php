@@ -18,6 +18,8 @@ if (file_exists('install.php'))
 	die('Excuse me, but you need to delete install.php before you can use this as leaving install.php there is a biiiig security hole.');
 }
 
+session_start();
+
 include('config.php');
 
 mysql_connect($dbhost, $dbuser, $dbpass);

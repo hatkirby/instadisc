@@ -12,38 +12,35 @@ if (!isset($_GET['submit']))
 	$numOfErrors = 0;
 	$errors = array();
 
-	$getpending = "SELECT * FROM pending WHERE username = \"" . mysql_real_escape_string($_POST['username']) . "\" AND code = \"" . mysql_real_escape_string($_POST['code']) . "\"";
-	$getpending2 = mysql_query($getpending);
-	$getpending3 = mysql_fetch_array($getpending2);
-	if ($getpending3['username'] != $_POST['username'])
+	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($_POST['username']) . "\" AND password = \"" . mysql_real_escape_string(md5($_POST['password'])) . "\"";
+	$getuser2 = mysql_query($getuser);
+	$getuser3 = mysql_fetch_array($getuser2);
+	if ($getuser3['username'] != $_POST['username'])
 	{
 		addError($numOfErrors, $errors, '', 'Account could not be found');
 	}
 
 	if ($numOfErrors > 0)
 	{
-		showForm($_POST['username'], $_POST['code'], $errors);
+		showForm($_POST['username'], $_POST['password'], $errors);
 	} else {
-		if ($_POST['submit'] == "Verify")
+		if (instaDisc_verifyUser($_POST['username'], $_POST['password']))
 		{
-			if (instaDisc_activateAccount($_POST['username'], $_POST['code']))
-			{
-				$template = new FITemplate('activated');
-				$template->add('SITENAME', instaDisc_getConfig('siteName'));
-				$template->display();
-			} else {
-				addError($numOfErrors, $errors, '', 'The email could not be sent');
-				showForm($_POST['username'], $_POST['code'], $errors);
-			}
+			$_SESSION['username'] == $_POST['username'];
+
+			$template = new FITemplate('loggedin');
+			$template->add('SITENAME', instaDisc_getConfig('siteName'));
+			$template->display();
 		} else {
-			instaDisc_deactivateAccount($_POST['username'], $_POST['code']);
+			addError($numOfErrors, $errors, '', 'Account could not be found');
+			showForm($_POST['username'], $_POST['password'], $errors);
 		}
 	}
 }
 
-function showForm($username, $code, $errors)
+function showForm($username, $password, $errors)
 {
-	$template = new FITemplate('activate');
+	$template = new FITemplate('login');
 	$template->add('SITENAME', instaDisc_getConfig('siteName'));
 
 	if (isset($errors[1]))
@@ -58,13 +55,13 @@ function showForm($username, $code, $errors)
 	}
 
 	$template->add('USERNAME_ERR', ifErrors($errors, 'username'));
-	$template->add('CODE_ERR', ifErrors($errors, 'code'));
+	$template->add('PASSWORD_ERR', ifErrors($errors, 'password'));
 
 	doErrors($template, $errors, 'username');
-	doErrors($template, $errors, 'code');
+	doErrors($template, $errors, 'password');
 
 	$template->add('USERNAME', $username);
-	$template->add('CODE', $code);
+	$template->add('PASSWORD', $password);
 
 	$template->display();
 }
