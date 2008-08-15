@@ -3,6 +3,7 @@
 /* InstaDisc Server - A Four Island Project */
 
 include('instadisc.php');
+include('template.php');
 
 if (!isset($_GET['submit']))
 {
@@ -27,21 +28,9 @@ if (!isset($_GET['submit']))
 		{
 			if (instaDisc_activateAccount($_POST['username'], $_POST['code']))
 			{
-?>
-<HTML>
- <HEAD>
-  <TITLE><?php echo(instaDisc_getConfig('siteName')); ?> InstaDisc Central Server</TITLE>
- </HEAD>
- <BODY>
-  <CENTER>
-   <H1>InstaDisc Activation</H1>
-
-   <P>Thank you for activating! You've now been signed up for the InstaDisc service.
-    You will recieve an email with the information to input into your InstaDisc client.
-  </CENTER>
- </BODY>
-</HTML>
-<?php
+				$template = new FITemplate('activated');
+				$template->add('SITENAME', instaDisc_getConfig('siteName'));
+				$template->display();
 			} else {
 				addError($numOfErrors, $errors, '', 'The email could not be sent');
 				showForm($_POST['username'], $_POST['code'], $errors);
@@ -54,46 +43,30 @@ if (!isset($_GET['submit']))
 
 function showForm($username, $code, $errors)
 {
-?>
-<HTML>
- <HEAD>
-  <TITLE><?php echo(instaDisc_getConfig('siteName')); ?> InstaDisc Central Server</TITLE>
-  <LINK REL="stylesheet" TYPE="text/css" HREF="uniform.css">
- </HEAD>
- <BODY>
-  <CENTER>
-   <H1>InstaDisc Activation</H1>
+	$template = new FITemplate('activate');
+	$template->add('SITENAME', instaDisc_getConfig('siteName'));
 
-   <P>If you've already registered and an activation email has been sent to your address, please fill in the form below.
-  </CENTER>
-
-  <FORM CLASS="uniform" ACTION="./activate.php?submit=" METHOD="POST">
-<?php
 	if (isset($errors[1]))
 	{
-?><DIV ID="errorMsg">Uh oh! Validation errors!<P>
-<OL><?php
+		$template->adds('ERROR', array('ex'=>'1'));
+
 		foreach ($errors as $name => $value)
 		{
-?><LI><A HREF="#error<?php echo($name); ?>"><?php echo($value['msg']); ?></A></LI><?php
+			$template->adds('ERRORS', array(	'NAME' => $name,
+								'MSG' => $value['msg']));
 		}
-?></OL></DIV><?php
 	}
-?>
-<FIELDSET CLASS="inlineLabels"><LEGEND>User Details</LEGEND>
-<DIV CLASS="ctrlHolder<?php ifErrors($errors, 'username'); ?>">
-<?php doErrors($errors, 'username'); ?> <LABEL FOR="username"><EM>*</EM> Username: </LABEL>
- <INPUT TYPE="text" ID="username" NAME="username" CLASS="textInput" VALUE="<?php echo($username); ?>">
-</DIV>
-<DIV CLASS="ctrlHolder<?php ifErrors($errors, 'code'); ?>">
-<?php doErrors($errors, 'code'); ?> <LABEL FOR="code"><EM>*</EM> Activation Code: </LABEL>
- <INPUT TYPE="text" ID="code" NAME="code" CLASS="textInput" VALUE="<?php echo($code); ?>">
-</DIV>
-</FIELDSET>
-<DIV CLASS="buttonHolder">
- <INPUT TYPE="submit" NAME="submit" VALUE="Verify">
- <INPUT TYPE="submit" NAME="submit" VALUE="Delete">
-</DIV></FORM><?php
+
+	$template->add('USERNAME_ERR', ifErrors($errors, 'username'));
+	$template->add('CODE_ERR', ifErrors($errors, 'code'));
+
+	doErrors($template, $errors, 'username');
+	doErrors($template, $errors, 'code');
+
+	$template->add('USERNAME', $username);
+	$template->add('CODE', $code);
+
+	$template->display();
 }
 
 function ifErrors($errors, $id)
@@ -102,19 +75,21 @@ function ifErrors($errors, $id)
         {
                 if ($value['field'] == $id)
                 {
-                        echo(' error');
-                        return;
+                        return ' error';
                 }
         }
+
+	return '';
 }
 
-function doErrors($errors, $id)
+function doErrors($template, $errors, $id)
 {
         foreach ($errors as $name => $value)
         {
                 if ($value['field'] == $id)
                 {
-?> <P ID="error<?php echo($name); ?>" CLASS="errorField"><EM>*</EM> <?php echo($value['msg']); ?></P><?php echo("\n");
+			$template->adds(strtoupper($id) . '_ERRS', array(	'NAME' => $name,
+										'VALUE' => $value['msg']));
                 }
         }
 }
