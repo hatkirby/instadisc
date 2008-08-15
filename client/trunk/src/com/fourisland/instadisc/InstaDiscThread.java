@@ -21,6 +21,12 @@ import java.util.logging.Logger;
 public class InstaDiscThread implements Runnable {
 
     boolean cancelled = false;
+    InstaDiscView idv;
+    
+    public InstaDiscThread(InstaDiscView idv)
+    {
+        this.idv = idv;
+    }
 
     public void cancel() {
         cancelled = true;
@@ -38,7 +44,7 @@ public class InstaDiscThread implements Runnable {
                 try
                 {
                     Socket s = svr.accept();
-                    HandleItemThread hit = new HandleItemThread(s);
+                    HandleItemThread hit = new HandleItemThread(s,idv);
                     Thread hitt = new Thread(hit);
                     hitt.start();
                 } catch (SocketException ex)
@@ -62,12 +68,17 @@ public class InstaDiscThread implements Runnable {
 class HandleItemThread implements Runnable {
 
     Socket s;
+    InstaDiscView idv;
 
-    public HandleItemThread(Socket s) {
+    public HandleItemThread(Socket s, InstaDiscView idv) {
         this.s = s;
+        this.idv = idv;
     }
 
     public void run() {
+        idv.startProgress();
+        idv.doText("Downloading Item....");
+        
         try
         {
             InputStream is = s.getInputStream();
@@ -85,6 +96,9 @@ class HandleItemThread implements Runnable {
                     {
                         buffer[i] = rs;
                     }
+                    
+                    idv.doProgress(buffer.length / (is.available()+1));
+                    
                     i++;
                 } catch (SocketException ex)
                 {
@@ -135,5 +149,7 @@ class HandleItemThread implements Runnable {
         {
             Logger.getLogger(HandleItemThread.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        idv.doneProgress();
     }
 }
