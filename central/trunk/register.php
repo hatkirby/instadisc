@@ -104,3 +104,5 @@ function addError(&$numOfErrors, &$errors, $field, $msg)
         $numOfErrors++;
         $errors[$numOfErrors] = array('field' => $field, 'msg' => $msg);
 }
+
+?>
