@@ -2,10 +2,9 @@
 
 /* InstaDisc Server - A Four Island Project */
 
-include('xmlrpc/xmlrpc.inc');
-include('xmlrpc/xmlrpcs.inc');
-include('db.php');
-include('instadisc.php');
+include('includes/xmlrpc/xmlrpc.inc');
+include('includes/xmlrpc/xmlrpcs.inc');
+include('includes/instadisc.php');
 
 function checkRegistration($username, $verification, $verificationID)
 {
