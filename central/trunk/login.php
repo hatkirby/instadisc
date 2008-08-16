@@ -14,7 +14,7 @@ if (!isset($_GET['submit']))
 
 	if (instaDisc_verifyUser($_POST['username'], $_POST['password']))
 	{
-		$_SESSION['username'] == $_POST['username'];
+		$_SESSION['username'] = $_POST['username'];
 
 		$template = new FITemplate('loggedin');
 		$template->add('SITENAME', instaDisc_getConfig('siteName'));
