@@ -12,29 +12,16 @@ if (!isset($_GET['submit']))
 	$numOfErrors = 0;
 	$errors = array();
 
-	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($_POST['username']) . "\" AND password = \"" . mysql_real_escape_string(md5($_POST['password'])) . "\"";
-	$getuser2 = mysql_query($getuser);
-	$getuser3 = mysql_fetch_array($getuser2);
-	if ($getuser3['username'] != $_POST['username'])
+	if (instaDisc_verifyUser($_POST['username'], $_POST['password']))
 	{
-		addError($numOfErrors, $errors, '', 'Account could not be found');
-	}
+		$_SESSION['username'] == $_POST['username'];
 
-	if ($numOfErrors > 0)
-	{
-		showForm($_POST['username'], $_POST['password'], $errors);
+		$template = new FITemplate('loggedin');
+		$template->add('SITENAME', instaDisc_getConfig('siteName'));
+		$template->display();
 	} else {
-		if (instaDisc_verifyUser($_POST['username'], $_POST['password']))
-		{
-			$_SESSION['username'] == $_POST['username'];
-
-			$template = new FITemplate('loggedin');
-			$template->add('SITENAME', instaDisc_getConfig('siteName'));
-			$template->display();
-		} else {
-			addError($numOfErrors, $errors, '', 'Account could not be found');
-			showForm($_POST['username'], $_POST['password'], $errors);
-		}
+		addError($numOfErrors, $errors, '', 'Account could not be found');
+		showForm($_POST['username'], $_POST['password'], $errors);
 	}
 }
 

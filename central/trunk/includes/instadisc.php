@@ -11,8 +11,7 @@ function instaDisc_checkVerification($username, $verification, $verificationID, 
 	$getverid2 = mysql_query($getverid);
 	$getverid3 = mysql_fetch_array($getverid2);
 	if ($getverid3['id'] != $verificationID)
-	{
-		$getitem = "SELECT * FROM " . $table . " WHERE " . $nameField . " = \"" . mysql_real_escape_string($username) . "\"";
+	{		$getitem = "SELECT * FROM " . $table . " WHERE " . $nameField . " = \"" . mysql_real_escape_string($username) . "\"";
 		$getitem2 = mysql_query($getitem);
 		$getitem3 = mysql_fetch_array($getitem2);
 		if ($getitem3[$nameField] == $username)
@@ -233,7 +232,11 @@ function instaDisc_deactivateAccount($username, $penKey)
 
 function instaDisc_verifyUser($username, $password)
 {
-	return instaDisc_checkVerification($username, md5($username . ':' . md5($password) . ':0'), 0, 'users', 'username', 'password');
+	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username). "\" AND password = \"" . mysql_real_escape_string(md5($password)) . "\"";
+	$getuser2 = mysql_query($getuser);
+	$getuser3 = mysql_fetch_array($getuser2);
+
+	return ($getuser3['username'] == $username);
 }
 
 function instaDisc_deleteAccount($username)
