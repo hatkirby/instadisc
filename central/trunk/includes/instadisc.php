@@ -61,7 +61,7 @@ function instaDisc_sendItem($username, $id)
 		$fp = @fsockopen($getuser3['ip'], 1204, $errno, $errstr);
 		if ($fp)
 		{
-			$verID = rand(1,65536);
+			$verID = rand(1,2147483647);
 
 			$title = str_replace(': ', '__INSTADISC__', $getitem3['title']);
 
@@ -126,7 +126,7 @@ function instaDisc_sendDatabase($cserver)
 	$getuk2 = mysql_query($getuk);
 	$getuk3 = mysql_fetch_array($getuk2);
 
-	$verID = rand(1,65536);
+	$verID = rand(1,2147483647);
 
 	$client = new xmlrpc_client($cserver);
 	$msg = new xmlrpcmsg("InstaDisc.sendDatabase", array(	new xmlrpcval($cserver2, 'string'),
@@ -176,7 +176,7 @@ function instaDisc_phpMailer()
 
 function instaDisc_sendActivationEmail($username, $password, $email)
 {
-	$penKey = md5(rand(1,65536));
+	$penKey = md5(rand(1,2147483647));
 
 	$inspending = "INSERT INTO pending (username, password, email, code) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string(md5($password)) . "\", \"" . mysql_real_escape_string($email) . "\", \"" . mysql_real_escape_string($penKey) . "\")";
 	$inspending2 = mysql_query($inspending);
@@ -358,7 +358,7 @@ function instaDisc_generateSubscriptionActivation($username, $url)
 	$getuser3 = mysql_fetch_array($getuser2);
 	if ($getuser3['username'] == $username)
 	{
-		$key = md5(rand(1,65536));
+		$key = md5(rand(1,2147483647));
 
 		$inspending = "INSERT INTO pending2 (username, url, code) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($url) . "\", \"" . mysql_real_escape_string($key) . "\")";
 		$inspending2 = mysql_query($inspending);

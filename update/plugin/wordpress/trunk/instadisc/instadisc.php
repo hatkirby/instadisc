@@ -146,7 +146,7 @@ function sendPost($id)
 	$authorName = $author->display_name;
 	$url = get_permalink($id);
 
-	$verID = rand(1,65536);
+	$verID = rand(1,2147483647);
 
 	$client = new xmlrpc_client(get_option('instaDisc_blogPost_centralServer'));
 	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval(get_option('instaDisc_blogPost_centralServer_username'), 'string'),
@@ -170,7 +170,7 @@ function sendComment($id)
 	$author = $comment->comment_author;
 	$url = get_permalink($comment->comment_post_ID) . "#comments";
 
-	$verID = rand(1,65536);
+	$verID = rand(1,2147483647);
 
 	$client = new xmlrpc_client(get_option('instaDisc_comment_centralServer'));
 	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval(get_option('instaDisc_comment_centralServer_username'), 'string'),

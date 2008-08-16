@@ -94,7 +94,7 @@ function sendFromUpdate($username, $verification, $verificationID, $subscription
 			$i=0;
 			while ($getcs3[$i] = mysql_fetch_array($getcs2))
 			{
-				$verID = rand(1,65536);
+				$verID = rand(1,2147483647);
 
 				$client = new xmlrpc_client($getcs3[$i]['xmlrpc']);
 				$msg = new xmlrpcmsg("InstaDisc.sendFromCentral", array(	new xmlrpcval($cserver, 'string'),
@@ -133,7 +133,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 			$getuk2 = mysql_query($getuk);
 			$getuk3 = mysql_fetch_array($getuk2);
 
-			$verID = rand(1,65536);
+			$verID = rand(1,2147483647);
 
 			$client = new xmlrpc_client($cserver);
 			$msg = new xmlrpcmsg("InstaDisc.sendUpdateNotice", array(	new xmlrpcval($cserver2, 'string'),
@@ -150,7 +150,7 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 			$getuk2 = mysql_query($getuk);
 			$getuk3 = mysql_fetch_array($getuk2);
 
-			$verID = rand(1,65536);
+			$verID = rand(1,2147483647);
 
 			$client = new xmlrpc_client($cserver);
 			$msg = new xmlrpcmsg("InstaDisc.askForDatabase", array(	new xmlrpcval($cserver2, 'string'),
