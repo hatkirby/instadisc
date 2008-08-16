@@ -193,7 +193,7 @@ if (!isset($_GET['submit']))
 					$sql[5] = "INSERT INTO config (name,value) VALUES (\"siteName\",\"" . mysql_real_escape_string($_POST['siteName']) . "\")";
 					$sql[6] = "INSERT INTO config (name,value) VALUES (\"xmlrpcURL\",\"" . mysql_real_escape_string($_POST['xmlrpcURL']) . "\")";
 					$sql[7] = "INSERT INTO config (name,value) VALUES (\"owner\",\"" . mysql_real_escape_string($_POST['adminUser']) . "\")";
-					$sql[8] = "INSERT INTO config (name,value) VALUES (\"verIDBufferSize\",\"100\")";
+					$sql[8] = "INSERT INTO config (name,value) VALUES (\"verIDBufferSize\",\"10000\")";
 					$sql[9] = "INSERT INTO config (name,value) VALUES (\"softwareVersion\",\"" . $softwareVersion . "\")";
 					$sql[10] = "INSERT INTO config (name,value) VALUES (\"databaseVersion\",\"1\")";
 					$sql[11] = "INSERT INTO users (username, password, email, ip) VALUES (\"" . mysql_real_escape_string($_POST['adminUser']) . "\",\"" . mysql_real_escape_string(md5($_POST['adminPass'])) . "\",\"" . mysql_real_escape_string($_POST['adminEmail']) . "\",\"" . mysql_real_escape_string($_SERVER['REMOTE_ADDR']) . "\")";

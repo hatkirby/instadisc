@@ -22,14 +22,14 @@ public class AdvancedSettingsForm extends javax.swing.JDialog {
         
         SpinnerNumberModel sm = new SpinnerNumberModel();
         sm.setValue(Integer.decode(Wrapper.getConfig("itemBufferSize")));
-        sm.setMaximum(100);
+        sm.setMaximum(1000);
         sm.setMinimum(1);
         sm.setStepSize(1);
         jSpinner1.setModel(sm);
         
         SpinnerNumberModel sm2 = new SpinnerNumberModel();
         sm2.setValue(Integer.decode(Wrapper.getConfig("verIDBufferSize")));
-        sm2.setMaximum(10000);
+        sm2.setMaximum(100000);
         sm2.setMinimum(1);
         sm2.setStepSize(1);
         jSpinner2.setModel(sm2);
