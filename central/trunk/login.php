@@ -45,11 +45,11 @@ function showForm($username, $password, $errors)
 
 	if (isset($errors[1]))
 	{
-		$template->adds('ERROR', array('ex'=>'1'));
+		$template->adds_block('ERROR', array('ex'=>'1'));
 
 		foreach ($errors as $name => $value)
 		{
-			$template->adds('ERRORS', array(	'NAME' => $name,
+			$template->adds_block('ERRORS', array(	'NAME' => $name,
 								'MSG' => $value['msg']));
 		}
 	}
@@ -85,7 +85,7 @@ function doErrors($template, $errors, $id)
         {
                 if ($value['field'] == $id)
                 {
-			$template->adds(strtoupper($id) . '_ERRS', array(	'NAME' => $name,
+			$template->adds_block(strtoupper($id) . '_ERRS', array(	'NAME' => $name,
 										'VALUE' => $value['msg']));
                 }
         }
