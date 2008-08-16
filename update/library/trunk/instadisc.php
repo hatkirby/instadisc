@@ -18,7 +18,7 @@ function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 {
 	global $idusUsername, $idusPassword, $idusCentralServer, $idusSubscriptionURI;
 	
-	$verID = rand(1,65536);
+	$verID = rand(1,2147483647);
 
 	$client = new xmlrpc_client($idusCentralServer[$id]);
 	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($idusUsername[$id], 'string'),
@@ -40,7 +40,7 @@ function instaDisc_sendEncrypted($id, $title, $author, $url, $semantics)
 	$encID = 0;
 	while ($encID == 0)
 	{
-		$encID = rand(1,65536);
+		$encID = rand(1,2147483647);
 	}
 
 	$cipher = "rijndael-128";
@@ -70,7 +70,7 @@ function instaDisc_sendEncrypted($id, $title, $author, $url, $semantics)
 	
 	mcrypt_module_close($td);
 
-	$verID = rand(1,65536);
+	$verID = rand(1,2147483647);
 
 	$client = new xmlrpc_client($idusCentralServer[$id]);
 	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($idusUsername[$id], 'string'),
