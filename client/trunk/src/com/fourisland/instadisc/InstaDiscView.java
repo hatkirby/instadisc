@@ -443,7 +443,6 @@ public class InstaDiscView extends FrameView {
         }
 
         ipCheckTimer = new Timer(delay, new ActionListener() {
-
             public void actionPerformed(ActionEvent arg0) {
                 XmlRpc xmlrpc = new XmlRpc("checkRegistration");
                 xmlrpc.execute();
@@ -451,6 +450,9 @@ public class InstaDiscView extends FrameView {
         });
 
         ipCheckTimer.start();
+        
+        XmlRpc xmlrpc = new XmlRpc("checkRegistration");
+        xmlrpc.execute();
     }
     
     public synchronized void startProgress()
