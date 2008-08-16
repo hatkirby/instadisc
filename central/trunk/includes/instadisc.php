@@ -11,7 +11,8 @@ function instaDisc_checkVerification($username, $verification, $verificationID, 
 	$getverid2 = mysql_query($getverid);
 	$getverid3 = mysql_fetch_array($getverid2);
 	if ($getverid3['id'] != $verificationID)
-	{		$getitem = "SELECT * FROM " . $table . " WHERE " . $nameField . " = \"" . mysql_real_escape_string($username) . "\"";
+	{
+		$getitem = "SELECT * FROM " . $table . " WHERE " . $nameField . " = \"" . mysql_real_escape_string($username) . "\"";
 		$getitem2 = mysql_query($getitem);
 		$getitem3 = mysql_fetch_array($getitem2);
 		if ($getitem3[$nameField] == $username)
@@ -136,7 +137,7 @@ function instaDisc_sendDatabase($cserver)
 	$client->send($msg);
 }
 
-function instaDisc_addItem($username, $subscription, $title, $author, $url, $semantics, $encryptionID)
+function instaDisc_addItem($username, $subscription, $title, $author, $url, $semantics, $encryptionID = 0)
 {
 	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
 	$getuser2 = mysql_query($getuser);
