@@ -18,7 +18,7 @@ if (isset($_SESSION['username']))
 		{
 			addError($numOfErrors, $errors, 'old', 'Old Password is a required field');
 		} else {
-			if (!instaDisc_verifyUser($_SESSION['username'], $_POST['old'])
+			if (!instaDisc_verifyUser($_SESSION['username'], $_POST['old']))
 			{
 				addError($numOfErrors, $errors, 'old', 'Old password is not correct');
 			}
