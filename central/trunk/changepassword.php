@@ -5,52 +5,53 @@
 include('includes/instadisc.php');
 include('includes/template.php');
 
-if (!isset($_GET['submit']))
+if (isset($_SESSION['username']))
 {
-	showForm('','','',array());
-} else {
-	$numOfErrors = 0;
-	$errors = array();
-
-	if ($_POST['old'] == '')
+	if (!isset($_GET['submit']))
 	{
-		addError($numOfErrors, $errors, 'old', 'Old Password is a required field');
+		showForm('','','',array());
 	} else {
-		$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($_SESSION['username']) . "\" AND password = \"" . mysql_real_escape_string(md5($_POST['old'])) . "\"";
-		$getuser2 = mysql_query($getuser);
-		$getuser3 = mysql_fetch_array($getuser2);
+		$numOfErrors = 0;
+		$errors = array();
 
-		if ($getuser3['password'] != md5($_POST['password']))
+		if ($_POST['old'] == '')
 		{
-			addError($numOfErrors, $errors, 'old', 'Old password is not correct');
+			addError($numOfErrors, $errors, 'old', 'Old Password is a required field');
+		} else {
+			if (!instaDisc_verifyUser($_SESSION['username'], $_POST['old'])
+			{
+				addError($numOfErrors, $errors, 'old', 'Old password is not correct');
+			}
+		}
+
+		if ($_POST['new'] == '')
+		{
+			addError($numOfErrors, $errors, 'new', 'New Password is a required field');
+		}
+
+		if ($_POST['confirm'] == '')
+		{
+			addError($numOfErrors, $errors, 'confirm', 'Confirm New Password is a required field');
+		}
+
+		if ($_POST['new'] != $_POST['confirm'])
+		{
+			addError($numOfErrors, $errors, 'confirm', 'Passwords do not match');
+		}
+
+		if ($numOfErrors > 0)
+		{
+			showForm($_POST['old'], $_POST['new'], $_POST['confirm'], $errors);
+		} else {
+			instaDisc_changePassword($_SESSION['username'], $_POST['new']);
+
+			$template = new FITemplate('changedpassword');
+			$template->add('SITENAME', instaDisc_getConfig('siteName'));
+			$template->display();
 		}
 	}
-
-	if ($_POST['new'] == '')
-	{
-		addError($numOfErrors, $errors, 'new', 'New Password is a required field');
-	}
-
-	if ($_POST['confirm'] == '')
-	{
-		addError($numOfErrors, $errors, 'confirm', 'Confirm New Password is a required field');
-	}
-
-	if ($_POST['new'] != $_POST['confirm'])
-	{
-		addError($numOfErrors, $errors, 'confirm', 'Passwords do not match');
-	}
-
-	if ($numOfErrors > 0)
-	{
-		showForm($_POST['old'], $_POST['new'], $_POST['confirm'], $errors);
-	} else {
-		instaDisc_changePassword($_SESSION['username'], $_POST['new']);
-
-		$template = new FITemplate('changedpassword');
-		$template->add('SITENAME', instaDisc_getConfig('siteName'));
-		$template->display();
-	}
+} else {
+	header('Location: index.php');
 }
 
 function showForm($old, $new, $confirm, $errors)
