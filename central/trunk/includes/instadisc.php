@@ -26,7 +26,7 @@ function instaDisc_checkVerification($username, $verification, $verificationID, 
 				$cntverid3 = mysql_fetch_array($cntverid2);
 				if ($cntverid3[0] >= intval(instaDisc_getConfig('verIDBufferSize')))
 				{
-					$delverid = "DELETE FROM oldVerID WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+					$delverid = "DELETE FROM oldVerID WHERE username = \"" . mysql_real_escape_string($username) . "\" LIMIT 0,1";
 					$delverid2 = mysql_query($delverid);
 				}
 
