@@ -5,7 +5,7 @@
 include_once('includes/db.php');
 include_once('includes/class.phpmailer.php');
 
-function instaDisc_checkVerification($username, $verification, $verificationID, $table, $nameField, $passField)
+function instaDisc_checkVerification($username, $verification, $verificationID, $table, $nameField, $passField, $comeAgain = false, $comeAgainURL = '', $comeAgainMethod = '', $comeAgainSignature = '')
 {
 	$getverid = "SELECT * FROM oldVerID WHERE username = \"" . mysql_real_escape_string($username) . "\" AND verID = " . $verificationID;
 	$getverid2 = mysql_query($getverid);
@@ -41,6 +41,24 @@ function instaDisc_checkVerification($username, $verification, $verificationID, 
 
 				return true;
 			}
+		}
+	} else {
+		if ($comeAgain)
+		{
+			$cserver = $_SERVER['SERVER_NAME'];
+			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver) . "\"";
+			$getuk2 = mysql_query($getuk);
+			$getuk3 = mysql_fetch_array($getuk2);
+
+			$verID = rand(1,2147483647);
+
+			$client = new xmlrpc_client($comeAgainURL);
+			$msg = new xmlrpcmsg("InstaDisc.comeAgain", array(	new xmlrpcval($cserver, 'string'),
+										new xmlrpcval(md5($cserver . ":" . $getuk3['code'] . ":" . $verID), 'string'),
+										new xmlrpcval($verID, 'int'),
+										new xmlrpcval($comeAgainMethod, 'string'),
+										new xmlrpcval(serialize($comeAgainSignature), 'string')));
+			$client->send($msg);			
 		}
 	}
 
@@ -121,7 +139,7 @@ function instaDisc_sendDatabase($cserver)
 		$i++;
 	}
 
-	$cserver2 = $_SERVER['HTTP_HOST'];
+	$cserver2 = $_SERVER['SERVER_NAME'];
 	$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver2) . "\"";
 	$getuk2 = mysql_query($getuk);
 	$getuk3 = mysql_fetch_array($getuk2);
@@ -184,7 +202,7 @@ function instaDisc_sendActivationEmail($username, $password, $email)
 	$mail = instaDisc_phpMailer();
 	$mail->AddAddress($email, $username);
 	$mail->Subject = 'InstaDisc Account Verification';
-	$mail->Body = "Hello, someone has recently registered an account at " . $_SERVER['HTTP_HOST'] . " with your email address. If that was you, and your chosen username IS " . $username . ", then copy the account verification code below to our Account Verification page, enter your username and press Activate!\r\n\r\n" . $penKey . "\r\n\r\nIf that was not you, copy the above code to our Account Verification page, enter the above username, and click Delete.";
+	$mail->Body = "Hello, someone has recently registered an account at " . $_SERVER['SERVER_NAME'] . " with your email address. If that was you, and your chosen username IS " . $username . ", then copy the account verification code below to our Account Verification page, enter your username and press Activate!\r\n\r\n" . $penKey . "\r\n\r\nIf that was not you, copy the above code to our Account Verification page, enter the above username, and click Delete.";
 	$mail->Send();
 
 	return ($mail->IsError() ? $mail->ErrorInfo : true);
