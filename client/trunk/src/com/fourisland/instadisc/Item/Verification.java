@@ -32,7 +32,7 @@ public class Verification {
             throw new VerificationIDReusedException();
         } else {
             if (Wrapper.countOldVerID() == Integer.decode(Wrapper.getConfig("verIDBufferSize"))) {
-                Wrapper.emptyOldVerID();
+                Wrapper.dropFromTopOldVerID();
             }
             Wrapper.addOldVerID(id);
         }

@@ -8,7 +8,6 @@ import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 import com.sleepycat.je.Transaction;
-import com.sleepycat.persist.EntityCursor;
 import com.sleepycat.persist.EntityStore;
 import com.sleepycat.persist.PrimaryIndex;
 import com.sleepycat.persist.StoreConfig;
@@ -120,21 +119,15 @@ public class Wrapper {
         }
     }
 
-    public static void emptyOldVerID() {
+    public static void addOldVerID(Integer id) {
         synchronized (oldVerID) {
             try {
                 Transaction t = e.beginTransaction(null, null);
 
                 try {
-                    EntityCursor<OldVerID> ec = oldVerID.entities();
-                    try {
-                        Iterator<OldVerID> i = ec.iterator();
-                        while (i.hasNext()) {
-                            oldVerID.delete(t, i.next().getID());
-                        }
-                    } finally {
-                        ec.close();
-                    }
+                    OldVerID temp = new OldVerID();
+                    temp.setID(id);
+                    oldVerID.put(t, temp);
 
                     t.commit();
                 } catch (Exception ex) {
@@ -145,16 +138,15 @@ public class Wrapper {
             }
         }
     }
-
-    public static void addOldVerID(Integer id) {
+    
+    public static void dropFromTopOldVerID() {
         synchronized (oldVerID) {
             try {
                 Transaction t = e.beginTransaction(null, null);
 
                 try {
-                    OldVerID temp = new OldVerID();
-                    temp.setID(id);
-                    oldVerID.put(t, temp);
+                    Iterator<Entry<Integer, OldVerID>> i = oldVerID.map().entrySet().iterator();
+                    oldVerID.delete(t, i.next().getKey());
 
                     t.commit();
                 } catch (Exception ex) {

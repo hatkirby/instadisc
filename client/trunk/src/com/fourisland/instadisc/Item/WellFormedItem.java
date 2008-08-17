@@ -174,10 +174,6 @@ public class WellFormedItem {
         return good;
     }
 
-    private boolean checkForLegalCategory(String string, boolean good) {
-        return (good ? true : Wrapper.getSubscription(aThis.headerMap.get("Subscription")).getCategory().equals(string));
-    }
-
     private boolean checkForProperVerification() {
         boolean good = false;
         try {
