@@ -157,7 +157,13 @@ function sendPost($id)
 								new xmlrpcval($authorName, 'string'),
 								new xmlrpcval($url, 'string'),
 								new xmlrpcval(serialize(array()), 'string')));
-	$client->send($msg);
+	$resp = $client->send($msg);
+	$val = $resp->value()->scalarVal();
+
+	if ($val == 2)
+	{
+		sendPost($id);
+	}
 }
 
 add_action('comment_post','sendComment');
@@ -181,7 +187,13 @@ function sendComment($id)
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
 								new xmlrpcval(serialize(array()), 'string')));
-	$client->send($msg);
+	$resp = $client->send($msg);
+	$val = $resp->value()->scalarVal();
+
+	if ($val == 2)
+	{
+		sendComment($id);
+	}
 }
 
 ?>
