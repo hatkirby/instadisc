@@ -89,6 +89,13 @@ function id_settings_page()
   <BR>Both after registration and after activation, the Central Server you are using should tell you it's XML-RPC URL (usually a URL containing the string "xmlrpc.php"). Copy that URL into this field.
  </TD>
 </TR>
+<TR VALIGN="top">
+ <TH SCOPE="row"><LABEL>Encryption Password</LABEL>
+ <TD>
+  <INPUT TYPE="text" NAME="instaDisc_blogPost_password" VALUE="<?php echo(get_option('instaDisc_blogPost_password')); ?>" SIZE="40">
+  <BR>If you would like to password-protect your feed, enter a password into this box. That password will need to be known by anyone allowed to view your subscription. If you don't want to password protect this feed, leave this field blank.
+ </TD>
+</TR>
 </TABLE>
 <H3>Comments Subscription</H3>
 <TABLE CLASS="form-table">
@@ -127,9 +134,16 @@ function id_settings_page()
   <BR>Both after registration and after activation, the Central Server you are using should tell you it's XML-RPC URL (usually a URL containing the string "xmlrpc.php"). Copy that URL into this field.
  </TD>
 </TR>
+<TR VALIGN="top">
+ <TH SCOPE="row"><LABEL>Encryption Password</LABEL>
+ <TD>
+  <INPUT TYPE="text" NAME="instaDisc_comment_password" VALUE="<?php echo(get_option('instaDisc_comment_password')); ?>" SIZE="40">
+  <BR>If you would like to password-protect your feed, enter a password into this box. That password will need to be known by anyone allowed to view your subscription. If you don't want to password protect this feed, leave this field blank.
+ </TD>
+</TR>
 </TABLE>
 <INPUT TYPE="hidden" NAME="action" VALUE="update">
-<INPUT TYPE="hidden" NAME="page_options" VALUE="instaDisc_subscription_title,instadisc_blogPost_centralServer_activationKey,instaDisc_blogPost_centralServer,instaDisc_comment_centralServer_activationKey,instaDisc_comment_centralServer,instaDisc_blogPost_centralServer_username,instaDisc_blogPost_centralServer_password,instaDisc_comment_centralServer_username,instaDisc_comment_centralServer_password">
+<INPUT TYPE="hidden" NAME="page_options" VALUE="instaDisc_subscription_title,instadisc_blogPost_centralServer_activationKey,instaDisc_blogPost_centralServer,instaDisc_comment_centralServer_activationKey,instaDisc_comment_centralServer,instaDisc_blogPost_centralServer_username,instaDisc_blogPost_centralServer_password,instaDisc_comment_centralServer_username,instaDisc_comment_centralServer_password,instaDisc_blogPost_password,instaDisc_comment_password">
 <P CLASS="submit"><INPUT TYPE="submit" NAME="Submit" VALUE="<?php _e('Save Changes') ?>"></P>
 </FORM></DIV><?php
 }
