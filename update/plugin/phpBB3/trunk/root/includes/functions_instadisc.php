@@ -51,7 +51,13 @@ function sendItem($title, $userID, $url, $fourm)
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
 								new xmlrpcval(serialize($semantics), 'string')));
-	$client->send($msg);
+	$resp = $client->send($msg);
+	$val = $resp->value()->scalarVal();
+
+	if ($val == 2)
+	{
+		sendItem($title, $userID, $url, $fourm);
+	}
 }
 
 ?>
