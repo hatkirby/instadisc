@@ -184,6 +184,12 @@ function sendPost($id)
 	$authorName = $author->display_name;
 	$url = get_permalink($id);
 
+	$encID = 0;
+	if (get_option('instaDisc_blogPost_password') != '')
+	{
+		$encID = encryptData($title, $author, $url, get_option('instaDisc_blogPost_password'));
+	}
+
 	$verID = rand(1,2147483647);
 
 	$client = new xmlrpc_client(get_option('instaDisc_blogPost_centralServer'));
@@ -194,7 +200,8 @@ function sendPost($id)
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($authorName, 'string'),
 								new xmlrpcval($url, 'string'),
-								new xmlrpcval(serialize(array()), 'string')));
+								new xmlrpcval(serialize(array()), 'string'),
+								new xmlrpcval($encID, 'int')));
 	$resp = $client->send($msg);
 	$val = $resp->value()->scalarVal();
 
@@ -214,6 +221,12 @@ function sendComment($id)
 	$author = $comment->comment_author;
 	$url = get_permalink($comment->comment_post_ID) . "#comments";
 
+	$encID = 0;
+	if (get_option('instaDisc_comment_password') != '')
+	{
+		$encID = encryptData($title, $author, $url, get_option('instaDisc_comment_password'));
+	}
+
 	$verID = rand(1,2147483647);
 
 	$client = new xmlrpc_client(get_option('instaDisc_comment_centralServer'));
@@ -224,7 +237,8 @@ function sendComment($id)
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
-								new xmlrpcval(serialize(array()), 'string')));
+								new xmlrpcval(serialize(array()), 'string'),
+								new xmlrpcval($encID, 'int')));
 	$resp = $client->send($msg);
 	$val = $resp->value()->scalarVal();
 
@@ -232,6 +246,34 @@ function sendComment($id)
 	{
 		sendComment($id);
 	}
+}
+
+function encryptData(&$title, &$author, &$url, $password)
+{
+	$encID = rand(1,2147483647);
+
+	$cipher = "rijndael-128";
+	$mode = "cbc";
+	$key = substr(md5(substr(str_pad($password,16,$encID),0,16)),0,16);
+
+	$td = mcrypt_module_open($cipher, "", $mode, "");
+
+	$title = encryptString($td, $key, $title);
+	$author = encryptString($td, $key, $author);
+	$url = encryptString($td, $key, $url);
+
+	mcrypt_module_close($td);
+
+	return $encID;
+}
+
+function encryptString($td, $key, $string)
+{
+	mcrypt_generic_init($td, $key, strrev($key));
+	$string = bin2hex(mcrypt_generic($td, $string));
+	mcrypt_generic_deinit($td);
+
+	return $string;
 }
 
 ?>
