@@ -14,9 +14,32 @@ $idusActivationKey = array();
 $idusEncryptionKey = array();
 $instaDisc_subCount = 0;
 
-function instaDisc_sendItem($id, $title, $author, $url, $semantics, $encryptionID = 0)
+function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 {
-	global $idusUsername, $idusPassword, $idusCentralServer, $idusSubscriptionURI;
+	global $idusUsername, $idusPassword, $idusCentralServer, $idusSubscriptionURI, $idusEncryptionKey;
+
+	$encID = 0;
+	if (($idusEncryptionKey[$id] != '') && extension_loaded('mcrypt'))
+	{
+		$encID = rand(1,2147483647);
+
+		$cipher = "rijndael-128";
+		$mode = "cbc";
+		$key = substr(md5(substr(str_pad($idusEncryptionKey[$id],16,$encID),0,16)),0,16);
+
+		$td = mcrypt_module_open($cipher, "", $mode, "");
+
+		$title = encryptString($td, $key, $title);
+		$author = encryptString($td, $key, $author);
+		$url = encryptString($td, $key, $url);
+
+		foreach ($semantics as $name => $value)
+		{
+			$semantics[$name] = encryptString($td, $key, $value);
+		}
+	
+		mcrypt_module_close($td);
+	}
 	
 	$verID = rand(1,2147483647);
 
@@ -29,7 +52,7 @@ function instaDisc_sendItem($id, $title, $author, $url, $semantics, $encryptionI
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
 								new xmlrpcval(serialize($semantics), 'string'),
-								new xmlrpcval($encryptionID, 'int')));
+								new xmlrpcval($encID, 'int')));
 	$resp = $client->send($msg);
         $val = $resp->value()->scalarVal();
 
@@ -44,46 +67,6 @@ function instaDisc_sendItem($id, $title, $author, $url, $semantics, $encryptionI
 	}
 }
 
-function instaDisc_sendEncrypted($id, $title, $author, $url, $semantics)
-{
-	global $idusEncryptionKey;
-
-	$encID = 0;
-	while ($encID == 0)
-	{
-		$encID = rand(1,2147483647);
-	}
-
-	$cipher = "rijndael-128";
-	$mode = "cbc";
-	$key = substr(md5(substr(str_pad($idusEncryptionKey[$id],16,$encID),0,16)),0,16);
-
-	$td = mcrypt_module_open($cipher, "", $mode, "");
-
-	mcrypt_generic_init($td, $key, strrev($key));
-	$title = bin2hex(mcrypt_generic($td, $title));
-	mcrypt_generic_deinit($td);
-
-	mcrypt_generic_init($td, $key, strrev($key));
-	$author = bin2hex(mcrypt_generic($td, $author));
-	mcrypt_generic_deinit($td);
-
-	mcrypt_generic_init($td, $key, strrev($key));
-	$url = bin2hex(mcrypt_generic($td, $url));
-	mcrypt_generic_deinit($td);
-
-	foreach ($semantics as $name => $value)
-	{
-		mcrypt_generic_init($td, $key, strrev($key));
-		$semantics[$name] = bin2hex(mcrypt_generic($td, $value));
-		mcrypt_generic_deinit($td);
-	}
-	
-	mcrypt_module_close($td);
-
-	return instaDisc_sendItem($id, $title, $author, $url, $semantics, $encID);
-}
-
 function instaDisc_addSubscription($username, $password, $central, $uri, $title, $category, $key = '', $enc = '')
 {
 	global $instaDisc_subCount, $idusUsername, $idusPassword, $idusCentralServer, $idusSubscriptionURI, $idusSubscriptionTitle, $idusSubscriptionCategory, $idusActivationKey, $idusEncryptionKey;
@@ -96,6 +79,15 @@ function instaDisc_addSubscription($username, $password, $central, $uri, $title,
 	$idusActivationKey[$instaDisc_subCount] = $key;
 	$idusEncryptionKey[$instaDisc_subCount] = $enc;
 	$instaDisc_subCount++;
+}
+
+function encryptString($td, $key, $string)
+{
+	mcrypt_generic_init($td, $key, strrev($key));
+	$string = bin2hex(mcrypt_generic($td, $string));
+	mcrypt_generic_deinit($td);
+
+	return $string;
 }
 
 ?>
