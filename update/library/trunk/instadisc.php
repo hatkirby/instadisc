@@ -14,7 +14,7 @@ $idusActivationKey = array();
 $idusEncryptionKey = array();
 $instaDisc_subCount = 0;
 
-function instaDisc_sendItem($id, $title, $author, $url, $semantics)
+function instaDisc_sendItem($id, $title, $author, $url, $semantics, $encryptionID = 0)
 {
 	global $idusUsername, $idusPassword, $idusCentralServer, $idusSubscriptionURI;
 	
@@ -29,13 +29,23 @@ function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
 								new xmlrpcval(serialize($semantics), 'string'),
-								new xmlrpcval('0', 'int')));
-	$client->send($msg);
+								new xmlrpcval($encryptionID, 'int')));
+	$resp = $client->send($msg);
+
+	if ($resp->value() == 2)
+	{
+		return instaDisc_sendItem($id, $title, $author, $url, $semantics, $encryptionID);
+	} else if ($resp->value() == 0)
+	{
+		return TRUE;
+	} else {
+		return FALSE;
+	}
 }
 
 function instaDisc_sendEncrypted($id, $title, $author, $url, $semantics)
 {
-	global $idusUsername, $idusPassword, $idusCentralServer, $idusSubscriptionURI, $idusEncryptionKey;
+	global $idusEncryptionKey;
 
 	$encID = 0;
 	while ($encID == 0)
@@ -70,19 +80,7 @@ function instaDisc_sendEncrypted($id, $title, $author, $url, $semantics)
 	
 	mcrypt_module_close($td);
 
-	$verID = rand(1,2147483647);
-
-	$client = new xmlrpc_client($idusCentralServer[$id]);
-	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($idusUsername[$id], 'string'),
-								new xmlrpcval(md5($idusUsername[$id] . ":" . md5($idusPassword[$id]) . ":" . $verID), 'string'),
-								new xmlrpcval($verID, 'int'),
-								new xmlrpcval($idusSubscriptionURI[$id], 'string'),
-								new xmlrpcval($title, 'string'),
-								new xmlrpcval($author, 'string'),
-								new xmlrpcval($url, 'string'),
-								new xmlrpcval(serialize($semantics), 'string'),
-								new xmlrpcval($encID, 'int')));
-	$client->send($msg);
+	return instaDisc_sendItem($id, $title, $author, $url, $semantics, $encID);
 }
 
 function instaDisc_addSubscription($username, $password, $central, $uri, $title, $category, $key = '', $enc = '')
