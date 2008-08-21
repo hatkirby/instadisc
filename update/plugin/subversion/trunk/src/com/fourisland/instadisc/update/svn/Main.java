@@ -53,7 +53,7 @@ public class Main {
             config.setServerURL(new URL(centralServer));
             XmlRpcClient client = new XmlRpcClient();
             client.setConfig(config);
-            client.execute("InstaDisc.sendFromUpdate", new Object[]{username,
+            Integer resp = (Integer) client.execute("InstaDisc.sendFromUpdate", new Object[]{username,
                 (new MD5(username + ":" + (new MD5(password)).hash() + ":" + verID)).hash(),
                 verID,
                 subscription,
@@ -62,6 +62,11 @@ public class Main {
                 path,
                 "a:0:{}"
             });
+
+            if (resp == 2)
+            {
+                main(args);
+            }
         } catch (XmlRpcException ex)
         {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -72,7 +77,7 @@ public class Main {
     }
 
     public static String getArg(int arg, String[] args) {
-        if (args.length < (arg+1))
+        if (args.length < (arg + 1))
         {
             System.out.println("Program requires 7 arguments and you only provided " + arg);
             System.exit(1);
