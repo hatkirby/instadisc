@@ -31,11 +31,12 @@ function instaDisc_sendItem($id, $title, $author, $url, $semantics, $encryptionI
 								new xmlrpcval(serialize($semantics), 'string'),
 								new xmlrpcval($encryptionID, 'int')));
 	$resp = $client->send($msg);
+        $val = $resp->value()->scalarVal();
 
-	if ($resp->value() == 2)
+	if ($val == 2)
 	{
 		return instaDisc_sendItem($id, $title, $author, $url, $semantics, $encryptionID);
-	} else if ($resp->value() == 0)
+	} else if ($val == 0)
 	{
 		return TRUE;
 	} else {
