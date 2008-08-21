@@ -114,6 +114,8 @@ function sendFromUpdate($username, $verification, $verificationID, $subscription
 
 			return new xmlrpcresp(new xmlrpcval(0, "int"));
 		}
+	} else {
+		return new xmlrpcresp(new xmlrpcval(2, "int"));
 	}
 
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
