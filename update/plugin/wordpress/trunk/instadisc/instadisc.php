@@ -30,6 +30,16 @@ if (get_option('instaDisc_subscription_title') === FALSE)
 	add_option('instaDisc_subscription_title',get_option('blogname'));
 }
 
+if (get_option('instaDisc_blogPost_password') === FALSE)
+{
+	add_option('instaDisc_blogPost_password','');
+}
+
+if (get_option('instaDisc_comment_password') === FALSE)
+{
+	add_option('instaDisc_comment_password','');
+}
+
 add_action('admin_menu', 'am_pages');
 
 function am_pages()
