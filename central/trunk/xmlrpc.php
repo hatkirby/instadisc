@@ -236,7 +236,7 @@ function addSubscription($username, $verification, $verificationID, $subscriptio
 		$getsub = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\" AND username = \"" . mysql_real_escape_string($username) . "\" AND owner = \"false\"";
 		$getsub2 = mysql_query($getsub);
 		$getsub3 = mysql_fetch_array($getsub2);
-		if ($getsub3['url'] == $subscription)	
+		if ($getsub3['url'] != $subscription)	
 		{
 			$inssub = "INSERT INTO subscriptions (url, username, owner, category) VALUES (\"" . mysql_real_escape_string($subscription) . "\", \"" . mysql_real_escape_string($username) . "\", \"false\", \"" . mysql_real_escape_string($category) . "\")";
 			$inssub2 = mysql_query($inssub);
