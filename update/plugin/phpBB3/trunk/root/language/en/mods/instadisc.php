@@ -33,22 +33,31 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ACP_INSTADISC'		=> 'InstaDisc',
 
-	'INSTADISC'		=> 'InstaDisc',
-	'INSTADISC_EXPLAIN'	=> 'Welcome to the InstaDisc Update Server admin panel. To set up your subscriptions, you have to do a few things. For more information, see',
-	'INSTADISC_LINK_TEXT'	=> 'the InstaDisc phpBB3 plugin page',
+	'INSTADISC'			=> 'InstaDisc',
+	'INSTADISC_EXPLAIN'		=> 'Welcome to the InstaDisc Update Server admin panel. To set up your subscriptions, you have to do a few things. For more information, see',
+	'INSTADISC_LINK_TEXT'		=> 'the InstaDisc phpBB3 plugin page',
 
-	'SUBSCRIPTION'		=> 'Subscription',
-	'SUBSCRIPTION_TITLE'	=> 'Subscription Title',
-	'SUBSCRIPTION_FILE'	=> 'Subscription File URL',
+	'SUBSCRIPTION'			=> 'Subscription',
+	'SUBSCRIPTION_TITLE'		=> 'Subscription Title',
+	'SUBSCRIPTION_FILE'		=> 'Subscription File URL',
 
-	'CENTRAL_SERVER'	=> 'Central Server',
-	'USERNAME'		=> 'Username',
-	'PASSWORD'		=> 'Password',
-	'ACTIVATION'		=> 'Activation Key',
+	'CENTRAL_SERVER'		=> 'Central Server',
+	'USERNAME'			=> 'Username',
+	'PASSWORD'			=> 'Password',
+	'ACTIVATION'			=> 'Activation Key',
 
-	'ENCRYPTION'		=> 'Encryption Key',
+	'ENCRYPTION'			=> 'Encryption Key',
 
-	'LN'			=> "\n",
+	'SUBSCRIPTION_FILE_DESC'	=> 'This is the URL of your subscription file',
+	'CENTRAL_SERVER_DESC'		=> 'This is the Central Server\'s XML-RPC URL. They should have provided this for you in an email and also on their site.',
+	'USERNAME_DESC'			=> 'Enter the username you registered for at your Central Server',
+	'PASSWORD_DESC'			=> 'Enter the password to go with the username above',
+	'ACTIVATION_DESC'		=> 'After submitting your subscription for sponsership at your Central Server, it should provide you with an Activation Key',
+	'ENCRYPTION_DESC'		=> 'If you have the PHP module "mcrypt" installed, you can password protect this subscription so that users who wish to subscribe to it must provide the correct password. Leave this field blank if you do not wish to encrypt this subscription.',
+
+	'ID_CHANGES_SAVED'		=> 'The changes you made to your InstaDisc settings have been saved!',
+
+	'LN'				=> "\n",
 ));
 			
 ?>

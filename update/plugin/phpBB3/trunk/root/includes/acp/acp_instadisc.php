@@ -25,7 +25,7 @@ class acp_instadisc
 		// Set up the page
 		$this->tpl_name		= 'acp_instadisc';
 		$this->page_title	= 'ACP_INSTADISC';
-		$submit		= isset($_POST['submit']) ? true : false;
+		$submit			= isset($_POST['submit']) ? true : false;
 
 		if ($submit)
 		{
@@ -37,7 +37,7 @@ class acp_instadisc
 			set_config('id_activation_key', $_POST['central_server_activation']);
 			set_config('id_encryption_key', $_POST['encryption_key']);
 
-			trigger_error('The changes you made to your InstaDisc settings have been saved!' . adm_back_link($this->u_action), E_USER_NOTICE);
+			trigger_error($user->lang['ID_CHANGES_SAVED'] . adm_back_link($this->u_action), E_USER_NOTICE);
 		} else {
 			$idst	= isset($config['id_subscription_title']) ? $config['id_subscription_title'] : $config['sitename'];
 			$idcs	= isset($config['id_central_server']) ? $config['id_central_server'] : '';
