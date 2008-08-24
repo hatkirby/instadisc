@@ -35,6 +35,7 @@ class acp_instadisc
 			set_config('id_username', $_POST['central_server_username']);
 			set_config('id_password', $_POST['central_server_password']);
 			set_config('id_activation_key', $_POST['central_server_activation']);
+			set_config('id_encryption_key', $_POST['encryption_key']);
 
 			trigger_error('The changes you made to your InstaDisc settings have been saved!' . adm_back_link($this->u_action), E_USER_NOTICE);
 		} else {
@@ -44,6 +45,7 @@ class acp_instadisc
 			$idps	= isset($config['id_password']) ? $config['id_password'] : '';
 			$idak	= isset($config['id_activation_key']) ? $config['id_activation_key'] : '';
 			$idsf	= generate_board_url() . '/instadisc.php';
+			$idec	= isset($config['id_encryption_key']) ? $config['id_encryption_key'] : '';
 
 			$template->assign_vars(array(
 				'S_SUBSCRIPTION_TITLE'	=> $idst,
@@ -52,6 +54,7 @@ class acp_instadisc
 				'S_PASSWORD'		=> $idps,
 				'S_ACTIVATION'		=> $idak,
 				'S_SUBSCRIPTION_FILE'	=> $idsf,
+				'S_ENCRYPTION_KEY'	=> $idec,
 				'S_SUBMIT'		=> $this->u_action
 			));
 		}

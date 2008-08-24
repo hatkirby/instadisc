@@ -46,6 +46,8 @@ $lang = array_merge($lang, array(
 	'PASSWORD'		=> 'Password',
 	'ACTIVATION'		=> 'Activation Key',
 
+	'ENCRYPTION'		=> 'Encryption Key',
+
 	'LN'			=> "\n",
 ));
 			
