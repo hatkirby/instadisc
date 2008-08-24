@@ -49,6 +49,13 @@
 			</DT>
 			<DD><INPUT NAME="central_server_activation" TYPE="text" ID="central_server_activation" MAXLENGTH="255" VALUE="{S_ACTIVATION}" SIZE="40"></DD>
 		</DL>
+		<DL>
+			<DT>
+				<LABEL FOR="encryption_key">{L_ENCRYPTION}</LABEL>
+				<BR><SPAN>If you have the PHP module "mcrypt" installed, you can password protect this subscription so that users who wish to subscribe to it must provide the correct password. Leave this field blank if you do not wish to encrypt this subscription.</SPAN>
+			</DT>
+			<DD><INPUT NAME="encryption_key" TYPE="text" ID="encryption_key" MAXLENGTH="255" VALUE="{S_ENCRYPTION}" SIZE="40"></DD>
+		</DL>
 	</fieldset>
 	<p class="submit-buttons">
 		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
