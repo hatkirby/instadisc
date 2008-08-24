@@ -24,7 +24,7 @@ include($phpbb_root_path . 'includes/xmlrpc/xmlrpc.inc');
 function sendItem($title, $userID, $url, $fourm)
 {
 	global $config, $db, $phpbb_root_path;
-	$verID = rand(1,65536);
+	$verID = rand(1,2147483647);
 
 	$da = array('user_id' => $userID);
 	$getuser = "SELECT * FROM " . USERS_TABLE . " WHERE " . $db->sql_build_array('SELECT', $da);
@@ -33,7 +33,7 @@ function sendItem($title, $userID, $url, $fourm)
 	$db->sql_freeresult($getuser2);
 	$author = $getuser3['username'];
 
-	$url = html_entity_decode(str_replace($phpbb_root_path, generate_board_url() . '/', $url));
+	$url = str_replace($phpbb_root_path, generate_board_url() . '/', $url);
 
 	$da = array('forum_id' => $fourm);
 	$getfourm = "SELECT * FROM " . FORUMS_TABLE . " WHERE " . $db->sql_build_array('SELECT', $da);
