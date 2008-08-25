@@ -21,6 +21,14 @@
 				<LI><A HREF="activatesub.php">Activate a Subscription</A></LI>
 				<LI><A HREF="mansub.php">Manage subscriptions</A></LI>
 			</UL>
+
+			<!--BEGIN ADMIN-->
+			<P>Since you are the almighty admin of this Central Server, you can edit configurational values!
+
+			<UL>
+				<LI><A HREF="admin.php">Edit Configuration</A></LI>
+			</UL>
+			<!--END ADMIN-->
 		</CENTER>
 	</BODY>
 </HTML>

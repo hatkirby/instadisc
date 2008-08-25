@@ -294,9 +294,6 @@ function instaDisc_addSubscription($username, $url)
 	$getcode3 = mysql_fetch_array($getcode2);
 	if ($getcode3['username'] == $username)
 	{
-		$delcode = "DELETE FROM pending2 WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\"";
-		$delcode2 = mysql_query($delcode);
-
 		$c = curl_init();
 		curl_setopt($c, CURLOPT_URL, $url);
 		curl_setopt($c, CURLOPT_HEADER, false);
@@ -324,15 +321,30 @@ function instaDisc_addSubscription($username, $url)
 							$inssub = "INSERT INTO subscriptions (username,url,owner,category) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($header['Subscription']) . "\", \"true\", \"" . mysql_real_escape_string($header['Category']) . "\")";
 							$inssub2 = mysql_query($inssub);
 
-							return true;
+							$delcode = "DELETE FROM pending2 WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\"";
+							$delcode2 = mysql_query($delcode);
+
+							return 0;
+						} else {
+							return 4;
 						}
+					} else {
+						return 3;
 					}
+				} else {
+					return 3;
 				}
+			} else {
+				return 3;
 			}
+		} else {
+			return 3;
 		}
+	} else {
+		return 2;
 	}
 
-	return false;
+	return 1;
 }
 
 function instaDisc_listPendingSubscriptions($username)
