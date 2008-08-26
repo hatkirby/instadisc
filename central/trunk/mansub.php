@@ -14,7 +14,7 @@ if (isset($_SESSION['username']))
 	$i=0;
 	for ($i=0;$i<$subs['size'];$i++)
 	{
-		$template->adds_block('SUBSCRIPTION', array(	'URL' => $subs[$i],
+		$template->adds_block('SUBSCRIPTIONS', array(	'URL' => $subs[$i],
 								'ID' => $i,
 								'EVEN' => (($i % 2 == 0) ? " CLASS=\"even\"" : "")));
 	}

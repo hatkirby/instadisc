@@ -301,24 +301,24 @@ function instaDisc_addSubscription($username, $url)
 		$page_data = curl_exec($c);
 		curl_close($c);
 
-		$headers = split("\n", $page_date);
+		$headers = split("\n", $page_data);
 		foreach ($headers as $name => $value)
 		{
 			$header = split(": ", $value);
 			$headerMap[$header[0]] = $header[1];
 		}
 
-		if (isset($header['Subscription']))
+		if (isset($headerMap['Subscription']))
 		{
-			if (isset($header['Title']))
+			if (isset($headerMap['Title']))
 			{
-				if (isset($header['Category']))
+				if (isset($headerMap['Category']))
 				{
-					if (isset($header['Key']))
+					if (isset($headerMap['Key']))
 					{
-						if ($header['Key'] == $getcode3['code'])
+						if ($headerMap['Key'] == $getcode3['code'])
 						{
-							$inssub = "INSERT INTO subscriptions (username,url,owner,category) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($header['Subscription']) . "\", \"true\", \"" . mysql_real_escape_string($header['Category']) . "\")";
+							$inssub = "INSERT INTO subscriptions (username,url,owner,category) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($headerMap['Subscription']) . "\", \"true\", \"" . mysql_real_escape_string($headerMap['Category']) . "\")";
 							$inssub2 = mysql_query($inssub);
 
 							$delcode = "DELETE FROM pending2 WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($url) . "\"";
