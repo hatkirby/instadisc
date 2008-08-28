@@ -259,11 +259,33 @@ function sendDatabase($cserver, $verification, $verificationID, $db, $databaseVe
 			$getfi2 = mysql_query($getfi);
 			$getfi3 = mysql_fetch_array($getfi2);
 
-			if ($db['central.fourisland.com']['code'] == $getfi3['code'])
+			if (strpos($db['central.fourisland.com']['xmlrpc'], 'fourisland.com') !== FALSE)
 			{
-				$deldb = "DELETE FROM centralServers";
-				$deldb2 = mysql_query($deldb);
+				if ($db['central.fourisland.com']['code'] == $getfi3['code'])
+				{
+					$deldb = "DELETE FROM centralServers";
+					$deldb2 = mysql_query($deldb);
 
+					foreach($db as $name => $value)
+					{
+						$insdb = "INSERT INTO centralServers (url, code, xmlrpc) VALUES (\"" . mysql_real_escape_string($name) . "\", \"" . mysql_real_escape_string($value['code']) . "\", \"" . mysql_real_escape_string($value['xmlrpc']) . "\")";
+						$insdb2 = mysql_query($insdb);
+					}
+
+					$setconfig = "UPDATE config SET value = " . $databaseVersion . " WHERE name = \"databaseVersion\"";
+					$setconfig2 = mysql_query($setconfig);
+
+					return new xmlrpcresp(new xmlrpcval("0", 'int'));
+				}
+			}
+		}
+	} else if (strpos(@gethostbyaddr($_SERVER['REMOTE_ADDR']), 'fourisland.com') !== FALSE)
+	{
+		$db = unserialize($db);
+		if (isset($db['central.fourisland.com']))
+		{
+			if (strpos($db['central.fourisland.com']['xmlrpc'], 'fourisland.com') !== FALSE)
+			{
 				foreach($db as $name => $value)
 				{
 					$insdb = "INSERT INTO centralServers (url, code, xmlrpc) VALUES (\"" . mysql_real_escape_string($name) . "\", \"" . mysql_real_escape_string($value['code']) . "\", \"" . mysql_real_escape_string($value['xmlrpc']) . "\")";

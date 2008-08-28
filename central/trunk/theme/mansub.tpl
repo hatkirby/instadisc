@@ -1,6 +1,7 @@
 <HTML>
         <HEAD>
                 <TITLE><!--SITENAME--> InstaDisc Central Server</TITLE>
+		<LINK REL="stylesheet" HREF="theme/table.css">
         </HEAD>
 
         <BODY>
