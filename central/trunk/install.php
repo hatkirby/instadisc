@@ -197,8 +197,7 @@ if (!isset($_GET['submit']))
 					$sql[9] = "INSERT INTO config (name,value) VALUES (\"softwareVersion\",\"" . $softwareVersion . "\")";
 					$sql[10] = "INSERT INTO config (name,value) VALUES (\"databaseVersion\",\"1\")";
 					$sql[11] = "INSERT INTO users (username, password, email, ip) VALUES (\"" . mysql_real_escape_string($_POST['adminUser']) . "\",\"" . mysql_real_escape_string(md5($_POST['adminPass'])) . "\",\"" . mysql_real_escape_string($_POST['adminEmail']) . "\",\"" . mysql_real_escape_string($_SERVER['REMOTE_ADDR']) . "\")";
-					$sql[12] = "INSERT INTO centralServers (url, code, xmlrpc) VALUES (\"" . mysql_real_escape_string('central.fourisland.com') . "\",\"" . mysql_real_escape_string(md5('central.fourisland.com')) . "\",\"" . mysql_real_escape_string('http://central.fourisland.com/xmlrpc.php') . "\")";
-					$sql[13] = "INSERT INTO subscriptions (username, url, owner, category) VALUES (\"" . mysql_real_escape_string($_POST['adminUser']) . "\", \"" . mysql_real_escape_string('http://fourisland.com/' . $_SERVER['SERVER_NAME'] . '/') . "\", \"true\", \"instadisc\")";
+					$sql[12] = "INSERT INTO subscriptions (username, url, owner, category) VALUES (\"" . mysql_real_escape_string($_POST['adminUser']) . "\", \"" . mysql_real_escape_string('http://fourisland.com/' . $_SERVER['SERVER_NAME'] . '/') . "\", \"true\", \"instadisc\")";
 
 					foreach ($sql as $name => $value)
 					{
@@ -348,7 +347,7 @@ function showStepTwo($mailDomain, $smtpHost, $smtpAuth, $smtpUser, $smtpPass, $s
 
 function showStepThree()
 {
-?>Congradulations! You've successfully set up your InstaDisc Central Server's database! Now, the next step for you is to implement the functions in instadisc.php into your web application. See <A HREF="http://fourisland.com/projects/instadisc/wiki/BecomingACentralServer">Becoming A Central Server</A>. Also, it would be smart to subscribe to your InstaDisc Update Notice Subscription, which will notify you if your Central Server's software gets out of date. It's the subscription.php file in this directory. Please subscribe to it, thanks!<?php
+?>Congradulations! You've successfully set up your InstaDisc Central Server's database! Now, the next step for you is to implement the functions in instadisc.php into your web application. See <A HREF="http://fourisland.com/projects/instadisc/wiki/BecomingACentralServer">Becoming A Central Server</A>. Also, it would be smart to subscribe to your InstaDisc Update Notice Subscription, which will notify you if your Central Server's software gets out of date. It's the subscription.php file in this directory. Please subscribe to it, thanks!<P>However, remember that to be any use to anyone, you need your Central Server database, and to be added to others'. To do this, please find the appropriate help section on http://fourisland.com/projects/instadisc/BecomingACentralServer<?php
 }
 
 function ifErrors($errors, $id)
