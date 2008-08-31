@@ -250,13 +250,16 @@ function addSubscription($username, $verification, $verificationID, $subscriptio
 
 function sendDatabase($cserver, $verification, $verificationID, $db, $databaseVersion)
 {
-	if (strpos(@gethostbyaddr($_SERVER['REMOTE_ADDR']), 'fourisland.com') !== FALSE)
+	if (preg_match('/^(.*\.)?fourisland\.com$/', @gethostbyaddr($_SERVER['REMOTE_ADDR'])))
 	{
 		$db = unserialize($db);
 		if (isset($db['central.fourisland.com']))
 		{
 			if (strpos($db['central.fourisland.com']['xmlrpc'], 'fourisland.com') !== FALSE)
 			{
+				$deldb = "DELETE FROM centralServers";
+				$deldb2 = mysql_query($deldb);
+
 				foreach($db as $name => $value)
 				{
 					$insdb = "INSERT INTO centralServers (url, code, xmlrpc) VALUES (\"" . mysql_real_escape_string($name) . "\", \"" . mysql_real_escape_string($value['code']) . "\", \"" . mysql_real_escape_string($value['xmlrpc']) . "\")";
