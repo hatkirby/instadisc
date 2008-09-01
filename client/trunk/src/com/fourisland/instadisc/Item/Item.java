@@ -10,6 +10,7 @@ import com.fourisland.instadisc.InstaDiscView;
 import com.fourisland.instadisc.XmlRpc;
 import java.awt.SystemTray;
 import java.awt.TrayIcon.MessageType;
+import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -54,6 +55,8 @@ public class Item {
             temp.remove("URL");
             item.setSemantics(temp);
             
+            item.setUnread(true);
+            item.setRecieved(Calendar.getInstance().getTime());
             Wrapper.addItem(item);
 
             ((InstaDiscView) InstaDiscApp.getApplication().getMainView()).refreshItemPane();

@@ -40,32 +40,39 @@ public class Wrapper {
         esConfig.setAllowCreate(true);
         envConfig.setTransactional(true);
         esConfig.setTransactional(true);
-        try {
+        try
+        {
             e = new Environment(new File(loc), envConfig);
             es = new EntityStore(e, "EntityStore", esConfig);
-        } catch (DatabaseException ex) {
+        } catch (DatabaseException ex)
+        {
             Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(1);
         }
         Runtime.getRuntime().addShutdownHook(new Thread(new CloseEnvironmentThread(e)));
         Runtime.getRuntime().addShutdownHook(new Thread(new CloseEntityStoreThread(es)));
 
-        try {
+        try
+        {
             oldVerID = es.getPrimaryIndex(Integer.class, OldVerID.class);
             idConfig = es.getPrimaryIndex(String.class, IDConfig.class);
             subscription = es.getPrimaryIndex(String.class, Subscription.class);
             filter = es.getPrimaryIndex(Integer.class, Filter.class);
             item = es.getPrimaryIndex(Integer.class, Item.class);
-        } catch (DatabaseException ex) {
+        } catch (DatabaseException ex)
+        {
             Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public static String getConfig(String key) {
-        synchronized (idConfig) {
-            try {
+        synchronized (idConfig)
+        {
+            try
+            {
                 return idConfig.get(key).getValue();
-            } catch (DatabaseException ex) {
+            } catch (DatabaseException ex)
+            {
                 Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
                 return "";
             }
@@ -73,16 +80,21 @@ public class Wrapper {
     }
 
     public static void setConfig(String key, String value) {
-        synchronized (idConfig) {
-            try {
+        synchronized (idConfig)
+        {
+            try
+            {
                 Transaction t = e.beginTransaction(null, null);
 
-                try {
-                    if (idConfig.contains(key)) {
+                try
+                {
+                    if (idConfig.contains(key))
+                    {
                         IDConfig temp = idConfig.get(key);
                         temp.setValue(value);
                         idConfig.put(t, temp);
-                    } else {
+                    } else
+                    {
                         IDConfig temp = new IDConfig();
                         temp.setKey(key);
                         temp.setValue(value);
@@ -90,29 +102,36 @@ public class Wrapper {
                     }
 
                     t.commit();
-                } catch (Exception ex) {
+                } catch (Exception ex)
+                {
                     t.abort();
                 }
-            } catch (DatabaseException ex) {
+            } catch (DatabaseException ex)
+            {
                 Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     public static boolean containsOldVerID(Integer id) {
-        try {
+        try
+        {
             return oldVerID.contains(id);
-        } catch (DatabaseException ex) {
+        } catch (DatabaseException ex)
+        {
             Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
 
     public static int countOldVerID() {
-        synchronized (oldVerID) {
-            try {
+        synchronized (oldVerID)
+        {
+            try
+            {
                 return (int) oldVerID.count();
-            } catch (DatabaseException ex) {
+            } catch (DatabaseException ex)
+            {
                 Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
                 return 0;
             }
@@ -120,49 +139,62 @@ public class Wrapper {
     }
 
     public static void addOldVerID(Integer id) {
-        synchronized (oldVerID) {
-            try {
+        synchronized (oldVerID)
+        {
+            try
+            {
                 Transaction t = e.beginTransaction(null, null);
 
-                try {
+                try
+                {
                     OldVerID temp = new OldVerID();
                     temp.setID(id);
                     oldVerID.put(t, temp);
 
                     t.commit();
-                } catch (Exception ex) {
+                } catch (Exception ex)
+                {
                     t.abort();
                 }
-            } catch (DatabaseException ex) {
+            } catch (DatabaseException ex)
+            {
                 Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-    
+
     public static void dropFromTopOldVerID() {
-        synchronized (oldVerID) {
-            try {
+        synchronized (oldVerID)
+        {
+            try
+            {
                 Transaction t = e.beginTransaction(null, null);
 
-                try {
+                try
+                {
                     Iterator<Entry<Integer, OldVerID>> i = oldVerID.map().entrySet().iterator();
                     oldVerID.delete(t, i.next().getKey());
 
                     t.commit();
-                } catch (Exception ex) {
+                } catch (Exception ex)
+                {
                     t.abort();
                 }
-            } catch (DatabaseException ex) {
+            } catch (DatabaseException ex)
+            {
                 Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     public static Subscription getSubscription(String url) {
-        synchronized (subscription) {
-            try {
+        synchronized (subscription)
+        {
+            try
+            {
                 return subscription.get(url);
-            } catch (DatabaseException ex) {
+            } catch (DatabaseException ex)
+            {
                 Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
                 return null;
             }
@@ -170,10 +202,13 @@ public class Wrapper {
     }
 
     public static boolean existsSubscription(String url) {
-        synchronized (subscription) {
-            try {
+        synchronized (subscription)
+        {
+            try
+            {
                 return subscription.contains(url);
-            } catch (DatabaseException ex) {
+            } catch (DatabaseException ex)
+            {
                 Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
                 return false;
             }
@@ -181,30 +216,37 @@ public class Wrapper {
     }
 
     public static void addSubscription(Subscription s) {
-        synchronized (subscription) {
-            try {
+        synchronized (subscription)
+        {
+            try
+            {
                 Transaction t = e.beginTransaction(null, null);
 
-                try {
+                try
+                {
                     subscription.put(t, s);
 
                     t.commit();
-                } catch (Exception ex) {
+                } catch (Exception ex)
+                {
                     t.abort();
                 }
-            } catch (DatabaseException ex) {
+            } catch (DatabaseException ex)
+            {
                 Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     public static Subscription[] getAllSubscription() {
-        synchronized (subscription) {
+        synchronized (subscription)
+        {
             Collection vals = subscription.map().values();
             Subscription subs[] = new Subscription[vals.size()];
             Iterator i = vals.iterator();
             int j = 0;
-            while (i.hasNext()) {
+            while (i.hasNext())
+            {
                 subs[j] = (Subscription) i.next();
                 j++;
             }
@@ -213,51 +255,65 @@ public class Wrapper {
     }
 
     public static void deleteSubscription(String url) {
-        synchronized (subscription) {
-            try {
+        synchronized (subscription)
+        {
+            try
+            {
                 Transaction t = e.beginTransaction(null, null);
 
-                try {
+                try
+                {
                     subscription.delete(t, url);
 
                     t.commit();
-                } catch (Exception ex) {
+                } catch (Exception ex)
+                {
                     t.abort();
                 }
-            } catch (DatabaseException ex) {
+            } catch (DatabaseException ex)
+            {
                 Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     public static void addFilter(Filter f) {
-        if (f.getID() == -65536) {
+        if (f.getID() == -65536)
+        {
             f.setID(Integer.decode(Wrapper.getConfig("nextFilterID")));
             Wrapper.setConfig("nextFilterID", Integer.toString(Integer.decode(Wrapper.getConfig("nextFilterID")) + 1));
         }
 
-        synchronized (filter) {
-            try {
+        synchronized (filter)
+        {
+            try
+            {
                 Transaction t = e.beginTransaction(null, null);
 
-                try {
+                try
+                {
                     filter.put(t, f);
 
                     t.commit();
-                } catch (Exception ex) {
+                } catch (Exception ex)
+                {
                     t.abort();
                 }
-            } catch (DatabaseException ex) {
+            } catch (DatabaseException ex)
+            {
                 Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     public static Filter getFilter(Integer id) {
-        synchronized (filter) {
-            try {
+        synchronized (filter)
+        {
+            try
+            {
                 return filter.get(id);
-            } catch (DatabaseException ex) {
+            } catch (DatabaseException ex)
+            {
                 Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
                 return null;
             }
@@ -265,30 +321,37 @@ public class Wrapper {
     }
 
     public static void deleteFilter(Integer id) {
-        synchronized (filter) {
-            try {
+        synchronized (filter)
+        {
+            try
+            {
                 Transaction t = e.beginTransaction(null, null);
 
-                try {
+                try
+                {
                     filter.delete(t, id);
 
                     t.commit();
-                } catch (Exception ex) {
+                } catch (Exception ex)
+                {
                     t.abort();
                 }
-            } catch (DatabaseException ex) {
+            } catch (DatabaseException ex)
+            {
                 Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     public static Filter[] getAllFilter() {
-        synchronized (filter) {
+        synchronized (filter)
+        {
             Collection vals = filter.map().values();
             Filter fils[] = new Filter[vals.size()];
             Iterator i = vals.iterator();
             int j = 0;
-            while (i.hasNext()) {
+            while (i.hasNext())
+            {
                 fils[j] = (Filter) i.next();
                 j++;
             }
@@ -297,37 +360,45 @@ public class Wrapper {
     }
 
     public static Integer countItem() {
-        synchronized (item) {
+        synchronized (item)
+        {
             return item.map().size();
         }
     }
 
     public static void dropFromTopItem() {
-        synchronized (item) {
-            try {
+        synchronized (item)
+        {
+            try
+            {
                 Transaction t = e.beginTransaction(null, null);
 
-                try {
+                try
+                {
                     Iterator<Entry<Integer, Item>> i = item.map().entrySet().iterator();
                     item.delete(t, i.next().getKey());
 
                     t.commit();
-                } catch (Exception ex) {
+                } catch (Exception ex)
+                {
                     t.abort();
                 }
-            } catch (DatabaseException ex) {
+            } catch (DatabaseException ex)
+            {
                 Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     public static Item[] getAllItem() {
-        synchronized (item) {
+        synchronized (item)
+        {
             Collection vals = item.map().values();
             Item items[] = new Item[vals.size()];
             Iterator i = vals.iterator();
             int j = 0;
-            while (i.hasNext()) {
+            while (i.hasNext())
+            {
                 items[j] = (Item) i.next();
                 j++;
             }
@@ -336,18 +407,48 @@ public class Wrapper {
     }
 
     public static void addItem(Item i) {
-        synchronized (item) {
-            try {
+        synchronized (item)
+        {
+            try
+            {
                 Transaction t = e.beginTransaction(null, null);
 
-                try {
+                try
+                {
                     item.put(t, i);
 
                     t.commit();
-                } catch (Exception ex) {
+                } catch (Exception ex)
+                {
                     t.abort();
                 }
-            } catch (DatabaseException ex) {
+            } catch (DatabaseException ex)
+            {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public static void setUnreadFlagItem(Integer id, Boolean value) {
+        synchronized (item)
+        {
+            try
+            {
+                Transaction t = e.beginTransaction(null, null);
+                
+                try
+                {
+                    Item i = item.get(id);
+                    i.setUnread(value);
+                    item.put(t, i);
+                    
+                    t.commit();
+                } catch (Exception ex)
+                {
+                    t.abort();
+                }
+            } catch (DatabaseException ex)
+            {
                 Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

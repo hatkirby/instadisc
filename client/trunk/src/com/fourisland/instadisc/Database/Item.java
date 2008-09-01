@@ -6,6 +6,7 @@ package com.fourisland.instadisc.Database;
 
 import com.sleepycat.persist.model.Entity;
 import com.sleepycat.persist.model.PrimaryKey;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -22,9 +23,12 @@ public class Item {
     private String author;
     private String url;
     private HashMap<String, String> semantics;
+    private Boolean unread;
+    private Date recieved;
 
     public Item() {
         semantics = new HashMap<String, String>();
+        unread = true;
     }
 
     public Integer getID() {
@@ -48,7 +52,17 @@ public class Item {
     }
 
     public HashMap<String, String> getSemantics() {
-        return semantics;
+        return semantics;   
+    }
+    
+    public Boolean getUnread()
+    {
+        return unread;
+    }
+    
+    public Date getRecieved()
+    {
+        return recieved;
     }
 
     public void setID(Integer id) {
@@ -73,6 +87,16 @@ public class Item {
 
     public void setSemantics(HashMap<String, String> semantics) {
         this.semantics = semantics;
+    }
+    
+    public void setUnread(Boolean unread)
+    {
+        this.unread = unread;
+    }
+    
+    public void setRecieved(Date recieved)
+    {
+        this.recieved = recieved;
     }
 
     public String getSemantics(String key) {

@@ -330,9 +330,12 @@ public class InstaDiscView extends FrameView {
             try {
                 if (java.awt.Desktop.isDesktopSupported())
                 {
+                    Wrapper.setUnreadFlagItem(item.getID(), false);
+                    refreshItemPane();
+                    
                     java.awt.Desktop.getDesktop().browse(new URI(item.getURL()));
                 } else {
-                    statusMessageLabel.setText("Error: Desktop not supported");
+                    doText("Error: Desktop not supported");
                 }
             } catch (IOException ex) {
                 Logger.getLogger(InstaDiscView.class.getName()).log(Level.SEVERE, null, ex);
@@ -378,7 +381,7 @@ public class InstaDiscView extends FrameView {
             {
                 java.awt.Desktop.getDesktop().browse(new URI("http://fourisland.com/projects/instadisc/"));
             } else {
-                statusMessageLabel.setText("Error: Desktop not supported");
+                doText("Error: Desktop not supported");
             }
         } catch (IOException ex)
         {
