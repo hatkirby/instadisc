@@ -9,6 +9,7 @@ import com.fourisland.instadisc.Item.Categories.InstaDiscIcon;
 import java.awt.AWTException;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
+import java.awt.event.MouseEvent;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -150,6 +151,7 @@ public class InstaDiscView extends FrameView {
         jMenuItem7 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
@@ -169,6 +171,12 @@ public class InstaDiscView extends FrameView {
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jList1MouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jList1MousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jList1MouseReleased(evt);
             }
         });
         jList1.addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -253,6 +261,15 @@ public class InstaDiscView extends FrameView {
         });
         jMenu1.add(jMenuItem4);
 
+        jMenuItem8.setText(resourceMap.getString("jMenuItem8.text")); // NOI18N
+        jMenuItem8.setName("jMenuItem8"); // NOI18N
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem8);
+
         jMenuItem5.setText(resourceMap.getString("jMenuItem5.text")); // NOI18N
         jMenuItem5.setName("jMenuItem5"); // NOI18N
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
@@ -324,7 +341,7 @@ public class InstaDiscView extends FrameView {
         setStatusBar(statusPanel);
     }// </editor-fold>//GEN-END:initComponents
     private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
-        if (evt.getClickCount() == 2) {
+        if ((evt.getButton() == MouseEvent.BUTTON1) && (evt.getClickCount() == 2)) {
             Item item = (Item) jList1.getSelectedValue();
 
             try {
@@ -397,6 +414,35 @@ public class InstaDiscView extends FrameView {
         cpf.setVisible(true);
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
+    private void jList1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseReleased
+        int i = jList1.locationToIndex(evt.getPoint());
+        if ((evt.isPopupTrigger()) && (i != -1))
+        {
+            jList1.setSelectedIndex(i);
+            new UnreadFlagPopupMenu((Item) jList1.getSelectedValue()).show(jList1, evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_jList1MouseReleased
+
+    private void jList1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MousePressed
+        int i = jList1.locationToIndex(evt.getPoint());
+        if ((evt.isPopupTrigger()) && (i != -1))
+        {
+            jList1.setSelectedIndex(i);
+            new UnreadFlagPopupMenu((Item) jList1.getSelectedValue()).show(jList1, evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_jList1MousePressed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        Item[] items = Wrapper.getAllItem();
+        int i = 0;
+        for (i=0; i < items.length; i++)
+        {
+            Wrapper.setUnreadFlagItem(items[i].getID(), false);
+        }
+        
+        refreshItemPane();
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList jList1;
     private javax.swing.JMenu jMenu1;
@@ -407,6 +453,7 @@ public class InstaDiscView extends FrameView {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPanel mainPanel;

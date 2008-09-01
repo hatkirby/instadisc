@@ -453,4 +453,18 @@ public class Wrapper {
             }
         }
     }
+    
+    public static Item getItem(Integer id) {
+        synchronized (item)
+        {
+            try
+            {
+                return item.get(id);
+            } catch (DatabaseException ex)
+            {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            }
+        }
+    }
 }
