@@ -170,6 +170,7 @@ public class Step2 extends javax.swing.JDialog {
                             Wrapper.setConfig("nextFilterID", "0");
                             Wrapper.setConfig("ipCheckValue", "1");
                             Wrapper.setConfig("ipCheckUnit", "day");
+                            Wrapper.setConfig("useUnreadFlag", "true");
                             Wrapper.setConfig("initCheck", "done");
                             
                             StepEndResults.ok = true;

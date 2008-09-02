@@ -4,7 +4,6 @@ import com.fourisland.instadisc.Database.Item;
 import com.fourisland.instadisc.Database.Wrapper;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 

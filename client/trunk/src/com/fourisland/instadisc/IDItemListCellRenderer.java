@@ -32,8 +32,7 @@ public class IDItemListCellRenderer extends JLabel implements ListCellRenderer {
         {
             this.setText("<HTML><I>" + Wrapper.getSubscription(item.getSubscription()).getTitle() + "</I>, <B>" + item.getTitle() + "</B> by " + item.getAuthor());
         }
-        
-        if (item.getUnread())
+        if ((Wrapper.getConfig("useUnreadFlag").equals("true")) && (item.getUnread()))
         {
             this.setText(this.getText() + "<BR><B>New </B> at " + new SimpleDateFormat("EEEE, MMMM d yyyy k:mm aa").format(item.getRecieved()));
         }
@@ -46,7 +45,7 @@ public class IDItemListCellRenderer extends JLabel implements ListCellRenderer {
         {
             this.setForeground(arg0.getForeground());
 
-            if (item.getUnread())
+            if ((Wrapper.getConfig("useUnreadFlag").equals("true")) && (item.getUnread()))
             {
                 this.setBackground(java.awt.Color.yellow);
             } else
