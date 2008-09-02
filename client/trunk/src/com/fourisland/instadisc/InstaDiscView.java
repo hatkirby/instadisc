@@ -233,6 +233,15 @@ public class InstaDiscView extends FrameView {
 
         jMenu1.setText(resourceMap.getString("jMenu1.text")); // NOI18N
         jMenu1.setName("jMenu1"); // NOI18N
+        jMenu1.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                jMenu1MenuSelected(evt);
+            }
+        });
 
         jMenuItem7.setText(resourceMap.getString("jMenuItem7.text")); // NOI18N
         jMenuItem7.setName("jMenuItem7"); // NOI18N
@@ -347,7 +356,11 @@ public class InstaDiscView extends FrameView {
             try {
                 if (java.awt.Desktop.isDesktopSupported())
                 {
-                    Wrapper.setUnreadFlagItem(item.getID(), false);
+                    if (Wrapper.getConfig("useUnreadFlag").equals("true"))
+                    {
+                        Wrapper.setUnreadFlagItem(item.getID(), false);
+                    }
+                    
                     refreshItemPane();
                     
                     java.awt.Desktop.getDesktop().browse(new URI(item.getURL()));
@@ -415,33 +428,46 @@ public class InstaDiscView extends FrameView {
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jList1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseReleased
-        int i = jList1.locationToIndex(evt.getPoint());
-        if ((evt.isPopupTrigger()) && (i != -1))
+        if (Wrapper.getConfig("useUnreadFlag").equals("true"))
         {
-            jList1.setSelectedIndex(i);
-            new UnreadFlagPopupMenu((Item) jList1.getSelectedValue()).show(jList1, evt.getX(), evt.getY());
+            int i = jList1.locationToIndex(evt.getPoint());
+            if ((evt.isPopupTrigger()) && (i != -1))
+            {
+                jList1.setSelectedIndex(i);
+                new UnreadFlagPopupMenu((Item) jList1.getSelectedValue()).show(jList1, evt.getX(), evt.getY());
+            }
         }
     }//GEN-LAST:event_jList1MouseReleased
 
     private void jList1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MousePressed
-        int i = jList1.locationToIndex(evt.getPoint());
-        if ((evt.isPopupTrigger()) && (i != -1))
+        if (Wrapper.getConfig("useUnreadFlag").equals("true"))
         {
-            jList1.setSelectedIndex(i);
-            new UnreadFlagPopupMenu((Item) jList1.getSelectedValue()).show(jList1, evt.getX(), evt.getY());
+            int i = jList1.locationToIndex(evt.getPoint());
+            if ((evt.isPopupTrigger()) && (i != -1))
+            {
+                jList1.setSelectedIndex(i);
+                new UnreadFlagPopupMenu((Item) jList1.getSelectedValue()).show(jList1, evt.getX(), evt.getY());
+            }
         }
     }//GEN-LAST:event_jList1MousePressed
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-        Item[] items = Wrapper.getAllItem();
-        int i = 0;
-        for (i=0; i < items.length; i++)
+        if (Wrapper.getConfig("useUnreadFlag").equals("true"))
         {
-            Wrapper.setUnreadFlagItem(items[i].getID(), false);
-        }
+            Item[] items = Wrapper.getAllItem();
+            int i = 0;
+            for (i=0; i < items.length; i++)
+            {
+                Wrapper.setUnreadFlagItem(items[i].getID(), false);
+            }
         
-        refreshItemPane();
+            refreshItemPane();
+        }
     }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenu1MenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_jMenu1MenuSelected
+        jMenuItem8.setEnabled(Wrapper.getConfig("useUnreadFlag").equals("true"));
+    }//GEN-LAST:event_jMenu1MenuSelected
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList jList1;
