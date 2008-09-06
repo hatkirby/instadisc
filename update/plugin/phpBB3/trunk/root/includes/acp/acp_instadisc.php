@@ -31,29 +31,21 @@ class acp_instadisc
 		{
 			// Add config to the database
 			set_config('id_subscription_title', $_POST['subscription_title']);
-			set_config('id_central_server', $_POST['central_server']);
-			set_config('id_username', $_POST['central_server_username']);
-			set_config('id_password', $_POST['central_server_password']);
-			set_config('id_activation_key', $_POST['central_server_activation']);
+			set_config('id_series_url', $_POST['series_url']);
+			set_config('id_subscription_id', $_POST['subscription_id']);
 			set_config('id_encryption_key', $_POST['encryption_key']);
 
 			trigger_error($user->lang['ID_CHANGES_SAVED'] . adm_back_link($this->u_action), E_USER_NOTICE);
 		} else {
 			$idst	= isset($config['id_subscription_title']) ? $config['id_subscription_title'] : $config['sitename'];
-			$idcs	= isset($config['id_central_server']) ? $config['id_central_server'] : '';
-			$idun	= isset($config['id_username']) ? $config['id_username'] : '';
-			$idps	= isset($config['id_password']) ? $config['id_password'] : '';
-			$idak	= isset($config['id_activation_key']) ? $config['id_activation_key'] : '';
-			$idsf	= generate_board_url() . '/instadisc.php';
+			$idsu	= isset($config['id_series_url']) ? $config['id_series_url'] : '';
+			$idsi	= isset($config['id_subscription_id']) ? $config['id_subscription_id'] : '';
 			$idec	= isset($config['id_encryption_key']) ? $config['id_encryption_key'] : '';
 
 			$template->assign_vars(array(
 				'S_SUBSCRIPTION_TITLE'	=> $idst,
-				'S_CENTRAL_SERVER'	=> $idcs,
-				'S_USERNAME'		=> $idun,
-				'S_PASSWORD'		=> $idps,
-				'S_ACTIVATION'		=> $idak,
-				'S_SUBSCRIPTION_FILE'	=> $idsf,
+				'S_SERIES_URL'		=> $idsu,
+				'S_SUBSCRIPTION_ID'	=> $idsi,
 				'S_ENCRYPTION_KEY'	=> $idec,
 				'S_SUBMIT'		=> $this->u_action
 			));
