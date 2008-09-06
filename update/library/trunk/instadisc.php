@@ -7,7 +7,6 @@ include('xmlrpc/xmlrpc.inc');
 $idusSubscriptionSeriesURL = array();
 $idusSubscriptionID = array();
 $idusSubscriptionTitle = array();
-$idusSubscriptionCategory = array();
 $idusEncryptionKey = array();
 $instaDisc_subCount = 0;
 
@@ -62,13 +61,12 @@ function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 	}
 }
 
-function instaDisc_addSubscription($url, $id, $title, $category, $enc = '')
+function instaDisc_addSubscription($url, $id, $title, $enc = '')
 {
-	global $instaDisc_subCount, $idusSubscriptionSeriesURL, $idusSubscriptionID, $idusSubscriptionTitle, $idusSubscriptionCategory, $idusEncryptionKey;
+	global $instaDisc_subCount, $idusSubscriptionSeriesURL, $idusSubscriptionID, $idusSubscriptionTitle, $idusEncryptionKey;
 	$idusSubscriptionSeriesURL[$instaDisc_subCount] = $url;
 	$idusSubscriptionID[$instaDisc_subCount] = $id;
 	$idusSubscriptionTitle[$instaDisc_subCount] = $title;
-	$idusSubscriptionCategory[$instaDisc_subCount] = $category;
 	$idusEncryptionKey[$instaDisc_subCount] = $enc;
 	$instaDisc_subCount++;
 }
