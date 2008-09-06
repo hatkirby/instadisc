@@ -3,11 +3,11 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: Aug 03, 2008 at 04:54 PM
+-- Generation Time: Sep 06, 2008 at 05:37 PM
 -- Server version: 5.0.51
 -- PHP Version: 5.2.4-2ubuntu5.3
 -- 
--- Database: `instadisc`
+-- Database: `instadisc_central`
 -- 
 
 -- --------------------------------------------------------
@@ -16,13 +16,14 @@
 -- Table structure for table `centralServers`
 -- 
 
-CREATE TABLE IF NOT EXISTS `centralServers` (
+DROP TABLE IF EXISTS `centralServers`;
+CREATE TABLE `centralServers` (
   `id` int(11) NOT NULL auto_increment,
   `url` varchar(255) NOT NULL,
   `code` varchar(255) NOT NULL,
   `xmlrpc` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -30,12 +31,13 @@ CREATE TABLE IF NOT EXISTS `centralServers` (
 -- Table structure for table `config`
 -- 
 
-CREATE TABLE IF NOT EXISTS `config` (
+DROP TABLE IF EXISTS `config`;
+CREATE TABLE `config` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL,
   `value` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -43,7 +45,8 @@ CREATE TABLE IF NOT EXISTS `config` (
 -- Table structure for table `inbox`
 -- 
 
-CREATE TABLE IF NOT EXISTS `inbox` (
+DROP TABLE IF EXISTS `inbox`;
+CREATE TABLE `inbox` (
   `id` int(11) NOT NULL auto_increment,
   `username` varchar(255) NOT NULL,
   `itemID` int(11) NOT NULL,
@@ -54,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `inbox` (
   `semantics` text NOT NULL,
   `encryptionID` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -62,12 +65,13 @@ CREATE TABLE IF NOT EXISTS `inbox` (
 -- Table structure for table `oldVerID`
 -- 
 
-CREATE TABLE IF NOT EXISTS `oldVerID` (
+DROP TABLE IF EXISTS `oldVerID`;
+CREATE TABLE `oldVerID` (
   `id` int(11) NOT NULL auto_increment,
   `username` varchar(255) NOT NULL,
   `verID` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -75,25 +79,12 @@ CREATE TABLE IF NOT EXISTS `oldVerID` (
 -- Table structure for table `pending`
 -- 
 
-CREATE TABLE IF NOT EXISTS `pending` (
+DROP TABLE IF EXISTS `pending`;
+CREATE TABLE `pending` (
   `id` int(11) NOT NULL auto_increment,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `code` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
--- 
--- Table structure for table `pending2`
--- 
-
-CREATE TABLE IF NOT EXISTS `pending2` (
-  `id` int(11) NOT NULL auto_increment,
-  `username` varchar(255) NOT NULL,
-  `url` varchar(255) NOT NULL,
   `code` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -104,12 +95,12 @@ CREATE TABLE IF NOT EXISTS `pending2` (
 -- Table structure for table `subscriptions`
 -- 
 
-CREATE TABLE IF NOT EXISTS `subscriptions` (
-  `id` mediumint(11) NOT NULL auto_increment,
+DROP TABLE IF EXISTS `subscriptions`;
+CREATE TABLE `subscriptions` (
+  `id` int(11) NOT NULL auto_increment,
   `username` varchar(255) NOT NULL,
   `url` varchar(255) NOT NULL,
-  `owner` varchar(5) NOT NULL,
-  `category` varchar(255) NOT NULL,
+  `identity` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -119,7 +110,8 @@ CREATE TABLE IF NOT EXISTS `subscriptions` (
 -- Table structure for table `users`
 -- 
 
-CREATE TABLE IF NOT EXISTS `users` (
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
   `id` int(11) NOT NULL auto_increment,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -127,5 +119,5 @@ CREATE TABLE IF NOT EXISTS `users` (
   `ip` varchar(255) NOT NULL,
   `nextItemID` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
