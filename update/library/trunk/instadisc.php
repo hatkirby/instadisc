@@ -6,17 +6,16 @@ include('xmlrpc/xmlrpc.inc');
 
 $idusUsername = array();
 $idusPassword = array();
-$idusCentralServer = array();
-$idusSubscriptionURI = array();
+$idusSubscriptionSeriesURL = array();
+$idusSubscriptionID = array();
 $idusSubscriptionTitle = array();
 $idusSubscriptionCategory = array();
-$idusActivationKey = array();
 $idusEncryptionKey = array();
 $instaDisc_subCount = 0;
 
 function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 {
-	global $idusUsername, $idusPassword, $idusCentralServer, $idusSubscriptionURI, $idusEncryptionKey;
+	global $idusUsername, $idusPassword, $idusSubscriptionSeriesID, $idusSubscriptionID, $idusEncryptionKey;
 
 	$encID = 0;
 	if (($idusEncryptionKey[$id] != '') && extension_loaded('mcrypt'))
@@ -43,11 +42,12 @@ function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 	
 	$verID = rand(1,2147483647);
 
-	$client = new xmlrpc_client($idusCentralServer[$id]);
+	$client = new xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
 	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($idusUsername[$id], 'string'),
 								new xmlrpcval(md5($idusUsername[$id] . ":" . md5($idusPassword[$id]) . ":" . $verID), 'string'),
 								new xmlrpcval($verID, 'int'),
-								new xmlrpcval($idusSubscriptionURI[$id], 'string'),
+								new xmlrpcval($idusSubscriptionSeriesURL[$id], 'string'),
+								new xmlrpcval($idusSubscriptionID[$id], 'string'),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
@@ -67,16 +67,15 @@ function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 	}
 }
 
-function instaDisc_addSubscription($username, $password, $central, $uri, $title, $category, $key = '', $enc = '')
+function instaDisc_addSubscription($username, $password, $url, $id, $title, $category, $enc = '')
 {
-	global $instaDisc_subCount, $idusUsername, $idusPassword, $idusCentralServer, $idusSubscriptionURI, $idusSubscriptionTitle, $idusSubscriptionCategory, $idusActivationKey, $idusEncryptionKey;
+	global $instaDisc_subCount, $idusUsername, $idusPassword, $idusSubscriptionSeriesURL, $idusSubscriptionID, $idusSubscriptionTitle, $idusSubscriptionCategory, $idusEncryptionKey;
 	$idusUsername[$instaDisc_subCount] = $username;
 	$idusPassword[$instaDisc_subCount] = $password;
-	$idusCentralServer[$instaDisc_subCount] = $central;
-	$idusSubscriptionURI[$instaDisc_subCount] = $uri;
+	$idusSubscriptionSeriesURL[$instaDisc_subCount] = $url;
+	$idusSubscriptionID[$instaDisc_subCount] = $id;
 	$idusSubscriptionTitle[$instaDisc_subCount] = $title;
 	$idusSubscriptionCategory[$instaDisc_subCount] = $category;
-	$idusActivationKey[$instaDisc_subCount] = $key;
 	$idusEncryptionKey[$instaDisc_subCount] = $enc;
 	$instaDisc_subCount++;
 }
