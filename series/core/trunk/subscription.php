@@ -27,4 +27,6 @@ if ($sub['password'] != '')
 	echo("Password: On\n");
 }
 
+echo('Series-Control-URL: http://' . $_SERVER['SERVER_NAME'] . str_replace(basename($_SERVER['PHP_SELF']), 'xmlrpc.php', $_SERVER['PHP_SELF']) . "\n");
+
 ?>
