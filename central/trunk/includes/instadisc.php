@@ -97,46 +97,6 @@ function instaDisc_sendItem($username, $id)
 	}
 }
 
-function instaDisc_sendUpdateNotice($softwareVersion)
-{
-	$username = instaDisc_getConfig('owner');
-	$subscription = 'http://fourisland.com/' . $_SERVER['SERVER_NAME'] . '/';
-	$title = 'Update your software to ' . $software;
-	$author = 'Hatkirby';
-	$url = 'http://fourisland.com/projects/instadisc/wiki/CentralSoftwareUpdate';
-	$semantics = array();
-
-	instaDisc_addItem($username, $subscription, $title, $author, $url, $semantics);
-}
-
-function instaDisc_sendDatabase($cserver)
-{
-	$getdb = "SELECT * FROM centralServers";
-	$getdb2 = mysql_query($getdb);
-	$i=0;
-	while ($getdb3[$i] = mysql_fetch_array($getdb2))
-	{
-		$db[$getdb3[$i]['url']]['code'] = $getdb3[$i]['code'];
-		$db[$getdb3[$i]['url']]['xmlrpc'] = $getdb3[$i]['xmlrpc'];
-		$i++;
-	}
-
-	$cserver2 = $_SERVER['SERVER_NAME'];
-	$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver2) . "\"";
-	$getuk2 = mysql_query($getuk);
-	$getuk3 = mysql_fetch_array($getuk2);
-
-	$verID = rand(1,2147483647);
-
-	$client = new xmlrpc_client($cserver);
-	$msg = new xmlrpcmsg("InstaDisc.sendDatabase", array(	new xmlrpcval($cserver2, 'string'),
-								new xmlrpcval(md5($cserver2 . ":" . $getuk3['code'] . ":" . $verID), 'string'),
-								new xmlrpcval($verID, 'int'),
-								new xmlrpcval(serialize($db), 'string'),
-								new xmlrpcval(instaDisc_getConfig('databaseVersion'), 'string')));
-	$client->send($msg);
-}
-
 function instaDisc_addItem($username, $subscription, $title, $author, $url, $semantics, $encryptionID = 0)
 {
 	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
