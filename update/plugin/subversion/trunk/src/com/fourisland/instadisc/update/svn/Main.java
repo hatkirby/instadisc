@@ -24,13 +24,11 @@ public class Main {
     public static void main(String[] args) {
         try
         {
-            String username = getArg(0, args);
-            String password = getArg(1, args);
-            String centralServer = getArg(2, args);
-            String pathScheme = getArg(3, args);
-            String author = getArg(4, args);
-            String subscription = getArg(5, args);
-            String revision = getArg(6, args);
+            String pathScheme = getArg(1, args);
+            String author = getArg(2, args);
+            String seriesURL = getArg(3, args);
+            String subscriptionID = getArg(4, args);
+            String revision = getArg(5, args);
 
             StringBuilder messBuilder = new StringBuilder();
             byte rs = 0;
@@ -101,10 +99,8 @@ public class Main {
             config.setServerURL(new URL(centralServer));
             XmlRpcClient client = new XmlRpcClient();
             client.setConfig(config);
-            Integer resp = (Integer) client.execute("InstaDisc.sendFromUpdate", new Object[]{username,
-                (new MD5(username + ":" + (new MD5(password)).hash() + ":" + verID)).hash(),
-                verID,
-                subscription,
+            Integer resp = (Integer) client.execute("InstaDisc.sendFromUpdate", new Object[]{seriesURL,
+                subscriptionID,
                 message,
                 author,
                 path,
