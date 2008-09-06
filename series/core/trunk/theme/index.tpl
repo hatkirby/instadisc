@@ -1,0 +1,7 @@
+<H1>Subscriptions Available</H1>
+
+<UL>
+	<!--BEGIN SUBSCRIPTIONS-->
+	<LI><A HREF="subscription.php?id=<!--SUBSCRIPTIONS.IDENTITY-->"><!--SUBSCRIPTIONS.IDENTITY--></A> - <!--SUBSCRIPTIONS.TITLE--> (<!--SUBSCRIPTIONS.CATEGORY-->)</LI>
+	<!--END SUBSCRIPTIONS-->
+</UL>
