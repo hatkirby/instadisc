@@ -75,7 +75,7 @@ function requestRetained($username, $verification, $verificationID)
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
-function sendFromUpdate($username, $verification, $verificationID, $subscriptionSeriesURL, $subscriptionID, $title, $author, $url, $semantics, $encryptionID)
+function sendFromUpdate($subscriptionSeriesURL, $subscriptionID, $title, $author, $url, $semantics, $encryptionID)
 {
 	$subscriptionURL = instaDisc_resolveSubscription($subscriptionSeriesURL, $subscriptionID);
 	if ($subscriptionURL != 'false')
