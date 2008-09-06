@@ -3,27 +3,12 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: Sep 06, 2008 at 05:37 PM
+-- Generation Time: Sep 06, 2008 at 06:34 PM
 -- Server version: 5.0.51
 -- PHP Version: 5.2.4-2ubuntu5.3
 -- 
 -- Database: `instadisc_central`
 -- 
-
--- --------------------------------------------------------
-
--- 
--- Table structure for table `centralServers`
--- 
-
-DROP TABLE IF EXISTS `centralServers`;
-CREATE TABLE `centralServers` (
-  `id` int(11) NOT NULL auto_increment,
-  `url` varchar(255) NOT NULL,
-  `code` varchar(255) NOT NULL,
-  `xmlrpc` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 

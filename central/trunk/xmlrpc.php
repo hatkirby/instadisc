@@ -77,136 +77,19 @@ function requestRetained($username, $verification, $verificationID)
 
 function sendFromUpdate($username, $verification, $verificationID, $subscriptionSeriesURL, $subscriptionID, $title, $author, $url, $semantics, $encryptionID)
 {
-	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
+	$subscriptionURL = instaDisc_resolveSubscription($subscriptionSeriesURL, $subscriptionID);
+	if ($subscriptionURL != 'false')
 	{
-		if (instaDisc_resolveSubscription($subscriptionSeriesURL, $subscriptionID) != 'false')
+		$getsed = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscriptionSeriesURL) . "\" AND identity = \"" . mysql_real_escape_string($subscriptionID) . "\"";
+		$getsed2 = mysql_query($getsed);
+		$i=0;
+		while ($getsed3[$i] = mysql_fetch_array($getsed2))
 		{
-			$cserver = $_SERVER['SERVER_NAME'];
-			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver) . "\"";
-			$getuk2 = mysql_query($getuk);
-			$getuk3 = mysql_fetch_array($getuk2);
-
-			$getcs = "SELECT * FROM centralServers";
-			$getcs2 = mysql_query($getcs);
-			$i=0;
-			while ($getcs3[$i] = mysql_fetch_array($getcs2))
-			{
-				$verID = rand(1,2147483647);
-
-				$client = new xmlrpc_client($getcs3[$i]['xmlrpc']);
-				$msg = new xmlrpcmsg("InstaDisc.sendFromCentral", array(	new xmlrpcval($cserver, 'string'),
-												new xmlrpcval(md5($cserver . ":" . $getuk3['code'] . ":" . $verID), 'string'),
-												new xmlrpcval($verID, 'int'),
-												new xmlrpcval($subscriptionSeriesURL, 'string'),
-												new xmlrpcval($subscriptionID, 'string'),
-												new xmlrpcval($title, 'string'),
-												new xmlrpcval($author, 'string'),
-												new xmlrpcval($url, 'string'),
-												new xmlrpcval($semantics, 'string'),
-												new xmlrpcval($encryptionID, 'int'),
-												new xmlrpcval(instaDisc_getConfig('softwareVersion'), 'int'),
-												new xmlrpcval(instaDisc_getConfig('databaseVersion'), 'int')));
-				$client->send($msg);
-				$i++;
-			}
-
-			return new xmlrpcresp(new xmlrpcval(0, "int"));
-		}
-	} else {
-		return new xmlrpcresp(new xmlrpcval(2, "int"));
-	}
-
-	return new xmlrpcresp(new xmlrpcval(1, "int"));
-}
-
-function sendFromCentral($cserver, $verification, $verificationID, $subscriptionSeriesURL, $subscriptionID, $title, $author, $url, $semantics, $encryptionID, $softwareVersion, $databaseVersion)
-{
-	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'code'))
-	{
-		if ($softwareVersion > instaDisc_getConfig('softwareVersion'))
-		{
-			instaDisc_sendUpdateNotice($softwareVersion);
-		} else if ($softwareVersion < instaDisc_getConfig('softwareVersion'))
-		{
-			$cserver2 = $_SERVER['SERVER_NAME'];
-			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver2) . "\"";
-			$getuk2 = mysql_query($getuk);
-			$getuk3 = mysql_fetch_array($getuk2);
-
-			$verID = rand(1,2147483647);
-
-			$client = new xmlrpc_client($cserver);
-			$msg = new xmlrpcmsg("InstaDisc.sendUpdateNotice", array(	new xmlrpcval($cserver2, 'string'),
-											new xmlrpcval(md5($cserver2 . ':' . $getuk3['code'] . ':' . $verID), 'string'),
-											new xmlrpcval($verID, 'int'),
-											new xmlrpcval(instaDisc_getConfig('softwareVersion'), 'int')));
-			$client->send($msg);
+			instaDisc_addItem($getsed3[$i]['username'], $subscriptionURL, $title, $author, $url, $semantics, $encryptionID);
+			$i++;
 		}
 
-		if ($databaseVersion > instaDisc_getConfig('databaseVersion'))
-		{
-			$cserver2 = $_SERVER['SERVER_NAME'];
-			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver2) . "\"";
-			$getuk2 = mysql_query($getuk);
-			$getuk3 = mysql_fetch_array($getuk2);
-
-			$verID = rand(1,2147483647);
-
-			$client = new xmlrpc_client($cserver);
-			$msg = new xmlrpcmsg("InstaDisc.askForDatabase", array(	new xmlrpcval($cserver2, 'string'),
-										new xmlrpcval(md5($cserver2 . ':' . $getuk3['code'] . ':' . $verID), 'string'),
-										new xmlrpcval($verID, 'int'),
-										new xmlrpcval(instaDisc_getConfig('databaseVersion'), 'int')));
-			$client->send($msg);
-		} else if ($databaseVersion < instaDisc_getConfig('databaseVersion'))
-		{
-			instaDisc_sendDatabase($cserver);
-		}
-
-		$subscriptionURL = instaDisc_resolveSubscription($subscriptionSeriesURL, $subscriptionID);
-		if ($subscriptionURL != 'false')
-		{
-			$getsed = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscriptionSeriesURL) . "\" AND identity = \"" . mysql_real_escape_string($subscriptionID) . "\"";
-			$getsed2 = mysql_query($getsed);
-			$i=0;
-			while ($getsed3[$i] = mysql_fetch_array($getsed2))
-			{
-				instaDisc_addItem($getsed3[$i]['username'], $subscriptionURL, $title, $author, $url, $semantics, $encryptionID);
-				$i++;
-			}
-
-			return new xmlrpcresp(new xmlrpcval(0, "int"));
-		}
-	}
-
-	return new xmlrpcresp(new xmlrpcval(1, "int"));
-}
-
-function sendUpdateNotice($cserver, $verification, $verificationID, $softwareVersion)
-{
-	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'code'))
-	{
-		if ($softwareVersion > instaDisc_getConfig('softwareVersion'))
-		{
-			instaDisc_sendUpdateNotice($softwareVersion);
-
-			return new xmlrpcresp(new xmlrpcval(0, "int"));
-		}
-	}
-
-	return new xmlrpcresp(new xmlrpcval(1, "int"));
-}
-
-function askForDatabase($cserver, $verification, $verificationID, $databaseVersion)
-{
-	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'code'))
-	{
-		if ($databaseVersion < instaDisc_getConfig('databaseVersion'))
-		{
-			instaDisc_sendDatabase($cserver);
-
-			return new xmlrpcresp(new xmlrpcval(0, "int"));
-		}
+		return new xmlrpcresp(new xmlrpcval(0, "int"));
 	}
 
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
@@ -250,78 +133,13 @@ function addSubscription($username, $verification, $verificationID, $subscriptio
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
-function sendDatabase($cserver, $verification, $verificationID, $db, $databaseVersion)
-{
-	if (preg_match('/^(.*\.)?fourisland\.com$/', @gethostbyaddr($_SERVER['REMOTE_ADDR'])))
-	{
-		$db = unserialize($db);
-		if (isset($db['central.fourisland.com']))
-		{
-			if (strpos($db['central.fourisland.com']['xmlrpc'], 'fourisland.com') !== FALSE)
-			{
-				$deldb = "DELETE FROM centralServers";
-				$deldb2 = mysql_query($deldb);
-
-				foreach($db as $name => $value)
-				{
-					$insdb = "INSERT INTO centralServers (url, code, xmlrpc) VALUES (\"" . mysql_real_escape_string($name) . "\", \"" . mysql_real_escape_string($value['code']) . "\", \"" . mysql_real_escape_string($value['xmlrpc']) . "\")";
-					$insdb2 = mysql_query($insdb);
-				}
-
-				$setconfig = "UPDATE config SET value = " . $databaseVersion . " WHERE name = \"databaseVersion\"";
-				$setconfig2 = mysql_query($setconfig);
-
-				return new xmlrpcresp(new xmlrpcval("0", 'int'));
-			}
-		}
-	} else if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'code'))
-	{
-		if (instaDisc_getConfig('databaseVersion') < $databaseVersion)
-		{
-			$db = unserialize($db);
-			if (isset($db['central.fourisland.com']))
-			{
-				$getfi = "SELECT * FROM centralServers WHERE url = \"central.fourisland.com\"";
-				$getfi2 = mysql_query($getfi);
-				$getfi3 = mysql_fetch_array($getfi2);
-
-				if (strpos($db['central.fourisland.com']['xmlrpc'], 'fourisland.com') !== FALSE)
-				{
-					if ($db['central.fourisland.com']['code'] == $getfi3['code'])
-					{
-						$deldb = "DELETE FROM centralServers";
-						$deldb2 = mysql_query($deldb);
-
-						foreach($db as $name => $value)
-						{
-							$insdb = "INSERT INTO centralServers (url, code, xmlrpc) VALUES (\"" . mysql_real_escape_string($name) . "\", \"" . mysql_real_escape_string($value['code']) . "\", \"" . mysql_real_escape_string($value['xmlrpc']) . "\")";
-							$insdb2 = mysql_query($insdb);
-						}
-
-						$setconfig = "UPDATE config SET value = " . $databaseVersion . " WHERE name = \"databaseVersion\"";
-						$setconfig2 = mysql_query($setconfig);
-
-						return new xmlrpcresp(new xmlrpcval("0", 'int'));
-					}
-				}
-			}
-		}
-	}
-
-	return new xmlrpcresp(new xmlrpcval(1, "int"));
-}
-
 $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function" => "checkRegistration"),
 				"InstaDisc.deleteItem" => array("function" => "deleteItem"),
 				"InstaDisc.resendItem" => array("function" => "resendItem"),
 				"InstaDisc.requestRetained" => array("function" => "requestRetained"),
 				"InstaDisc.sendFromUpdate" => array("function" => "sendFromUpdate"),
-				"InstaDisc.sendFromCentral" => array("function" => "sendFromCentral"),
-				"InstaDisc.sendUpdateNotice" => array("function" => "sendUpdateNotice"),
-				"InstaDisc.askForDatabase" => array("function" => "askForDatabase"),
 				"InstaDisc.deleteSubscription" => array("function" => "deleteSubscription"),
-				"InstaDisc.addSubscription" => array("function" => "addSubscription"),
-				"InstaDisc.sendDatabase" => array("function" => "sendDatabase")
+				"InstaDisc.addSubscription" => array("function" => "addSubscription")
 			),0);
 $s->functions_parameters_type = 'phpvals';
 $s->service();
