@@ -65,11 +65,9 @@ function sendItem($title, $userID, $url, $fourm)
                 mcrypt_module_close($td);
 	}
 
-	$client = new xmlrpc_client($config['id_central_server']);
-	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($config['id_username'], 'string'),
-								new xmlrpcval(md5($config['id_username'] . ':' . md5($config['id_password']) . ':' . $verID), 'string'),
-								new xmlrpcval($verID, 'int'),
-								new xmlrpcval(generate_board_url() . '/', 'string'),
+	$client = new xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
+	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($config['id_series_url'], 'string'),
+								new xmlrpcval($config['id_subscription_id'], 'string'),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
