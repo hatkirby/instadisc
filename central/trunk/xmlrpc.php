@@ -79,36 +79,39 @@ function sendFromUpdate($username, $verification, $verificationID, $subscription
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
-		$cserver = $_SERVER['SERVER_NAME'];
-		$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver) . "\"";
-		$getuk2 = mysql_query($getuk);
-		$getuk3 = mysql_fetch_array($getuk2);
-
-		$getcs = "SELECT * FROM centralServers";
-		$getcs2 = mysql_query($getcs);
-		$i=0;
-		while ($getcs3[$i] = mysql_fetch_array($getcs2))
+		if (instaDisc_resolveSubscription($subscriptionSeriesURL, $subscriptionID) != 'false')
 		{
-			$verID = rand(1,2147483647);
+			$cserver = $_SERVER['SERVER_NAME'];
+			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver) . "\"";
+			$getuk2 = mysql_query($getuk);
+			$getuk3 = mysql_fetch_array($getuk2);
 
-			$client = new xmlrpc_client($getcs3[$i]['xmlrpc']);
-			$msg = new xmlrpcmsg("InstaDisc.sendFromCentral", array(	new xmlrpcval($cserver, 'string'),
-											new xmlrpcval(md5($cserver . ":" . $getuk3['code'] . ":" . $verID), 'string'),
-											new xmlrpcval($verID, 'int'),
-											new xmlrpcval($subscriptionSeriesURL, 'string'),
-											new xmlrpcval($subscriptionID, 'string'),
-											new xmlrpcval($title, 'string'),
-											new xmlrpcval($author, 'string'),
-											new xmlrpcval($url, 'string'),
-											new xmlrpcval($semantics, 'string'),
-											new xmlrpcval($encryptionID, 'int'),
-											new xmlrpcval(instaDisc_getConfig('softwareVersion'), 'int'),
-											new xmlrpcval(instaDisc_getConfig('databaseVersion'), 'int')));
-			$client->send($msg);
-			$i++;
+			$getcs = "SELECT * FROM centralServers";
+			$getcs2 = mysql_query($getcs);
+			$i=0;
+			while ($getcs3[$i] = mysql_fetch_array($getcs2))
+			{
+				$verID = rand(1,2147483647);
+
+				$client = new xmlrpc_client($getcs3[$i]['xmlrpc']);
+				$msg = new xmlrpcmsg("InstaDisc.sendFromCentral", array(	new xmlrpcval($cserver, 'string'),
+												new xmlrpcval(md5($cserver . ":" . $getuk3['code'] . ":" . $verID), 'string'),
+												new xmlrpcval($verID, 'int'),
+												new xmlrpcval($subscriptionSeriesURL, 'string'),
+												new xmlrpcval($subscriptionID, 'string'),
+												new xmlrpcval($title, 'string'),
+												new xmlrpcval($author, 'string'),
+												new xmlrpcval($url, 'string'),
+												new xmlrpcval($semantics, 'string'),
+												new xmlrpcval($encryptionID, 'int'),
+												new xmlrpcval(instaDisc_getConfig('softwareVersion'), 'int'),
+												new xmlrpcval(instaDisc_getConfig('databaseVersion'), 'int')));
+				$client->send($msg);
+				$i++;
+			}
+
+			return new xmlrpcresp(new xmlrpcval(0, "int"));
 		}
-
-		return new xmlrpcresp(new xmlrpcval(0, "int"));
 	} else {
 		return new xmlrpcresp(new xmlrpcval(2, "int"));
 	}

@@ -14,12 +14,6 @@
 				<LI><A HREF="logout.php">Log out</A></LI>
 			</UL>
 
-			<P>If you own a subscription and wish to have this Central Server sponser it, you can use the option below:
-
-			<UL>
-				<LI><A HREF="setSeries.php">Set Series Control URL</A></LI>
-			</UL>
-
 			<!--BEGIN ADMIN-->
 			<P>Since you are the almighty admin of this Central Server, you can edit configurational values!
 
