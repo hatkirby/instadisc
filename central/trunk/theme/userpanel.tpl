@@ -14,12 +14,10 @@
 				<LI><A HREF="logout.php">Log out</A></LI>
 			</UL>
 
-			<P>If you own a subscription and wish to have this Central Server sponser it, you can use the options below:
+			<P>If you own a subscription and wish to have this Central Server sponser it, you can use the option below:
 
 			<UL>
-				<LI><A HREF="addsub.php">Submit a Subscription for Sponsership</A></LI>
-				<LI><A HREF="activatesub.php">Activate a Subscription</A></LI>
-				<LI><A HREF="mansub.php">Manage subscriptions</A></LI>
+				<LI><A HREF="setSeries.php">Set Series Control URL</A></LI>
 			</UL>
 
 			<!--BEGIN ADMIN-->

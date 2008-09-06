@@ -75,45 +75,40 @@ function requestRetained($username, $verification, $verificationID)
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
-function sendFromUpdate($username, $verification, $verificationID, $subscription, $title, $author, $url, $semantics, $encryptionID)
+function sendFromUpdate($username, $verification, $verificationID, $subscriptionSeriesURL, $subscriptionID, $title, $author, $url, $semantics, $encryptionID)
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
-		$getusubs = "SELECT * FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\" AND url = \"" . mysql_real_escape_string($subscription) . "\" AND owner = \"true\" AND category <> \"instadisc\"";
-		$getusubs2 = mysql_query($getusubs);
-		$getusubs3 = mysql_fetch_array($getusubs2);
-		if ($getusubs3['username'] == $username)
+		$cserver = $_SERVER['SERVER_NAME'];
+		$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver) . "\"";
+		$getuk2 = mysql_query($getuk);
+		$getuk3 = mysql_fetch_array($getuk2);
+
+		$getcs = "SELECT * FROM centralServers";
+		$getcs2 = mysql_query($getcs);
+		$i=0;
+		while ($getcs3[$i] = mysql_fetch_array($getcs2))
 		{
-			$cserver = $_SERVER['SERVER_NAME'];
-			$getuk = "SELECT * FROM centralServers WHERE url = \"" . mysql_real_escape_string($cserver) . "\"";
-			$getuk2 = mysql_query($getuk);
-			$getuk3 = mysql_fetch_array($getuk2);
+			$verID = rand(1,2147483647);
 
-			$getcs = "SELECT * FROM centralServers";
-			$getcs2 = mysql_query($getcs);
-			$i=0;
-			while ($getcs3[$i] = mysql_fetch_array($getcs2))
-			{
-				$verID = rand(1,2147483647);
-
-				$client = new xmlrpc_client($getcs3[$i]['xmlrpc']);
-				$msg = new xmlrpcmsg("InstaDisc.sendFromCentral", array(	new xmlrpcval($cserver, 'string'),
-												new xmlrpcval(md5($cserver . ":" . $getuk3['code'] . ":" . $verID), 'string'),
-												new xmlrpcval($verID, 'int'),
-												new xmlrpcval($subscription, 'string'),
-												new xmlrpcval($title, 'string'),
-												new xmlrpcval($author, 'string'),
-												new xmlrpcval($url, 'string'),
-												new xmlrpcval($semantics, 'string'),
-												new xmlrpcval($encryptionID, 'int'),
-												new xmlrpcval(instaDisc_getConfig('softwareVersion'), 'int'),
-												new xmlrpcval(instaDisc_getConfig('databaseVersion'), 'int')));
-				$client->send($msg);
-				$i++;
-			}
-
-			return new xmlrpcresp(new xmlrpcval(0, "int"));
+			$client = new xmlrpc_client($getcs3[$i]['xmlrpc']);
+			$msg = new xmlrpcmsg("InstaDisc.sendFromCentral", array(	new xmlrpcval($cserver, 'string'),
+											new xmlrpcval(md5($cserver . ":" . $getuk3['code'] . ":" . $verID), 'string'),
+											new xmlrpcval($verID, 'int'),
+											new xmlrpcval($subscriptionSeriesURL, 'string'),
+											new xmlrpcval($subscriptionID, 'string'),
+											new xmlrpcval($title, 'string'),
+											new xmlrpcval($author, 'string'),
+											new xmlrpcval($url, 'string'),
+											new xmlrpcval($semantics, 'string'),
+											new xmlrpcval($encryptionID, 'int'),
+											new xmlrpcval(instaDisc_getConfig('softwareVersion'), 'int'),
+											new xmlrpcval(instaDisc_getConfig('databaseVersion'), 'int')));
+			$client->send($msg);
+			$i++;
 		}
+
+		return new xmlrpcresp(new xmlrpcval(0, "int"));
 	} else {
 		return new xmlrpcresp(new xmlrpcval(2, "int"));
 	}
@@ -121,7 +116,7 @@ function sendFromUpdate($username, $verification, $verificationID, $subscription
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
-function sendFromCentral($cserver, $verification, $verificationID, $subscription, $title, $author, $url, $semantics, $encryptionID, $softwareVersion, $databaseVersion)
+function sendFromCentral($cserver, $verification, $verificationID, $subscriptionSeriesURL, $subscriptionID, $title, $author, $url, $semantics, $encryptionID, $softwareVersion, $databaseVersion)
 {
 	if (instaDisc_checkVerification($cserver, $verification, $verificationID, 'centralServers', 'url', 'code'))
 	{
@@ -165,16 +160,20 @@ function sendFromCentral($cserver, $verification, $verificationID, $subscription
 			instaDisc_sendDatabase($cserver);
 		}
 
-		$getsed = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\" AND owner = \"false\" AND category <> \"instadisc\"";
-		$getsed2 = mysql_query($getsed);
-		$i=0;
-		while ($getsed3[$i] = mysql_fetch_array($getsed2))
+		$subscriptionURL = instaDisc_resolveSubscription($subscriptionSeriesURL, $subscriptionID);
+		if ($subscriptionURL != 'false')
 		{
-			instaDisc_addItem($getsed3[$i]['username'], $subscription, $title, $author, $url, $semantics, $encryptionID);
-			$i++;
-		}
+			$getsed = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscriptionSeriesURL) . "\" AND identity = \"" . mysql_real_escape_string($subscriptionID) . "\"";
+			$getsed2 = mysql_query($getsed);
+			$i=0;
+			while ($getsed3[$i] = mysql_fetch_array($getsed2))
+			{
+				instaDisc_addItem($getsed3[$i]['username'], $subscriptionURL, $title, $author, $url, $semantics, $encryptionID);
+				$i++;
+			}
 
-		return new xmlrpcresp(new xmlrpcval(0, "int"));
+			return new xmlrpcresp(new xmlrpcval(0, "int"));
+		}
 	}
 
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
