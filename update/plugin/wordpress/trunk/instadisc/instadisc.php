@@ -65,38 +65,17 @@ function id_settings_page()
 <H3>Blog Posts Subscription</H3>
 <TABLE CLASS="form-table">
 <TR VALIGN="top">
- <TH SCOPE="row"><LABEL>Subscription File URL</LABEL>
+ <TH SCOPE="row"><LABEL>Series Control URL</LABEL>
  <TD>
-  <?php echo(get_option('siteurl') . '/wp-content/plugins/instadisc/subscription.php'); ?>
-  <BR>This is the URL that you advertise, the URL people use to subscribe to your subscription.
+  <INPUT TYPE="text" NAME="instaDisc_blogPost_seriesURL" VALUE="<?php echo(get_option('instaDisc_blogPost_seriesURL')); ?>" SIZE="40">
+  <BR>This is the XML-RPC URL of your Series Control.
  </TD>
 </TR>
 <TR VALIGN="top">
- <TH SCOPE="row"><LABEL>Central Server Username</LABEL>
+ <TH SCOPE="row"><LABEL>Subscription ID</LABEL>
  <TD>
-  <INPUT TYPE="text" NAME="instaDisc_blogPost_centralServer_username" VALUE="<?php echo(get_option('instaDisc_blogPost_centralServer_username')); ?>" SIZE="40">
-  <BR>This is the username you signed up with at your central server, and the one that you will/have register(ed) this subscription under.
- </TD>
-</TR>
-<TR VALIGN="top">
- <TH SCOPE="row"><LABEL>Central Server Password</LABEL>
- <TD>
-  <INPUT TYPE="password" NAME="instaDisc_blogPost_centralServer_password" VALUE="<?php echo(get_option('instaDisc_blogPost_centralServer_password')); ?>" SIZE="40">
-  <BR>This is the password for the user above
- </TD>
-</TR>
-<TR VALIGN="top">
- <TH SCOPE="row"><LABEL>Central Server Activation Key</LABEL>
- <TD>
-  <INPUT TYPE="text" NAME="instaDisc_blogPost_centralServer_activationKey" VALUE="<?php echo(get_option('instaDisc_blogPost_centralServer_activationKey')); ?>" SIZE="40">
-  <BR>When activating your subscription with a Central Server, it will require you to add an "activation key" to your "Subscription File" so as to prove that you actually do own the subscription.
- </TD>
-</TR>
-<TR VALIGN="top">
- <TH SCOPE="row"><LABEL>Central Server URL</LABEL>
- <TD>
-  <INPUT TYPE="text" NAME="instaDisc_blogPost_centralServer" VALUE="<?php echo(get_option('instaDisc_blogPost_centralServer')); ?>" SIZE="40">
-  <BR>Both after registration and after activation, the Central Server you are using should tell you it's XML-RPC URL (usually a URL containing the string "xmlrpc.php"). Copy that URL into this field.
+  <INPUT TYPE="password" NAME="instaDisc_blogPost_subscriptionID" VALUE="<?php echo(get_option('instaDisc_blogPost_subscriptionID')); ?>" SIZE="40">
+  <BR>This is the unique identifier this subscription is listed under on your Series Control.
  </TD>
 </TR>
 <?php
@@ -117,38 +96,17 @@ function id_settings_page()
 <H3>Comments Subscription</H3>
 <TABLE CLASS="form-table">
 <TR VALIGN="top">
- <TH SCOPE="row"><LABEL>Subscription File URL</LABEL>
+ <TH SCOPE="row"><LABEL>Series Control URL</LABEL>
  <TD>
-  <?php echo(get_option('siteurl') . '/wp-content/plugins/instadisc/subscription.php?comment='); ?>
-  <BR>This is the URL that you advertise, the URL people use to subscribe to your subscription.
+  <INPUT TYPE="text" NAME="instaDisc_comment_seriesURL" VALUE="<?php echo(get_option('instaDisc_comment_seriesURL')); ?>" SIZE="40">
+  <BR>This is the XML-RPC URL of your Series Control.
  </TD>
 </TR>
 <TR VALIGN="top">
- <TH SCOPE="row"><LABEL>Central Server Username</LABEL>
+ <TH SCOPE="row"><LABEL>Subscription ID</LABEL>
  <TD>
-  <INPUT TYPE="text" NAME="instaDisc_comment_centralServer_username" VALUE="<?php echo(get_option('instaDisc_comment_centralServer_username')); ?>" SIZE="40">
-  <BR>This is the username you signed up with at your central server, and the one that you will/have register(ed) this subscription under.
- </TD>
-</TR>
-<TR VALIGN="top">
- <TH SCOPE="row"><LABEL>Central Server Password</LABEL>
- <TD>
-  <INPUT TYPE="password" NAME="instaDisc_comment_centralServer_password" VALUE="<?php echo(get_option('instaDisc_comment_centralServer_password')); ?>" SIZE="40">
-  <BR>This is the password for the user above
- </TD>
-</TR>
-<TR VALIGN="top">
- <TH SCOPE="row"><LABEL>Central Server Activation Key</LABEL>
- <TD>
-  <INPUT TYPE="text" NAME="instaDisc_comment_centralServer_activationKey" VALUE="<?php echo(get_option('instaDisc_comment_centralServer_activationKey')); ?>" SIZE="40">
-  <BR>When activating your subscription with a Central Server, it will require you to add an "activation key" to your "Subscription File" so as to prove that you actually do own the subscription.
- </TD>
-</TR>
-<TR VALIGN="top">
- <TH SCOPE="row"><LABEL>Central Server URL</LABEL>
- <TD>
-  <INPUT TYPE="text" NAME="instaDisc_comment_centralServer" VALUE="<?php echo(get_option('instaDisc_comment_centralServer')); ?>" SIZE="40">
-  <BR>Both after registration and after activation, the Central Server you are using should tell you it's XML-RPC URL (usually a URL containing the string "xmlrpc.php"). Copy that URL into this field.
+  <INPUT TYPE="password" NAME="instaDisc_comment_subscriptionID" VALUE="<?php echo(get_option('instaDisc_comment_subscriptionID')); ?>" SIZE="40">
+  <BR>This is the unique identifier this subscription is listed under on your Series Control.
  </TD>
 </TR>
 <?php
@@ -167,7 +125,7 @@ function id_settings_page()
 ?>
 </TABLE>
 <INPUT TYPE="hidden" NAME="action" VALUE="update">
-<INPUT TYPE="hidden" NAME="page_options" VALUE="instaDisc_subscription_title,instadisc_blogPost_centralServer_activationKey,instaDisc_blogPost_centralServer,instaDisc_comment_centralServer_activationKey,instaDisc_comment_centralServer,instaDisc_blogPost_centralServer_username,instaDisc_blogPost_centralServer_password,instaDisc_comment_centralServer_username,instaDisc_comment_centralServer_password,instaDisc_blogPost_password,instaDisc_comment_password">
+<INPUT TYPE="hidden" NAME="page_options" VALUE="instaDisc_subscription_title,instaDisc_blogPost_seriesURL,instaDisc_blogPost_subscriptionID,instaDisc_comment_seriesURL,instaDisc_comment_subscriptionID,instaDisc_blogPost_password,instaDisc_comment_password">
 <P CLASS="submit"><INPUT TYPE="submit" NAME="Submit" VALUE="<?php _e('Save Changes') ?>"></P>
 </FORM></DIV><?php
 }
@@ -192,11 +150,9 @@ function sendPost($id)
 
 	$verID = rand(1,2147483647);
 
-	$client = new xmlrpc_client(get_option('instaDisc_blogPost_centralServer'));
-	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval(get_option('instaDisc_blogPost_centralServer_username'), 'string'),
-								new xmlrpcval(md5(get_option('instaDisc_blogPost_centralServer_username') . ':' . md5(get_option('instaDisc_blogPost_centralServer_password')) . ':' . $verID), 'string'),
-								new xmlrpcval($verID, 'int'),
-								new xmlrpcval(get_option('siteurl') . '/', 'string'),
+	$client = new xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
+	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array( new xmlrpcval(get_option('instaDisc_blogPost_seriesURL')),
+								new xmlrpcval(get_option('instaDisc_blogPost_subscriptionID')),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($authorName, 'string'),
 								new xmlrpcval($url, 'string'),
@@ -229,11 +185,9 @@ function sendComment($id)
 
 	$verID = rand(1,2147483647);
 
-	$client = new xmlrpc_client(get_option('instaDisc_comment_centralServer'));
-	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval(get_option('instaDisc_comment_centralServer_username'), 'string'),
-								new xmlrpcval(md5(get_option('instaDisc_comment_centralServer_username') . ':' . md5(get_option('instaDisc_comment_centralServer_password')) . ':' . $verID), 'string'),
-								new xmlrpcval($verID, 'int'),
-								new xmlrpcval(get_option('siteurl') . '/comments/', 'string'),
+	$client = new xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
+	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval(get_option('instaDisc_comment_seriesURL')),
+								new xmlrpcval(get_option('instaDisc_comment_subscriptionID')),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
