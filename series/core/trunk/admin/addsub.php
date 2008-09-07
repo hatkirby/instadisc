@@ -77,8 +77,8 @@ function showForm($id, $title, $url, $category, $password, $errors)
 	$template->add('ID_ERR', ifErrors($errors, 'id'));
 	$template->add('TITLE_ERR', ifErrors($errors, 'title'));
 	$template->add('URL_ERR', ifErrors($errors, 'url'));
-	$template->add('CATEGORY_ERR', ifErrors($category, 'url'));
-	$template->add('PASSWORD_ERR', ifErrors($password, 'url'));
+	$template->add('CATEGORY_ERR', ifErrors($errors, 'url'));
+	$template->add('PASSWORD_ERR', ifErrors($errors, 'url'));
 
 	doErrors($template, $errors, 'id');
 	doErrors($template, $errors, 'title');
