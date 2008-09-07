@@ -1,3 +1,4 @@
+<CENTER>
 <H1><!--SITENAME--></H1><P>
 <H2>Subscriptions Available</H2>
 
@@ -6,3 +7,4 @@
 	<LI><A HREF="subscription.php?id=<!--SUBSCRIPTIONS.IDENTITY-->"><!--SUBSCRIPTIONS.IDENTITY--></A> - <!--SUBSCRIPTIONS.TITLE--> (<!--SUBSCRIPTIONS.CATEGORY-->)</LI>
 	<!--END SUBSCRIPTIONS-->
 </UL>
+</CENTER>
