@@ -4,6 +4,8 @@
 
 include('includes/db.php');
 include('includes/template.php');
+include('includes/xmlrpc/xmlrpc.inc');
+include('includes/xmlrpc/xmlrpcs.inc');
 
 function instaDisc_subscriptionExists($id)
 {
