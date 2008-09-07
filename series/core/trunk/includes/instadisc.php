@@ -51,4 +51,9 @@ function instaDisc_getConfig($name)
 	return $getconfig3['value'];
 }
 
+function instaDisc_verifyUser($username, $password)
+{
+	return (($username == instaDisc_getConfig('adminUser')) && (md5($password) == instaDisc_getConfig('adminPass')));
+}
+
 ?>
