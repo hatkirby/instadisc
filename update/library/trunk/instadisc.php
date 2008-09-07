@@ -12,7 +12,7 @@ $instaDisc_subCount = 0;
 
 function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 {
-	global $idusSubscriptionSeriesID, $idusSubscriptionID, $idusEncryptionKey;
+	global $idusSubscriptionSeriesURL, $idusSubscriptionID, $idusEncryptionKey;
 
 	$encID = 0;
 	if (($idusEncryptionKey[$id] != '') && extension_loaded('mcrypt'))
