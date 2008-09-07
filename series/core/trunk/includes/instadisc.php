@@ -56,4 +56,11 @@ function instaDisc_verifyUser($username, $password)
 	return (($username == instaDisc_getConfig('adminUser')) && (md5($password) == instaDisc_getConfig('adminPass')));
 }
 
+function instaDisc_changePassword($password)
+{
+	$setconfig = "UPDATE config SET value = \"" . mysql_real_escape_string(md5($password)) . "\" WHERE name = \"adminPass\"";
+	$setconfig2 = mysql_query($setconfig);
+	$setconfig3 = mysql_fetch_array($setconfig2);
+}
+
 ?>
