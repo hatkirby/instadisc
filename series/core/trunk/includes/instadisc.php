@@ -63,4 +63,10 @@ function instaDisc_changePassword($password)
 	$setconfig3 = mysql_fetch_array($setconfig2);
 }
 
+function instaDisc_addSubscription($id, $title, $url, $category, $password = '')
+{
+	$inssub = "INSERT INTO subscriptions (identity, title, url, category, password) VALUES (\"" . mysql_real_escape_string($id) . "\",\"" . mysql_real_escape_string($title) . "\",\"" . mysql_real_escape_string($url) . "\",\"" . mysql_real_escape_string($category) . "\",\"" . mysql_real_escape_string(($password == '' ? '' : md5($password))) . "\")";
+	$inssub2 = mysql_query($inssub);
+}
+
 ?>
