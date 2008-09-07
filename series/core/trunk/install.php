@@ -77,7 +77,7 @@ if (!isset($_GET['submit']))
 							showStepOne($_POST['host'], $_POST['username'], $_POST['password'], $_POST['dbname'], $errors);
 						} else {
 							showHeader('2');
-							showStepTwo('', array());
+							showStepTwo('', '', '', array());
 						}
 					}
 				}
@@ -91,10 +91,20 @@ if (!isset($_GET['submit']))
 				addError($numOfErrors, $errors, 'siteName', 'Site Name is a required field');
 			}
 
+			if ($_POST['adminUser'] == '')
+			{
+				addError($numOfErrors, $errors, 'adminUser', 'Administrator Username is a required field');
+			}
+
+			if ($_POST['adminPass'] == '')
+			{
+				addError($numOfErrors, $errors, 'adminPass', 'Administrator Password is a required field');
+			}
+
 			if ($numOfErrors > 0)
 			{
 				showHeader('2');
-				showStepTwo($_POST['mailDomain'], $_POST['smtpHost'], ($_POST['smtpAuth'] == 'on' ? ' CHECKED' : ''), $_POST['smtpUser'], $_POST['smtpPass'], $_POST['siteName'], $_POST['xmlrpcURL'], $_POST['adminUser'], $_POST['adminPass'], $_POST['adminEmail'], $errors);
+				showStepTwo($_POST['siteName'], $_POST['adminUser'], $_POST['adminPass'], $errors);
 			} else {
 				include_once('includes/config.php');
 
@@ -102,6 +112,8 @@ if (!isset($_GET['submit']))
 				mysql_select_db($dbname);
 
 				$sql[0] = "INSERT INTO config (name,value) VALUES (\"siteName\",\"" . mysql_real_escape_string($_POST['siteName']) . "\")";
+				$sql[1] = "INSERT INTO config (name,value) VALUES (\"adminUser\",\"" . mysql_real_escape_string($_POST['adminUser']) . "\")";
+				$sql[2] = "INSERT INTO config (name,value) VALUES (\"adminPass\",\"" . mysql_real_escape_string($_POST['adminPass']) . "\")";
 
 				foreach ($sql as $name => $value)
 				{
@@ -118,7 +130,7 @@ if (!isset($_GET['submit']))
 				if ($numOfErrors > 0)
 				{
 					showHeader('2');
-					showStepTwo($_POST['siteName'], $errors);
+					showStepTwo($_POST['siteName'], $_POST['adminUser'], $_POST['adminPass'], $errors);
 				} else {
 					showHeader('3');
 					showStepThree();
@@ -197,6 +209,15 @@ function showStepTwo($siteName, $errors)
 <?php doErrors($errors, 'siteName'); ?> <LABEL FOR="siteName"><EM>*</EM> Site Name: </LABEL>
  <INPUT TYPE="text" ID="siteName" NAME="siteName" CLASS="textInput" VALUE="<?php echo($siteName); ?>">
  <P CLASS="formHint">Your website's name is required for a little personalization of emails.</P>
+</DIV>
+</FIELDSET><FIELDSET CLASS="inlineLabels"><LEGEND>Administrator User Details</LEGEND>
+<DIV CLASS="ctrlHolder<?php ifErrors($errors, 'adminUser'); ?>">
+<?php doErrors($errors, 'adminUser'); ?> <LABEL FOR="adminUser"><EM>*</EM> Administrator Username: </LABEL>
+ <INPUT TYPE="text" ID="adminUser" NAME="adminUser" CLASS="textInput" VALUE="<?php echo($adminUser); ?>">
+</DIV>
+<DIV CLASS="ctrlHolder<?php ifErrors($errors, 'adminPass'); ?>">
+<?php doErrors($errors, 'adminPass'); ?> <LABEL FOR="adminPass"><EM>*</EM> Administrator Password: </LABEL>
+ <INPUT TYPE="password" ID="adminPass" NAME="adminPass" CLASS="textInput" VALUE="<?php echo($adminPass); ?>">
 </DIV>
 </FIELDSET>
 <DIV CLASS="buttonHolder">
