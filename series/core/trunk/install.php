@@ -188,7 +188,7 @@ function showStepOne($host, $username, $password, $dbname, $errors)
 </DIV></FORM><?php
 }
 
-function showStepTwo($siteName, $errors)
+function showStepTwo($siteName, $adminUser, $adminPass, $errors)
 {
 ?>Your database has been set up. All we need to do now is fill it up a little. Please answer the below questions to set up your configuration:
 <FORM CLASS="uniform" ACTION="./install.php?submit=2" METHOD="POST">
