@@ -80,7 +80,9 @@ function sendFromUpdate($subscriptionSeriesURL, $subscriptionID, $title, $author
 	$subscriptionURL = instaDisc_resolveSubscription($subscriptionSeriesURL, $subscriptionID);
 	if ($subscriptionURL != 'false')
 	{
-		$getsed = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscriptionSeriesURL) . "\" AND identity = \"" . mysql_real_escape_string($subscriptionID) . "\"";
+		$subscriptionURL = $subscriptionURL['url'];
+
+		$getsed = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscriptionURL) . "\"";
 		$getsed2 = mysql_query($getsed);
 		$i=0;
 		while ($getsed3[$i] = mysql_fetch_array($getsed2))
@@ -99,12 +101,12 @@ function deleteSubscription($username, $verification, $verificationID, $subscrip
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
-		$getsub = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\" AND username = \"" . mysql_real_escape_string($username) . "\" AND owner = \"false\"";
+		$getsub = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\" AND username = \"" . mysql_real_escape_string($username) . "\"";
 		$getsub2 = mysql_query($getsub);
 		$getsub3 = mysql_fetch_array($getsub2);
 		if ($getsub3['url'] == $subscription)	
 		{
-			$delsub = "DELETE FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\" AND username = \"" . mysql_real_escape_string($username) . "\" AND owner = \"false\"";
+			$delsub = "DELETE FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\" AND username = \"" . mysql_real_escape_string($username) . "\"";
 			$delsub2 = mysql_query($delsub);
 
 			return new xmlrpcresp(new xmlrpcval(0, "int"));
@@ -118,12 +120,12 @@ function addSubscription($username, $verification, $verificationID, $subscriptio
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
-		$getsub = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\" AND username = \"" . mysql_real_escape_string($username) . "\" AND owner = \"false\"";
-		$getsub2 = mysql_query($getsub);
+		$getsub = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscription) . "\" AND username = \"" . mysql_real_escape_string($username) . "\"";
+		$getsub2 = mysql_query($getsub) or die($getsub);
 		$getsub3 = mysql_fetch_array($getsub2);
 		if ($getsub3['url'] != $subscription)	
 		{
-			$inssub = "INSERT INTO subscriptions (url, username, owner, category) VALUES (\"" . mysql_real_escape_string($subscription) . "\", \"" . mysql_real_escape_string($username) . "\", \"false\", \"" . mysql_real_escape_string($category) . "\")";
+			$inssub = "INSERT INTO subscriptions (url, username, category) VALUES (\"" . mysql_real_escape_string($subscription) . "\", \"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($category) . "\")";
 			$inssub2 = mysql_query($inssub);
 
 			return new xmlrpcresp(new xmlrpcval(0, "int"));
