@@ -28,5 +28,6 @@ if ($sub['password'] != '')
 }
 
 echo('Series-Control-URL: http://' . $_SERVER['SERVER_NAME'] . str_replace(basename($_SERVER['PHP_SELF']), 'xmlrpc.php', $_SERVER['PHP_SELF']) . "\n");
+echo('Subscription-ID: ' . $_GET['id'] . "\n");
 
 ?>
