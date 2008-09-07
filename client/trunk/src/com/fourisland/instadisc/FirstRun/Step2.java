@@ -34,9 +34,7 @@ public class Step2 extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
@@ -56,14 +54,8 @@ public class Step2 extends javax.swing.JDialog {
         jTextField1.setText(resourceMap.getString("jTextField1.text")); // NOI18N
         jTextField1.setName("jTextField1"); // NOI18N
 
-        jTextField3.setText(resourceMap.getString("jTextField3.text")); // NOI18N
-        jTextField3.setName("jTextField3"); // NOI18N
-
         jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
         jLabel3.setName("jLabel3"); // NOI18N
-
-        jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
-        jLabel4.setName("jLabel4"); // NOI18N
 
         jLabel5.setText(resourceMap.getString("jLabel5.text")); // NOI18N
         jLabel5.setName("jLabel5"); // NOI18N
@@ -96,20 +88,19 @@ public class Step2 extends javax.swing.JDialog {
                                 .addGap(12, 12, 12)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel3))
+                                .addGap(66, 66, 66)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
-                                    .addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1))))
+                                    .addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(24, 24, 24)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -128,13 +119,10 @@ public class Step2 extends javax.swing.JDialog {
                     .addComponent(jLabel3)
                     .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1)))
+                    .addComponent(jButton1)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         pack();
@@ -146,41 +134,28 @@ public class Step2 extends javax.swing.JDialog {
             if (jPasswordField1.getPassword().length == 0) {
                 jLabel5.setText("Error: You forgot to enter a password");
             } else {
-                if (jTextField3.getText().equals("")) {
-                    jLabel5.setText("Error: You forgot to enter a Central Server URL");
-                } else {
-                    try {
-                        new URL(jTextField3.getText());
-                        
-                        MD5 md5 = new MD5(jPasswordField1.getPassword());
-                        String password = md5.hash();
-                        
-                        XmlRpc xmlrpc = new XmlRpc("checkRegistration", jTextField3.getText(), jTextField1.getText(), password);
-                        Integer r = (Integer) xmlrpc.execute();
-                        
-                        if (r == 1)
-                        {
-                            jLabel5.setText("Error: No registration exists on the specified Central Server with the specified UN/PW combination");
-                        } else {                            
-                            Wrapper.setConfig("username", jTextField1.getText());
-                            Wrapper.setConfig("password", password);
-                            Wrapper.setConfig("centralServerURL", jTextField3.getText());
-                            Wrapper.setConfig("itemBufferSize", "10");
-                            Wrapper.setConfig("verIDBufferSize", "10000");
-                            Wrapper.setConfig("nextFilterID", "0");
-                            Wrapper.setConfig("ipCheckValue", "1");
-                            Wrapper.setConfig("ipCheckUnit", "day");
-                            Wrapper.setConfig("useUnreadFlag", "true");
-                            Wrapper.setConfig("initCheck", "done");
-                            
-                            StepEndResults.ok = true;
-                            this.setVisible(false);
-                        }
-                    } catch (MalformedURLException ex) {
-                        jLabel5.setText("Error: The Central Server URL is malformed");
-                    } catch (NullPointerException ex) {
-                        jLabel5.setText("Error: The Central Server URL specified does not exist");
-                    }
+                MD5 md5 = new MD5(jPasswordField1.getPassword());
+                String password = md5.hash();
+
+                XmlRpc xmlrpc = new XmlRpc("checkRegistration", jTextField1.getText(), password);
+                Integer r = (Integer) xmlrpc.execute();
+
+                if (r == 1)
+                {
+                    jLabel5.setText("Error: No registration exists on the specified Central Server with the specified UN/PW combination");
+                } else {                            
+                    Wrapper.setConfig("username", jTextField1.getText());
+                    Wrapper.setConfig("password", password);
+                    Wrapper.setConfig("itemBufferSize", "10");
+                    Wrapper.setConfig("verIDBufferSize", "10000");
+                    Wrapper.setConfig("nextFilterID", "0");
+                    Wrapper.setConfig("ipCheckValue", "1");
+                    Wrapper.setConfig("ipCheckUnit", "day");
+                    Wrapper.setConfig("useUnreadFlag", "true");
+                    Wrapper.setConfig("initCheck", "done");
+
+                    StepEndResults.ok = true;
+                    this.setVisible(false);
                 }
             }
         }
@@ -209,11 +184,9 @@ public class Step2 extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 }
