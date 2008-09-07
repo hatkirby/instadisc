@@ -1,4 +1,5 @@
-<H1>Subscriptions Available</H1>
+<H1><!--SITENAME--></H1><P>
+<H2>Subscriptions Available</H2>
 
 <UL>
 	<!--BEGIN SUBSCRIPTIONS-->
