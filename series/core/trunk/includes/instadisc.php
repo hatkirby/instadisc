@@ -42,4 +42,13 @@ function instaDisc_getAllSubscriptions()
 	return $getsubs3;
 }
 
+function instaDisc_getConfig($name)
+{
+	$getconfig = "SELECT * FROM config WHERE name = \"" . mysql_real_escape_string($name) . "\"";
+	$getconfig2 = mysql_query($getconfig);
+	$getconfig3 = mysql_fetch_array($getconfig2);
+
+	return $getconfig3['value'];
+}
+
 ?>
