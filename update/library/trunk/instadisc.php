@@ -9,6 +9,7 @@ $idusSubscriptionID = array();
 $idusSeriesUsername = array();
 $idusSeriesPassword = array();
 $idusSubscriptionURL = array();
+$idusSubscriptionTitle = array();
 $idusSubscriptionCategory = array();
 $idusSubscriptionPersonal = array();
 $idusEncryptionKey = array();
@@ -16,7 +17,7 @@ $instaDisc_subCount = 0;
 
 function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 {
-	global $idusSubscriptionSeriesURL, $idusSubscriptionID, $idusSeriesUsername, $idusSeriesPassword, $idusSubscriptionURL, $idusSubscriptionCategory, $idusSubscriptionPersonal, $idusEncryptionKey;
+	global $idusSubscriptionSeriesURL, $idusSubscriptionID, $idusSeriesUsername, $idusSeriesPassword, $idusSubscriptionURL, $idusSubscriptionTitle, $idusSubscriptionCategory, $idusSubscriptionPersonal, $idusEncryptionKey;
 
 	$encID = 0;
 	if (($idusEncryptionKey[$id] != '') && extension_loaded('mcrypt'))
@@ -72,14 +73,15 @@ function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 	}
 }
 
-function instaDisc_addSubscription($url, $id, $un, $pw, $sUrl, $cat, $personal = '', $enc = '')
+function instaDisc_addSubscription($url, $id, $un, $pw, $sUrl, $title, $cat, $personal = '', $enc = '')
 {
-	global $instaDisc_subCount, $idusSubscriptionSeriesURL, $idusSubscriptionID, $idusSeriesUsername, $idusSeriesPassword, $idusSubscriptionURL, $idusSubscriptionCategory, $idusSubscriptionPersonal, $idusEncryptionKey;
+	global $instaDisc_subCount, $idusSubscriptionSeriesURL, $idusSubscriptionID, $idusSeriesUsername, $idusSeriesPassword, $idusSubscriptionURL, $idusSubscriptionTitle, $idusSubscriptionCategory, $idusSubscriptionPersonal, $idusEncryptionKey;
 	$idusSubscriptionSeriesURL[$instaDisc_subCount] = $url;
 	$idusSubscriptionID[$instaDisc_subCount] = $id;
 	$idusSeriesUsername[$instaDisc_subCount] = $un;
 	$idusSeriesPassword[$instaDisc_subCount] = $pw;
 	$idusSubscriptionURL[$instaDisc_subCount] = $sUrl;
+	$idusSubscriptionTitle[$instaDisc_subCount] = $title;
 	$idusSubscriptionCategory[$instaDisc_subCount] = $cat;
 	$idusSubscriptionPersonal[$instaDisc_subCount] = ($personal != '' ? 'true' : 'false');
 	$idusEncryptionKey[$instaDisc_subCount] = $enc;
