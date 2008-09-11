@@ -39,6 +39,7 @@ function sendFromUpdate($username, $verification, $verificationID, $seriesURL, $
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
+		
 	} else {
 		return new xmlrpcresp(new xmlrpcval('2', 'int'));
 	}

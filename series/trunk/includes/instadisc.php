@@ -69,4 +69,41 @@ function instaDisc_addSubscription($id, $title, $url, $category, $password = '')
 	$inssub2 = mysql_query($inssub);
 }
 
+function instaDisc_checkVerification($username, $verification, $verificationID, $table, $nameField, $passField)
+{
+        $getverid = "SELECT * FROM oldVerID WHERE username = \"" . mysql_real_escape_string($username) . "\" AND verID = " . $verificationID;
+        $getverid2 = mysql_query($getverid);
+        $getverid3 = mysql_fetch_array($getverid2);
+        if ($getverid3['id'] != $verificationID)
+        {
+                $getitem = "SELECT * FROM " . $table . " WHERE " . $nameField . " = \"" . mysql_real_escape_string($username) . "\"";
+                $getitem2 = mysql_query($getitem);
+                $getitem3 = mysql_fetch_array($getitem2);
+                if ($getitem3[$nameField] == $username)
+                {
+                        $test = $username . ':' . $getitem3[$passField] . ':' . $verificationID;
+
+                        if (md5($test) == $verification)
+                        {
+                                $cntverid = "SELECT COUNT(*) FROM oldVerID WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+                                $cntverid2 = mysql_query($cntverid);
+                                $cntverid3 = mysql_fetch_array($cntverid2);
+                                if ($cntverid3[0] >= 10000)
+                                {
+                                        $delverid = "DELETE FROM oldVerID WHERE username = \"" . mysql_real_escape_string($username) . "\" LIMIT 0,1";
+                                        $delverid2 = mysql_query($delverid);
+                                }
+
+                                $insverid = "INSERT INTO oldVerID (username, verID) VALUES (\"" . mysql_real_escape_string($username) . "\", " . $verificationID . ")";
+                                $insverid2 = mysql_query($insverid);
+
+                                return true;
+                        }
+                }
+        }
+
+        return false;
+}
+
+
 ?>
