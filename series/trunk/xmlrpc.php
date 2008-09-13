@@ -35,7 +35,7 @@ function getPasswordInfo($id)
 	}
 }
 
-function sendFromUpdate($username, $verification, $verificationID, $seriesURL, $seriesID, $subscriptionURL, $subscriptionTitle, $subscriptionCategory, $subscriptionPersonal, $title, $author, $url, $semantics, $encryptionID)
+function sendFromUpdate($username, $verification, $verificationID, $seriesURL, $seriesID, $title, $author, $url, $semantics, $encryptionID)
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
@@ -74,9 +74,33 @@ function sendFromUpdate($username, $verification, $verificationID, $seriesURL, $
 	return new xmlrpcresp(new xmlrpcval('1', 'int'));
 }
 
+function initSubscription($username, $verification, $verificationID, $seriesURL, $subscriptionID, $subscriptionURL, $subscriptionTitle, $subscriptionCategory, $subscriptionPersonal)
+{
+	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
+	{
+		$getsub = "SELECT * FROM subscriptions WHERE identity = \"" . mysql_real_escape_string($seriesID) . "\"";
+		$getsub2 = mysql_query($getsub);
+		$getsub3 = mysql_fetch_array($getsub2);
+		if ($getsub3['identity'] == $seriesID)
+		{
+			if ($getsub3['username'] != $username)
+			{
+				return new xmlrpcresp(new xmlrpcval('1', 'int'));
+			}
+
+			$setsub = "UPDATE subscriptions SET title = \"" . mysql_real_escape_string($subscriptionTitle) . "\", url = \"" . mysql_real_escape_string($subscriptionURL) . "\", category = \"" . mysql_real_escape_string($subscriptionCategory) . "\", personal = \"" . mysql_real_escape_string($subscriptionPersonal) . "\"";
+			$setsub2 = mysql_query($setsub);
+		} else {
+			$inssub = "INSERT INTO subscriptions (identity, title, url, category, personal, username) VALUES (\"" . mysql_real_escape_string($seriesID) . "\",\"" . mysql_real_escape_string($subscriptionTitle) . "\",\"" . mysql_real_escape_string($subscriptionURL) . "\",\"" . mysql_real_escape_string($subscriptionCategory) . "\",\"" . mysql_real_escape_string($subscriptionPersonal) . "\",\"" . mysql_real_escape_string($username) . "\")";
+			$inssub2 = mysql_query($inssub);
+		}
+	}
+}
+
 $s = new xmlrpc_server(array(	"InstaDisc.subscriptionInfo" => array('function' => 'subscriptionInfo'),
 				"InstaDisc.getPasswordInfo" => array('function' => 'getPasswordInfo'),
-				"InstaDisc.sendFromUpdate" => array('function' => 'sendFromUpdate')
+				"InstaDisc.sendFromUpdate" => array('function' => 'sendFromUpdate'),
+				"InstaDisc.initSubscription" => array('function' => 'initSubscription')
 			), 0);
 $s->functions_parameters_type = 'phpvals';
 $s->service();
