@@ -56,7 +56,7 @@ function sendFromUpdate($username, $verification, $verificationID, $seriesURL, $
 			$inssub2 = mysql_query($inssub);
 		}
 
-		$client = xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
+		$client = new xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
 		$msg = new xmlrpcmsg("InstaDisc.sendFromSeries", array(	new xmlrpcval($seriesURL, 'string'),
 									new xmlrpcval($seriesID, 'string'),
 									new xmlrpcval($title, 'string'),
