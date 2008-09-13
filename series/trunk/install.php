@@ -113,7 +113,7 @@ if (!isset($_GET['submit']))
 
 				$sql[0] = "INSERT INTO config (name,value) VALUES (\"siteName\",\"" . mysql_real_escape_string($_POST['siteName']) . "\")";
 				$sql[1] = "INSERT INTO config (name,value) VALUES (\"adminUser\",\"" . mysql_real_escape_string($_POST['adminUser']) . "\")";
-				$sql[2] = "INSERT INTO config (name,value) VALUES (\"adminPass\",\"" . mysql_real_escape_string(md5($_POST['adminPass'])) . "\")";
+				$sql[2] = "INSERT INTO users (username,password) VALUES (\"" . mysql_real_escape_string($_POST['adminUser']) . "\",\"" . mysql_real_escape_string(md5($_POST['adminPass'])) . "\")";
 
 				foreach ($sql as $name => $value)
 				{
