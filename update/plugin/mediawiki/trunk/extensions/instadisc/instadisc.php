@@ -42,10 +42,6 @@ function instaDisc_sendItem(&$article, &$user, &$text, &$summary, &$minoredit, &
 								new xmlrpcval($verID, 'int'),
 								new xmlrpcval($instaDisc_seriesURL, 'string'),
 								new xmlrpcval($instaDisc_subscriptionID, 'string'),
-								new xmlrpcval($instaDisc_subscriptionURL, 'string'),
-								new xmlrpcval($instaDisc_subscriptionTitle, 'string'),
-								new xmlrpcval('page-change', 'string'),
-								new xmlrpcval($instaDisc_subscriptionPersonal, 'string'),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
@@ -93,3 +89,17 @@ function encryptString($td, $key, $string)
         return $string;
 }
 
+function instaDisc_initSubscription()
+{
+	$client = new xmlrpc_client($instaDisc_seriesURL);
+	$msg = new xmlrpcmsg("InstaDisc.initSubscription", array(	new xmlrpcval($instaDisc_seriesUsername, 'string'),
+									new xmlrpcval(md5($instaDisc_seriesUsername . ':' . md5($instaDisc_seriesPassword) . ':' . $verID), 'string'),
+									new xmlrpcval($verID, 'int'),
+									new xmlrpcval($instaDisc_seriesURL, 'string'),
+									new xmlrpcval($instaDisc_subscriptionID, 'string'),
+									new xmlrpcval($instaDisc_subscriptionURL, 'string'),
+									new xmlrpcval($instaDisc_subscriptionTitle, 'string'),
+									new xmlrpcval('page-change', 'string'),
+									new xmlrpcval($instaDisc_subscriptionPersonal, 'string')));
+	$client->send($msg);
+}
