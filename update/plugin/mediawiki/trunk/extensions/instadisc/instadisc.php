@@ -2,6 +2,8 @@
 
 /* InstaDisc Update - A Four Island Project */
 
+include('xmlrpc/xmlrpc.inc');
+
 $wgExtensionCredits['other'][] = array(
 	'name' => 'InstaDisc',
 	'author' => 'Starla Insigna',
