@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: Sep 06, 2008 at 05:38 PM
+-- Generation Time: Sep 13, 2008 at 09:16 AM
 -- Server version: 5.0.51
 -- PHP Version: 5.2.4-2ubuntu5.3
 -- 
@@ -38,7 +38,23 @@ CREATE TABLE `subscriptions` (
   `category` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `personal` varchar(5) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `lastUpdated` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `identity` (`identity`,`url`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `users`
+-- 
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL auto_increment,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
