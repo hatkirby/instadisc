@@ -21,6 +21,11 @@ public class Subscription {
     private String title;
     private String password;
     
+    public Subscription()
+    {
+        password = "";
+    }
+    
     public String getURL()
     {
         return url;

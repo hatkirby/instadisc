@@ -28,15 +28,15 @@ public class Category {
         } else if (category.equals("forum-post"))
         {
             return new ImageIcon(Fourm.fourm);
-        } else if (category.equals("instadisc"))
-        {
-            return new ImageIcon(InstaDiscIcon.instadiscicon);
         } else if (category.equals("email"))
         {
             return new ImageIcon(Email.email);
         } else if (category.equals("vcs-rev"))
         {
             return new ImageIcon(Vcsrev.vcsrev);
+        } else if (category.equals("page-change"))
+        {
+            return new ImageIcon(Page_edit.page_edit);
         }
         return null;
     }

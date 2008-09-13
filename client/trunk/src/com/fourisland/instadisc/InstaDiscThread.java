@@ -23,6 +23,11 @@ public class InstaDiscThread implements Runnable {
     boolean cancelled = false;
     InstaDiscView idv;
     
+    public InstaDiscThread()
+    {
+        this.idv = null;
+    }
+    
     public InstaDiscThread(InstaDiscView idv)
     {
         this.idv = idv;
@@ -76,8 +81,13 @@ class HandleItemThread implements Runnable {
     }
 
     public void run() {
-        idv.startProgress();
-        idv.doText("Downloading Item....");
+        try
+        {
+            idv.startProgress();
+            idv.doText("Downloading Item....");
+        } catch (NullPointerException ex)
+        {
+        }
         
         try
         {
@@ -97,7 +107,12 @@ class HandleItemThread implements Runnable {
                         buffer[i] = rs;
                     }
                     
-                    idv.doProgress(buffer.length / (is.available()+1));
+                    try
+                    {
+                       idv.doProgress(buffer.length / (is.available()+1));
+                    } catch (NullPointerException ex)
+                    {
+                    }
                     
                     i++;
                 } catch (SocketException ex)
@@ -150,6 +165,11 @@ class HandleItemThread implements Runnable {
             Logger.getLogger(HandleItemThread.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        idv.doneProgress();
+        try
+        {
+            idv.doneProgress();
+        } catch (NullPointerException ex)
+        {
+        }
     }
 }
