@@ -145,7 +145,7 @@ if (!isset($_GET['submit']))
 
 function showHeader($number)
 {
-?><HTML><HEAD><TITLE>InstaDisc Series Setup Step <?php echo($number); ?></TITLE><LINK REL="stylesheet" TYPE="text/css" HREF="uniform.css"></HEAD><BODY><CENTER><H1>InstaDisc Installation</H1></CENTER><P><?php
+?><HTML><HEAD><TITLE>InstaDisc Series Setup Step <?php echo($number); ?></TITLE><LINK REL="stylesheet" TYPE="text/css" HREF="theme/uniform.css"></HEAD><BODY><CENTER><H1>InstaDisc Installation</H1></CENTER><P><?php
 }
 
 function showStepOne($host, $username, $password, $dbname, $errors)
