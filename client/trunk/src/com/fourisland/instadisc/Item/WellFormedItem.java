@@ -204,11 +204,6 @@ public class WellFormedItem {
         good = (good ? checkForRequiredHeader("Author") : false);
         good = (good ? checkForRequiredHeader("URL") : false);
         
-        if (!Wrapper.getSubscription(aThis.headerMap.get("Subscription")).getPassword().equals(""))
-        {
-            good = (good ? checkForRequiredHeader("Encryption-ID") : false);
-        }
-        
         return good;
     }
 
@@ -237,12 +232,19 @@ public class WellFormedItem {
 
     private boolean checkForSubscription() {
         boolean good = Wrapper.existsSubscription(aThis.headerMap.get("Subscription"));
-        if (!good) {
+        if (!good)
+        {
             Subscription s = new Subscription();
             s.setURL(aThis.headerMap.get("Subscription"));
             
             SubscriptionFile.deleteSubscription(s, false);
+        } else {
+            if (!Wrapper.getSubscription(aThis.headerMap.get("Subscription")).getPassword().equals(""))
+            {
+                good = (good ? checkForRequiredHeader("Encryption-ID") : false);
+            }
         }
+        
         return good;
     }
 }
