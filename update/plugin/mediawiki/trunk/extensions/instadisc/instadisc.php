@@ -15,9 +15,9 @@ $wgHooks['ArticleSaveComplete'][] = 'instaDisc_sendItem';
 
 function instaDisc_sendItem(&$article, &$user, &$text, &$summary, &$minoredit, &$watchthis, &$sectionanchor, &$flags, &$revision)
 {
-	global $instaDisc_password, $instaDisc_subscriptionPersonal, $instaDisc_seriesURL, $instaDisc_seriesUsername, $instaDisc_seriesPassword, $instaDisc_subscriptionID, $instaDisc_subscriptionURL, $instaDisc_subscriptionTitle, $instaDisc_subscriptionCategory;
+	global $instaDisc_password, $instaDisc_subscriptionPersonal, $instaDisc_seriesURL, $instaDisc_seriesUsername, $instaDisc_seriesPassword, $instaDisc_subscriptionID, $instaDisc_subscriptionURL, $instaDisc_subscriptionTitle;
 
-	if (!isset($instaDisc_password) || !isset($instaDisc_subscriptionPersonal) || !isset($instaDisc_seriesURL) || !isset($instaDisc_seriesUsername) || !isset($instaDisc_seriesPassword) || !isset($instaDisc_subscriptionID) || !isset($instaDisc_subscriptionURL) || !isset($instaDisc_subscriptionTitle) || !isset($instaDisc_subscriptionCategory))
+	if (!isset($instaDisc_password) || !isset($instaDisc_subscriptionPersonal) || !isset($instaDisc_seriesURL) || !isset($instaDisc_seriesUsername) || !isset($instaDisc_seriesPassword) || !isset($instaDisc_subscriptionID) || !isset($instaDisc_subscriptionURL) || !isset($instaDisc_subscriptionTitle))
 	{
 		return false;
 	}
@@ -27,7 +27,7 @@ function instaDisc_sendItem(&$article, &$user, &$text, &$summary, &$minoredit, &
 	$url = $article->getTitle()->getFullURL();
 
 	$encID = 0;
-	if ($instaDisc_password != '')
+	if (($instaDisc_password != '') && (extension_loaded('mcrypt'))
 	{
 		$encID = encryptData($title, $author, $url, $instaDisc_password);
 	}
@@ -44,7 +44,7 @@ function instaDisc_sendItem(&$article, &$user, &$text, &$summary, &$minoredit, &
 								new xmlrpcval($instaDisc_subscriptionID, 'string'),
 								new xmlrpcval($instaDisc_subscriptionURL, 'string'),
 								new xmlrpcval($instaDisc_subscriptionTitle, 'string'),
-								new xmlrpcval($instaDisc_subscriptionCategory, 'string'),
+								new xmlrpcval('page-change', 'string'),
 								new xmlrpcval($instaDisc_subscriptionPersonal, 'string'),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
@@ -64,3 +64,32 @@ function instaDisc_sendItem(&$article, &$user, &$text, &$summary, &$minoredit, &
 		return false;
 	}
 }
+
+function encryptData(&$title, &$author, &$url, $password)
+{
+        $encID = rand(1,2147483647);
+
+        $cipher = "rijndael-128";
+        $mode = "cbc";
+        $key = substr(md5(substr(str_pad($password,16,$encID),0,16)),0,16);
+
+        $td = mcrypt_module_open($cipher, "", $mode, "");
+
+        $title = encryptString($td, $key, $title);
+        $author = encryptString($td, $key, $author);
+        $url = encryptString($td, $key, $url);
+
+        mcrypt_module_close($td);
+
+        return $encID;
+}
+
+function encryptString($td, $key, $string)
+{
+        mcrypt_generic_init($td, $key, strrev($key));
+        $string = bin2hex(mcrypt_generic($td, $string));
+        mcrypt_generic_deinit($td);
+
+        return $string;
+}
+
