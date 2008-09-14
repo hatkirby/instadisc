@@ -75,7 +75,7 @@ function requestRetained($username, $verification, $verificationID)
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
-function sendFromSeries($subscriptionSeriesURL, $subscriptionID, $title, $author, $url, $semantics, $encryptionID)
+function sendFromUpdate($subscriptionSeriesURL, $subscriptionID, $title, $author, $url, $semantics, $encryptionID)
 {
 	$subscriptionURL = instaDisc_resolveSubscription($subscriptionSeriesURL, $subscriptionID);
 	if ($subscriptionURL != 'false')
@@ -139,7 +139,7 @@ $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function"
 				"InstaDisc.deleteItem" => array("function" => "deleteItem"),
 				"InstaDisc.resendItem" => array("function" => "resendItem"),
 				"InstaDisc.requestRetained" => array("function" => "requestRetained"),
-				"InstaDisc.sendFromSeries" => array("function" => "sendFromSeries"),
+				"InstaDisc.sendFromUpdate" => array("function" => "sendFromUpdate"),
 				"InstaDisc.deleteSubscription" => array("function" => "deleteSubscription"),
 				"InstaDisc.addSubscription" => array("function" => "addSubscription")
 			),0);
