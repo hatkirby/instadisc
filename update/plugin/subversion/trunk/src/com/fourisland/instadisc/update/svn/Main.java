@@ -96,7 +96,7 @@ public class Main {
             }
 
             XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-            config.setServerURL(new URL(centralServer));
+            config.setServerURL(new URL("http://central.fourisland.com/xmlrpc.php"));
             XmlRpcClient client = new XmlRpcClient();
             client.setConfig(config);
             Integer resp = (Integer) client.execute("InstaDisc.sendFromUpdate", new Object[]{seriesURL,
