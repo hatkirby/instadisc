@@ -52,7 +52,7 @@ if (!isset($_GET['submit']))
 	$template->add('SITENAME',instaDisc_getConfig('siteName'));
 	$template->add('ID',$_GET['subid']);
 
-	$sub = instaDisc_getSubscription($_GET['subid']);
+	$sub = instaDisc_getSubscriptionByID($_GET['subid']);
 	$template->add('IDENTITY',$sub['identity']);
 	$template->display();
 } else {
