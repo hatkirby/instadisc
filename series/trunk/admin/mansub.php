@@ -30,8 +30,8 @@ if (instaDisc_isAdmin($_SESSION['username']))
 $i=0;
 for ($i=0;isset($subs[$i]);$i++)
 {
-	$template->adds_block('SUBSCRIPTIONS', array(	'IDENTITY' => $subs['identity'],
-							'ID' => $subs['id']));
+	$template->adds_block('SUBSCRIPTIONS', array(	'IDENTITY' => $subs[$i]['identity'],
+							'ID' => $subs[$i]['id']));
 }
 
 $template->display();

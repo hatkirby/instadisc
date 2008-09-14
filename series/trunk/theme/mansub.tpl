@@ -1,6 +1,7 @@
 <HTML>
         <HEAD>
                 <TITLE><!--SITENAME--> InstaDisc Series Control</TITLE>
+		<LINK REL="stylesheet" HREF="theme/table.css">
         </HEAD>
 
         <BODY>
