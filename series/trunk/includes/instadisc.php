@@ -67,7 +67,7 @@ function instaDisc_changePassword($username, $password)
 	$setconfig3 = mysql_fetch_array($setconfig2);
 }
 
-function instaDisc_initSubscription($username, $subscriptionID, $subscriptionURL, $subscriptionTitle, $subscriptionCategory, $subscriptionPersonal, $subscriptionPassword)
+function instaDisc_initSubscription($username, $subscriptionID, $subscriptionURL, $subscriptionTitle, $subscriptionCategory, $subscriptionPassword)
 {
 	$getuser = "SELECT * FROM users WHERE username = \"" . $username . "\"";
 	$getuser2 = mysql_query($getuser);
@@ -84,10 +84,10 @@ function instaDisc_initSubscription($username, $subscriptionID, $subscriptionURL
 				return false;
 			}
 
-			$setsub = "UPDATE subscriptions SET title = \"" . mysql_real_escape_string($subscriptionTitle) . "\", url = \"" . mysql_real_escape_string($subscriptionURL) . "\", category = \"" . mysql_real_escape_string($subscriptionCategory) . "\", personal = \"" . mysql_real_escape_string($subscriptionPersonal) . "\", password = \"" . mysql_real_escape_string($subscriptionPassword) . "\" WHERE identity = \"" . mysql_real_escape_string($subscriptionID) . "\"";
+			$setsub = "UPDATE subscriptions SET title = \"" . mysql_real_escape_string($subscriptionTitle) . "\", url = \"" . mysql_real_escape_string($subscriptionURL) . "\", category = \"" . mysql_real_escape_string($subscriptionCategory) . "\", password = \"" . mysql_real_escape_string($subscriptionPassword) . "\" WHERE identity = \"" . mysql_real_escape_string($subscriptionID) . "\"";
 			$setsub2 = mysql_query($setsub);
 		} else {
-			$inssub = "INSERT INTO subscriptions (identity, title, url, category, personal, username, password) VALUES (\"" . mysql_real_escape_string($subscriptionID) . "\",\"" . mysql_real_escape_string($subscriptionTitle) . "\",\"" . mysql_real_escape_string($subscriptionURL) . "\",\"" . mysql_real_escape_string($subscriptionCategory) . "\",\"" . mysql_real_escape_string($subscriptionPersonal) . "\",\"" . mysql_real_escape_string($username) . "\",\"" . mysql_real_escape_string($subscriptionPassword) . "\")";
+			$inssub = "INSERT INTO subscriptions (identity, title, url, category, username, password) VALUES (\"" . mysql_real_escape_string($subscriptionID) . "\",\"" . mysql_real_escape_string($subscriptionTitle) . "\",\"" . mysql_real_escape_string($subscriptionURL) . "\",\"" . mysql_real_escape_string($subscriptionCategory) . "\",\"" . mysql_real_escape_string($username) . "\",\"" . mysql_real_escape_string($subscriptionPassword) . "\")";
 			$inssub2 = mysql_query($inssub);
 		}
 
