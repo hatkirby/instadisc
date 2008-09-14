@@ -27,8 +27,13 @@ if (instaDisc_isAdmin($_SESSION['username']))
 } else {
 	$subs = instaDisc_listSubscriptions($_SESSION['username']);
 }
-$i=0;
+$i=0; $j=0;
 for ($i=0;isset($subs[$i]);$i++)
+{
+	$j++;
+}
+$j--;
+for ($i=0;$i<$j;$i++)
 {
 	$template->adds_block('SUBSCRIPTIONS', array(	'IDENTITY' => $subs[$i]['identity'],
 							'ID' => $subs[$i]['id']));
