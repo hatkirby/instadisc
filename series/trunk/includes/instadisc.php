@@ -79,7 +79,7 @@ function instaDisc_initSubscription($username, $subscriptionID, $subscriptionURL
 		$getsub3 = mysql_fetch_array($getsub2);
 		if ($getsub3['identity'] == $seriesID)
 		{
-			if ($getsub3['username'] != $username)
+			if (!instaDisc_isAdmin($username) && ($getsub3['username'] != $username))
 			{
 				return false;
 			}
