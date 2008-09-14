@@ -155,4 +155,13 @@ function instaDisc_getAllUsers()
 	return $getusers3;
 }
 
+function instaDisc_getUserByID($id)
+{
+	$getuser = "SELECT * FROM users WHERE id = " . $id;
+	$getuser2 = mysql_query($getuser);
+	$getuser3 = mysql_fetch_array($getuser2);
+
+	return $getuser3;
+}
+
 ?>
