@@ -50,7 +50,7 @@ if (!instaDisc_isAdmin($_SESSION['username']))
 if (!isset($_GET['submit']))
 {
 	$sub = instaDisc_getSubscriptionByID($_GET['subid']);
-	showForm($sub['identity'],$sub['title'],$sub['category'],$sub['url'],$sub['password'],array());
+	showForm($sub['identity'],$sub['title'],$sub['url'],$sub['category'],$sub['password'],array());
 } else {
 	$numOfErrors = 0;
 	$errors = array();
