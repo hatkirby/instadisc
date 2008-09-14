@@ -110,4 +110,10 @@ function instaDisc_listSubscriptions($username)
 	return $getsubs3;
 }
 
+function deleteSubscription($id)
+{
+	$delsub = "DELETE FROM subscriptions WHERE id = " . $id;
+	$delsub2 = mysql_query($delsub);
+}
+
 ?>

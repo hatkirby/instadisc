@@ -21,7 +21,7 @@ if (!isset($_SESSION['username']))
 $template = new FITemplate('main');
 $template->add('SITENAME',instaDisc_getConfig('siteName'));
 
-if (instaDisc_isAdmin($_SESSION['username'])
+if (instaDisc_isAdmin($_SESSION['username']))
 {
 	$template->adds_block('ADMIN', array('exi'=>1));
 }
