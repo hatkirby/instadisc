@@ -130,4 +130,29 @@ function instaDisc_getSubscriptionByID($id)
 	return $getsub3;
 }
 
+function instaDisc_addUser($username, $password)
+{
+	$insuser = "INSERT INTO users (username,password) VALUES (\"" . mysql_real_escape_string($username) . "\",\"" . mysql_real_escape_string(md5($password)) . "\")";
+	$insuser2 = mysql_query($insuser);
+}
+
+function instaDisc_deleteUser($id)
+{
+	$deluser = "DELETE FROM users WHERE id = " . $id;
+	$deluser2 = mysql_query($deluser);
+}
+
+function instaDisc_getAllUsers()
+{
+	$getusers = "SELECT * FROM users";
+	$getusers2 = mysql_query($getusers);
+	$i=0;
+	while ($getusers3[$i] = mysql_fetch_array($getusers2))
+	{
+		$i++;
+	}
+
+	return $getusers3;
+}
+
 ?>

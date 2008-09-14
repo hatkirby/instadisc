@@ -21,46 +21,36 @@ if (!isset($_SESSION['username']))
 
 if (!isset($_GET['submit']))
 {
-	showForm('','','','','',array());
+	showForm('','',array());
 } else {
 	$numOfErrors = 0;
 	$errors = array();
 
-	if ($_POST['id'] == '')
+	if ($_POST['username'] == '')
 	{
-		addError($numOfErrors, $errors, 'id', 'Subscription ID is a required field');
+		addError($numOfErrors, $errors, 'username', 'Username is a required field');
 	}
 
-	if ($_POST['title'] == '')
+	if ($_POST['password'] == '')
 	{
-		addError($numOfErrors, $errors, 'title', 'Title is a required field');
-	}
-
-	if ($_POST['url'] == '')
-	{
-		addError($numOfErrors, $errors, 'url', 'Subscription URL is a required field');
-	}
-
-	if ($_POST['category'] == '')
-	{
-		addError($numOfErrors, $errors, 'category', 'Category is a required field');
+		addError($numOfErrors, $errors, 'password', 'Password is a required field');
 	}
 
 	if ($numOfErrors > 0)
 	{
-		showForm($_POST['id'], $_POST['title'], $_POST['url'], $_POST['category'], $_POST['password'], $errors);
+		showForm($_POST['username'], $_POST['password'], $errors);
 	} else {
-		instaDisc_initSubscription($_SESSION['username'], $_POST['id'], $_POST['url'], $_POST['title'], $_POST['category'], $_POST['personal'], $_POST['password']);
+		instaDisc_addUser($_POST['username'], $_POST['password']);
 
-		$template = new FITemplate('addedsub');
+		$template = new FITemplate('addeduser');
 		$template->add('SITENAME', instaDisc_getConfig('siteName'));
 		$template->display();
 	}
 }
 
-function showForm($id, $title, $url, $category, $password, $errors)
+function showForm($username, $password, $errors)
 {
-	$template = new FITemplate('addsub');
+	$template = new FITemplate('adduser');
 	$template->add('SITENAME', instaDisc_getConfig('siteName'));
 
 	if (isset($errors[1]))
@@ -74,22 +64,13 @@ function showForm($id, $title, $url, $category, $password, $errors)
 		}
 	}
 
-	$template->add('ID_ERR', ifErrors($errors, 'id'));
-	$template->add('TITLE_ERR', ifErrors($errors, 'title'));
-	$template->add('URL_ERR', ifErrors($errors, 'url'));
-	$template->add('CATEGORY_ERR', ifErrors($errors, 'category'));
+	$template->add('USERNAME_ERR', ifErrors($errors, 'username'));
 	$template->add('PASSWORD_ERR', ifErrors($errors, 'password'));
 
-	doErrors($template, $errors, 'id');
-	doErrors($template, $errors, 'title');
-	doErrors($template, $errors, 'url');
-	doErrors($template, $errors, 'category');
+	doErrors($template, $errors, 'username');
 	doErrors($template, $errors, 'password');
 
-	$template->add('ID', $id);
-	$template->add('TITLE', $title);
-	$template->add('URL', $url);
-	$template->add('CATEGORY', $category);
+	$template->add('USERNAME', $username);
 	$template->add('PASSWORD', $password);
 
 	$template->display();
