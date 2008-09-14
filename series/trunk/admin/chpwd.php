@@ -56,7 +56,7 @@ if (isset($_SESSION['username']))
 		{
 			showForm($_POST['old'], $_POST['new'], $_POST['confirm'], $errors);
 		} else {
-			instaDisc_changePassword( $_POST['new']);
+			instaDisc_changePassword($_SESSION['username'], $_POST['new']);
 
 			$template = new FITemplate('changedpassword');
 			$template->add('SITENAME', instaDisc_getConfig('siteName'));
