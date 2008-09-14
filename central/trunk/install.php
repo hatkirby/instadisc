@@ -194,10 +194,7 @@ if (!isset($_GET['submit']))
 					$sql[6] = "INSERT INTO config (name,value) VALUES (\"xmlrpcURL\",\"" . mysql_real_escape_string($_POST['xmlrpcURL']) . "\")";
 					$sql[7] = "INSERT INTO config (name,value) VALUES (\"owner\",\"" . mysql_real_escape_string($_POST['adminUser']) . "\")";
 					$sql[8] = "INSERT INTO config (name,value) VALUES (\"verIDBufferSize\",\"10000\")";
-					$sql[9] = "INSERT INTO config (name,value) VALUES (\"softwareVersion\",\"" . $softwareVersion . "\")";
-					$sql[10] = "INSERT INTO config (name,value) VALUES (\"databaseVersion\",\"1\")";
 					$sql[11] = "INSERT INTO users (username, password, email, ip) VALUES (\"" . mysql_real_escape_string($_POST['adminUser']) . "\",\"" . mysql_real_escape_string(md5($_POST['adminPass'])) . "\",\"" . mysql_real_escape_string($_POST['adminEmail']) . "\",\"" . mysql_real_escape_string($_SERVER['REMOTE_ADDR']) . "\")";
-					$sql[12] = "INSERT INTO subscriptions (username, url, owner, category) VALUES (\"" . mysql_real_escape_string($_POST['adminUser']) . "\", \"" . mysql_real_escape_string('http://fourisland.com/' . $_SERVER['SERVER_NAME'] . '/') . "\", \"true\", \"instadisc\")";
 
 					foreach ($sql as $name => $value)
 					{
@@ -230,7 +227,7 @@ if (!isset($_GET['submit']))
 
 function showHeader($number)
 {
-?><HTML><HEAD><TITLE>InstaDisc Server Setup Step <?php echo($number); ?></TITLE><LINK REL="stylesheet" TYPE="text/css" HREF="uniform.css"></HEAD><BODY><CENTER><H1>InstaDisc Installation</H1></CENTER><P><?php
+?><HTML><HEAD><TITLE>InstaDisc Server Setup Step <?php echo($number); ?></TITLE><LINK REL="stylesheet" TYPE="text/css" HREF="theme/uniform.css"></HEAD><BODY><CENTER><H1>InstaDisc Installation</H1></CENTER><P><?php
 }
 
 function showStepOne($host, $username, $password, $dbname, $errors)
