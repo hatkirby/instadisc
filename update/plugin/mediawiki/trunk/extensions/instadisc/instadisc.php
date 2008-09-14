@@ -27,7 +27,7 @@ function instaDisc_sendItem(&$article, &$user, &$text, &$summary, &$minoredit, &
 	$url = $article->getTitle()->getFullURL();
 
 	$encID = 0;
-	if (($instaDisc_password != '') && (extension_loaded('mcrypt'))
+	if (($instaDisc_password != '') && (extension_loaded('mcrypt')))
 	{
 		$encID = encryptData($title, $author, $url, $instaDisc_password);
 	}
