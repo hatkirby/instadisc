@@ -121,4 +121,13 @@ function instaDisc_isAdmin($username)
 	return ($username == instaDisc_getConfig('adminUser'));
 }
 
+function instaDisc_getSubscriptionByID($id)
+{
+	$getsub = "SELECT * FROM subscriptions WHERE id = " . $id;
+	$getsub2 = mysql_query($getsub);
+	$getsub3 = mysql_fetch_array($getsub2);
+
+	return $getsub3;
+}
+
 ?>
