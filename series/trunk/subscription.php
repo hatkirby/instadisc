@@ -18,16 +18,19 @@ if (!instaDisc_subscriptionExists($_GET['id']))
 
 $sub = instaDisc_getSubscription($_GET['id']);
 
-echo('Subscription: ' . $sub['url'] . "\n");
-echo('Title: ' . $sub['title'] . "\n");
-echo('Category: ' . $sub['category'] . "\n");
+$template = new FITemplate('subscription');
+$template->add('SUBSCRIPTION', $sub['url']);
+$template->add('TITLE', $sub['title']);
+$template->add('CATEGORY', $sub['category']);
 
 if ($sub['password'] != '')
 {
-	echo("Password: On\n");
+	$template->add('PASSWORD', "Password: On\n");
 }
 
-echo('Series-Control-URL: http://' . $_SERVER['SERVER_NAME'] . str_replace(basename($_SERVER['PHP_SELF']), 'xmlrpc.php', $_SERVER['PHP_SELF']) . "\n");
-echo('Subscription-ID: ' . $_GET['id'] . "\n");
+$template->add('SERIESURL', 'http://' . $_SERVER['SERVER_NAME'] . str_replace(basename($_SERVER['PHP_SELF']), 'xmlrpc.php', $_SERVER['PHP_SELF']));
+$template->add('SUBID', $_GET['id']);
+
+$template->display();
 
 ?>

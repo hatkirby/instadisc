@@ -97,4 +97,17 @@ function initSubscription($username, $subscriptionID, $subscriptionURL, $subscri
 	}
 }
 
+function instaDisc_listSubscriptions($username)
+{
+	$getsubs = "SELECT * FROM subscriptions WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+	$getsubs2 = mysql_query($getsubs);
+	$i=0;
+	while ($getsubs3[$i] = mysql_fetch_array($getsubs2))
+	{
+		$i++;
+	}
+
+	return $getsubs3;
+}
+
 ?>

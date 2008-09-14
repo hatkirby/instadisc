@@ -208,7 +208,6 @@ function showStepTwo($siteName, $adminUser, $adminPass, $errors)
 <DIV CLASS="ctrlHolder<?php ifErrors($errors, 'siteName'); ?>">
 <?php doErrors($errors, 'siteName'); ?> <LABEL FOR="siteName"><EM>*</EM> Site Name: </LABEL>
  <INPUT TYPE="text" ID="siteName" NAME="siteName" CLASS="textInput" VALUE="<?php echo($siteName); ?>">
- <P CLASS="formHint">Your website's name is required for a little personalization of emails.</P>
 </DIV>
 </FIELDSET><FIELDSET CLASS="inlineLabels"><LEGEND>Administrator User Details</LEGEND>
 <DIV CLASS="ctrlHolder<?php ifErrors($errors, 'adminUser'); ?>">
