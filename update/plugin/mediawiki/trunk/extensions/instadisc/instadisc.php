@@ -15,9 +15,9 @@ $wgHooks['ArticleSaveComplete'][] = 'instaDisc_sendItem';
 
 function instaDisc_sendItem(&$article, &$user, &$text, &$summary, &$minoredit, &$watchthis, &$sectionanchor, &$flags, &$revision)
 {
-	global $instaDisc_password, $instaDisc_subscriptionPersonal, $instaDisc_seriesURL, $instaDisc_seriesUsername, $instaDisc_seriesPassword, $instaDisc_subscriptionID, $instaDisc_subscriptionURL, $instaDisc_subscriptionTitle;
+	global $instaDisc_password, $instaDisc_seriesURL, $instaDisc_subscriptionID;
 
-	if (!isset($instaDisc_password) || !isset($instaDisc_subscriptionPersonal) || !isset($instaDisc_seriesURL) || !isset($instaDisc_seriesUsername) || !isset($instaDisc_seriesPassword) || !isset($instaDisc_subscriptionID) || !isset($instaDisc_subscriptionURL) || !isset($instaDisc_subscriptionTitle))
+	if (!isset($instaDisc_password) || !isset($instaDisc_seriesURL) || !isset($instaDisc_subscriptionID))
 	{
 		return false;
 	}
@@ -32,15 +32,10 @@ function instaDisc_sendItem(&$article, &$user, &$text, &$summary, &$minoredit, &
 		$encID = encryptData($title, $author, $url, $instaDisc_password);
 	}
 
-	$instaDisc_subscriptionPersonal = ($instaDisc_subscriptionPersonal == 'true' ? 'true' : 'false');
-
 	$verID = rand(1,2147483647);
 
-	$client = new xmlrpc_client($instaDisc_seriesURL);
-	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($instaDisc_seriesUsername, 'string'),
-								new xmlrpcval(md5($instaDisc_seriesUsername . ':' . md5($instaDisc_seriesPassword) . ':' . $verID), 'string'),
-								new xmlrpcval($verID, 'int'),
-								new xmlrpcval($instaDisc_seriesURL, 'string'),
+	$client = new xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
+	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($instaDisc_seriesURL, 'string'),
 								new xmlrpcval($instaDisc_subscriptionID, 'string'),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
@@ -87,19 +82,4 @@ function encryptString($td, $key, $string)
         mcrypt_generic_deinit($td);
 
         return $string;
-}
-
-function instaDisc_initSubscription()
-{
-	$client = new xmlrpc_client($instaDisc_seriesURL);
-	$msg = new xmlrpcmsg("InstaDisc.initSubscription", array(	new xmlrpcval($instaDisc_seriesUsername, 'string'),
-									new xmlrpcval(md5($instaDisc_seriesUsername . ':' . md5($instaDisc_seriesPassword) . ':' . $verID), 'string'),
-									new xmlrpcval($verID, 'int'),
-									new xmlrpcval($instaDisc_seriesURL, 'string'),
-									new xmlrpcval($instaDisc_subscriptionID, 'string'),
-									new xmlrpcval($instaDisc_subscriptionURL, 'string'),
-									new xmlrpcval($instaDisc_subscriptionTitle, 'string'),
-									new xmlrpcval('page-change', 'string'),
-									new xmlrpcval($instaDisc_subscriptionPersonal, 'string')));
-	$client->send($msg);
 }
