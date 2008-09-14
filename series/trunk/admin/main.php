@@ -16,6 +16,7 @@ require_once('includes/instadisc.php');
 if (!isset($_SESSION['username']))
 {
 	header('Location: index.php');
+	exit;
 }
 
 $template = new FITemplate('main');

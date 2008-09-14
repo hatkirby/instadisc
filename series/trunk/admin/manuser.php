@@ -19,25 +19,26 @@ if (!isset($_SESSION['username']))
 	exit;
 }
 
-$template = new FITemplate('mansub');
+$template = new FITemplate('manuser');
 $template->add('SITENAME', instaDisc_getConfig('siteName'));
 
 if (instaDisc_isAdmin($_SESSION['username']))
 {
-	$subs = instaDisc_getAllSubscriptions();
+	$users = instaDisc_getAllUsers();
 } else {
-	$subs = instaDisc_listSubscriptions($_SESSION['username']);
+	header('Location: index.php');
+	exit;
 }
 $i=0; $j=0;
-for ($i=0;isset($subs[$i]);$i++)
+for ($i=0;isset($users[$i]);$i++)
 {
 	$j++;
 }
 $j--;
 for ($i=0;$i<$j;$i++)
 {
-	$template->adds_block('SUBSCRIPTIONS', array(	'IDENTITY' => $subs[$i]['identity'],
-							'ID' => $subs[$i]['id']));
+	$template->adds_block('USERS', array(	'USERNAME' => $users[$i]['username'],
+						'ID' => $users[$i]['id']));
 }
 
 $template->display();

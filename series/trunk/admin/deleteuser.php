@@ -21,47 +21,25 @@ if (!isset($_SESSION['username']))
 
 if (!instaDisc_isAdmin($_SESSION['username']))
 {
-	$subs = instaDisc_listSubscriptions($_SESSION['username']);
-	$i=0;
-	$notfound=1;
-	for ($i=0;isset($subs[$i]);$i++)
-	{
-		if (!isset($_GET['submit']))
-		{
-			if ($subs[$i]['identity'] == $_POST['id'])
-			{
-				$notfound=0;
-			}
-		} else {
-			if ($subs[$i]['id'] == $_GET['subid'])
-			{
-				$notfound=0;
-			}
-		}
-	}
-
-	if ($notfound == 1)
-	{
-		header('Location: index.php');
-		exit;
-	}
+	header('Location: index.php');
+	exit;
 }
 
 if (!isset($_GET['submit']))
 {
-	$template = new FITemplate('deletesub');
+	$template = new FITemplate('deleteuser');
 	$template->add('SITENAME',instaDisc_getConfig('siteName'));
-	$template->add('ID',$_GET['subid']);
+	$template->add('ID',$_GET['userid']);
 
-	$sub = instaDisc_getSubscriptionByID($_GET['subid']);
-	$template->add('IDENTITY',$sub['identity']);
+	$sub = instaDisc_getUserByID($_GET['userid']);
+	$template->add('USERNAME',$sub['username']);
 	$template->display();
 } else {
 	if ($_POST['submit'] == 'Yes')
 	{
-		instaDisc_deleteSubscription($_POST['id']);
+		instaDisc_deleteUser($_POST['id']);
 		
-		$template = new FITemplate('deletedsub');
+		$template = new FITemplate('deleteduser');
 		$template->display();
 	} else {
 		header('Location: admin.php?id=main');
