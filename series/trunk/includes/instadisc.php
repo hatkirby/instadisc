@@ -53,57 +53,48 @@ function instaDisc_getConfig($name)
 
 function instaDisc_verifyUser($username, $password)
 {
-	return (($username == instaDisc_getConfig('adminUser')) && (md5($password) == instaDisc_getConfig('adminPass')));
+	$getusers = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\" AND password = \"" . mysql_real_escape_string(md5($password)) . "\"";
+	$getusers2 = mysql_query($getusers);
+	$getusers3 = mysql_fetch_array($getusers2);
+
+	return ($getusers3['username'] == $username);
 }
 
-function instaDisc_changePassword($password)
+function instaDisc_changePassword($username, $password)
 {
-	$setconfig = "UPDATE config SET value = \"" . mysql_real_escape_string(md5($password)) . "\" WHERE name = \"adminPass\"";
+	$setconfig = "UPDATE users SET password = \"" . mysql_real_escape_string(md5($password)) . "\" WHERE username = \"" . mysql_real_escape_string($username) . "\"";
 	$setconfig2 = mysql_query($setconfig);
 	$setconfig3 = mysql_fetch_array($setconfig2);
 }
 
-function instaDisc_addSubscription($id, $title, $url, $category, $password = '')
+function initSubscription($username, $subscriptionID, $subscriptionURL, $subscriptionTitle, $subscriptionCategory, $subscriptionPersonal, $subscriptionPassword)
 {
-	$inssub = "INSERT INTO subscriptions (identity, title, url, category, password, personal) VALUES (\"" . mysql_real_escape_string($id) . "\",\"" . mysql_real_escape_string($title) . "\",\"" . mysql_real_escape_string($url) . "\",\"" . mysql_real_escape_string($category) . "\",\"" . mysql_real_escape_string(($password == '' ? '' : md5($password))) . "\",\"false\")";
-	$inssub2 = mysql_query($inssub);
+	$getuser = "SELECT * FROM users WHERE username = \"" . $username . "\"";
+	$getuser2 = mysql_query($getuser);
+	$getuser3 = mysql_fetch_array($getuser2);
+	if ($getuser3['username'] == $username)
+	{
+		$getsub = "SELECT * FROM subscriptions WHERE identity = \"" . mysql_real_escape_string($seriesID) . "\"";
+		$getsub2 = mysql_query($getsub);
+		$getsub3 = mysql_fetch_array($getsub2);
+		if ($getsub3['identity'] == $seriesID)
+		{
+			if ($getsub3['username'] != $username)
+			{
+				return false;
+			}
+
+			$setsub = "UPDATE subscriptions SET title = \"" . mysql_real_escape_string($subscriptionTitle) . "\", url = \"" . mysql_real_escape_string($subscriptionURL) . "\", category = \"" . mysql_real_escape_string($subscriptionCategory) . "\", personal = \"" . mysql_real_escape_string($subscriptionPersonal) . "\", password = \"" . mysql_real_escape_string($subscriptionPassword) . "\" WHERE identity = \"" . mysql_real_escape_string($subscriptionID) . "\"";
+			$setsub2 = mysql_query($setsub);
+		} else {
+			$inssub = "INSERT INTO subscriptions (identity, title, url, category, personal, username, password) VALUES (\"" . mysql_real_escape_string($seriesID) . "\",\"" . mysql_real_escape_string($subscriptionTitle) . "\",\"" . mysql_real_escape_string($subscriptionURL) . "\",\"" . mysql_real_escape_string($subscriptionCategory) . "\",\"" . mysql_real_escape_string($subscriptionPersonal) . "\",\"" . mysql_real_escape_string($username) . "\",\"" . mysql_real_escape_string($subscriptionPassword) . "\")";
+			$inssub2 = mysql_query($inssub);
+		}
+
+		return true;
+	} else {
+		return false;
+	}
 }
-
-function instaDisc_checkVerification($username, $verification, $verificationID, $table, $nameField, $passField)
-{
-        $getverid = "SELECT * FROM oldVerID WHERE username = \"" . mysql_real_escape_string($username) . "\" AND verID = " . $verificationID;
-        $getverid2 = mysql_query($getverid);
-        $getverid3 = mysql_fetch_array($getverid2);
-        if ($getverid3['id'] != $verificationID)
-        {
-                $getitem = "SELECT * FROM " . $table . " WHERE " . $nameField . " = \"" . mysql_real_escape_string($username) . "\"";
-                $getitem2 = mysql_query($getitem);
-                $getitem3 = mysql_fetch_array($getitem2);
-                if ($getitem3[$nameField] == $username)
-                {
-                        $test = $username . ':' . $getitem3[$passField] . ':' . $verificationID;
-
-                        if (md5($test) == $verification)
-                        {
-                                $cntverid = "SELECT COUNT(*) FROM oldVerID WHERE username = \"" . mysql_real_escape_string($username) . "\"";
-                                $cntverid2 = mysql_query($cntverid);
-                                $cntverid3 = mysql_fetch_array($cntverid2);
-                                if ($cntverid3[0] >= 10000)
-                                {
-                                        $delverid = "DELETE FROM oldVerID WHERE username = \"" . mysql_real_escape_string($username) . "\" LIMIT 0,1";
-                                        $delverid2 = mysql_query($delverid);
-                                }
-
-                                $insverid = "INSERT INTO oldVerID (username, verID) VALUES (\"" . mysql_real_escape_string($username) . "\", " . $verificationID . ")";
-                                $insverid2 = mysql_query($insverid);
-
-                                return true;
-                        }
-                }
-        }
-
-        return false;
-}
-
 
 ?>

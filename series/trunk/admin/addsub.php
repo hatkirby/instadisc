@@ -50,7 +50,7 @@ if (!isset($_GET['submit']))
 	{
 		showForm($_POST['id'], $_POST['title'], $_POST['url'], $_POST['category'], $_POST['password'], $errors);
 	} else {
-		instaDisc_addSubscription($_POST['id'], $_POST['title'], $_POST['url'], $_POST['category'], $_POST['password']);
+		instaDisc_initSubscription($_SESSION['username'], $_POST['id'], $_POST['url'], $_POST['title'], $_POST['category'], $_POST['personal'], $_POST['password']);
 
 		$template = new FITemplate('addedsub');
 		$template->add('SITENAME', instaDisc_getConfig('siteName'));
