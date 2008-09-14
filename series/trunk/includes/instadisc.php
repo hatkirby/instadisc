@@ -74,7 +74,7 @@ function instaDisc_initSubscription($username, $subscriptionID, $subscriptionURL
 	$getuser3 = mysql_fetch_array($getuser2);
 	if ($getuser3['username'] == $username)
 	{
-		$getsub = "SELECT * FROM subscriptions WHERE identity = \"" . mysql_real_escape_string($seriesID) . "\"";
+		$getsub = "SELECT * FROM subscriptions WHERE identity = \"" . mysql_real_escape_string($subscriptionID) . "\"";
 		$getsub2 = mysql_query($getsub);
 		$getsub3 = mysql_fetch_array($getsub2);
 		if ($getsub3['identity'] == $subscriptionID)
