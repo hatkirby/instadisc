@@ -74,7 +74,7 @@ function id_settings_page()
 <TR VALIGN="top">
  <TH SCOPE="row"><LABEL>Subscription ID</LABEL>
  <TD>
-  <INPUT TYPE="password" NAME="instaDisc_blogPost_subscriptionID" VALUE="<?php echo(get_option('instaDisc_blogPost_subscriptionID')); ?>" SIZE="40">
+  <INPUT TYPE="text" NAME="instaDisc_blogPost_subscriptionID" VALUE="<?php echo(get_option('instaDisc_blogPost_subscriptionID')); ?>" SIZE="40">
   <BR>This is the unique identifier this subscription is listed under on your Series Control.
  </TD>
 </TR>
@@ -85,7 +85,7 @@ function id_settings_page()
 <TR VALIGN="top">
  <TH SCOPE="row"><LABEL>Encryption Password</LABEL>
  <TD>
-  <INPUT TYPE="text" NAME="instaDisc_blogPost_password" VALUE="<?php echo(get_option('instaDisc_blogPost_password')); ?>" SIZE="40">
+  <INPUT TYPE="password" NAME="instaDisc_blogPost_password" VALUE="<?php echo(get_option('instaDisc_blogPost_password')); ?>" SIZE="40">
   <BR>If you would like to password-protect your feed, enter a password into this box. That password will need to be known by anyone allowed to view your subscription. If you don't want to password protect this feed, leave this field blank.
  </TD>
 </TR>
@@ -105,7 +105,7 @@ function id_settings_page()
 <TR VALIGN="top">
  <TH SCOPE="row"><LABEL>Subscription ID</LABEL>
  <TD>
-  <INPUT TYPE="password" NAME="instaDisc_comment_subscriptionID" VALUE="<?php echo(get_option('instaDisc_comment_subscriptionID')); ?>" SIZE="40">
+  <INPUT TYPE="text" NAME="instaDisc_comment_subscriptionID" VALUE="<?php echo(get_option('instaDisc_comment_subscriptionID')); ?>" SIZE="40">
   <BR>This is the unique identifier this subscription is listed under on your Series Control.
  </TD>
 </TR>
@@ -116,7 +116,7 @@ function id_settings_page()
 <TR VALIGN="top">
  <TH SCOPE="row"><LABEL>Encryption Password</LABEL>
  <TD>
-  <INPUT TYPE="text" NAME="instaDisc_comment_password" VALUE="<?php echo(get_option('instaDisc_comment_password')); ?>" SIZE="40">
+  <INPUT TYPE="password" NAME="instaDisc_comment_password" VALUE="<?php echo(get_option('instaDisc_comment_password')); ?>" SIZE="40">
   <BR>If you would like to password-protect your feed, enter a password into this box. That password will need to be known by anyone allowed to view your subscription. If you don't want to password protect this feed, leave this field blank.
  </TD>
 </TR>
