@@ -15,9 +15,9 @@ $wgHooks['ArticleSaveComplete'][] = 'instaDisc_sendItem';
 
 function instaDisc_sendItem(&$article, &$user, &$text, &$summary, &$minoredit, &$watchthis, &$sectionanchor, &$flags, &$revision)
 {
-	global $instaDisc_password, $instaDisc_seriesURL, $instaDisc_subscriptionID;
+	global $instaDisc_password, $instaDisc_subscriptionURL;
 
-	if (!isset($instaDisc_password) || !isset($instaDisc_seriesURL) || !isset($instaDisc_subscriptionID))
+	if (!isset($instaDisc_password) || !isset($instaDisc_subscriptionURL))
 	{
 		return false;
 	}
@@ -35,8 +35,7 @@ function instaDisc_sendItem(&$article, &$user, &$text, &$summary, &$minoredit, &
 	$verID = rand(1,2147483647);
 
 	$client = new xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
-	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($instaDisc_seriesURL, 'string'),
-								new xmlrpcval($instaDisc_subscriptionID, 'string'),
+	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($instaDisc_subscriptionURL, 'string'),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
