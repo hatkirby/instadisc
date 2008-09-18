@@ -237,19 +237,4 @@ function instaDisc_changePassword($username, $password)
 	$setpass2 = mysql_query($setpass);
 }
 
-function instaDisc_resolveSubscription($seriesURL, $id)
-{
-	$client = new xmlrpc_client($seriesURL);
-	$msg = new xmlrpcmsg('InstaDisc.subscriptionInfo', array(	new xmlrpcval($id, 'string')));
-	$resp = $client->send($msg);
-	$val = $resp->value()->scalarVal();
-
-	if ($val == 'false')
-	{
-		return 'false';
-	} else {
-		return unserialize($val);
-	}
-}
-
 ?>
