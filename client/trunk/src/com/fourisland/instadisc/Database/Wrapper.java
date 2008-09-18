@@ -467,4 +467,27 @@ public class Wrapper {
             }
         }
     }
+
+    public static void deleteItem(Integer id) {
+        synchronized (item)
+        {
+            try
+            {
+                Transaction t = e.beginTransaction(null, null);
+
+                try
+                {
+                    item.delete(t, id);
+
+                    t.commit();
+                } catch (Exception ex)
+                {
+                    t.abort();
+                }
+            } catch (DatabaseException ex)
+            {
+                Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 }
