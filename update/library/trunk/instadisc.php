@@ -4,14 +4,13 @@
 
 include('xmlrpc/xmlrpc.inc');
 
-$idusSubscriptionSeriesURL = array();
-$idusSubscriptionID = array();
+$idusSubscriptionURL = array();
 $idusEncryptionKey = array();
 $instaDisc_subCount = 0;
 
 function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 {
-	global $idusSubscriptionSeriesURL, $idusSubscriptionID, $idusEncryptionKey;
+	global $idusSubscriptionURL, $idusEncryptionKey;
 
 	$encID = 0;
 	if (($idusEncryptionKey[$id] != '') && extension_loaded('mcrypt'))
@@ -39,8 +38,7 @@ function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 	$verID = rand(1,2147483647);
 
 	$client = new xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
-	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($idusSubscriptionSeriesURL[$id], 'string'),
-								new xmlrpcval($idusSubscriptionID[$id], 'string'),
+	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($idusSubscriptionURL[$id], 'string'),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
@@ -60,11 +58,10 @@ function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 	}
 }
 
-function instaDisc_addSubscription($url, $id, $enc = '')
+function instaDisc_addSubscription($url, $enc = '')
 {
-	global $instaDisc_subCount, $idusSubscriptionSeriesURL, $idusSubscriptionID, $idusEncryptionKey;
-	$idusSubscriptionSeriesURL[$instaDisc_subCount] = $url;
-	$idusSubscriptionID[$instaDisc_subCount] = $id;
+	global $instaDisc_subCount, $idusSubscriptionURL, $idusEncryptionKey;
+	$idusSubscriptionURL[$instaDisc_subCount] = $url;
 	$idusEncryptionKey[$instaDisc_subCount] = $enc;
 	$instaDisc_subCount++;
 }
