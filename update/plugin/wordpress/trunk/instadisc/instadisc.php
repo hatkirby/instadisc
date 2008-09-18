@@ -175,7 +175,7 @@ function sendComment($id)
 	$post = get_post($comment->comment_post_ID);
 	$title = $post->post_title;
 	$author = $comment->comment_author;
-	$url = get_permalink($comment->comment_post_ID) . "#comments";
+	$url = get_permalink($comment->comment_post_ID) . "#comments-" . $id;
 
 	$encID = 0;
 	if (get_option('instaDisc_comment_password') != '')
