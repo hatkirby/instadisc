@@ -75,26 +75,18 @@ function requestRetained($username, $verification, $verificationID)
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
-function sendFromUpdate($subscriptionSeriesURL, $subscriptionID, $title, $author, $url, $semantics, $encryptionID)
+function sendFromUpdate($subscriptionURL, $title, $author, $url, $semantics, $encryptionID)
 {
-	$subscriptionURL = instaDisc_resolveSubscription($subscriptionSeriesURL, $subscriptionID);
-	if ($subscriptionURL != 'false')
+	$getsed = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscriptionURL) . "\"";
+	$getsed2 = mysql_query($getsed);
+	$i=0;
+	while ($getsed3[$i] = mysql_fetch_array($getsed2))
 	{
-		$subscriptionURL = $subscriptionURL['url'];
-
-		$getsed = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($subscriptionURL) . "\"";
-		$getsed2 = mysql_query($getsed);
-		$i=0;
-		while ($getsed3[$i] = mysql_fetch_array($getsed2))
-		{
-			instaDisc_addItem($getsed3[$i]['username'], $subscriptionURL, $title, $author, $url, $semantics, $encryptionID);
-			$i++;
-		}
-
-		return new xmlrpcresp(new xmlrpcval(0, "int"));
+		instaDisc_addItem($getsed3[$i]['username'], $subscriptionURL, $title, $author, $url, $semantics, $encryptionID);
+		$i++;
 	}
 
-	return new xmlrpcresp(new xmlrpcval(1, "int"));
+	return new xmlrpcresp(new xmlrpcval(0, "int"));
 }
 
 function deleteSubscription($username, $verification, $verificationID, $subscription)
