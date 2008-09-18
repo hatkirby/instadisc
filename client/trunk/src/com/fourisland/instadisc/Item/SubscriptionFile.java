@@ -48,6 +48,16 @@ public class SubscriptionFile {
     }
 
     public static void deleteSubscription(Subscription s, boolean deleteFromData) {
+        int i = 0;
+        com.fourisland.instadisc.Database.Item it[] = Wrapper.getAllItem();
+        for (i = 0; i < it.length; i++)
+        {
+            if (it[i].getSubscription().equals(s.getURL()))
+            {
+                Wrapper.deleteItem(it[i].getID());
+            }
+        }
+
         if (deleteFromData)
         {
             Wrapper.deleteSubscription(s.getURL());
@@ -57,7 +67,6 @@ public class SubscriptionFile {
         xmlrpc.addParam(s.getURL());
         xmlrpc.execute();
 
-        int i = 0;
         Filter f[] = Wrapper.getAllFilter();
         for (i = 0; i < f.length; i++)
         {
