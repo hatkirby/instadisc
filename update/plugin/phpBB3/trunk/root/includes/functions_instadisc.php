@@ -66,8 +66,7 @@ function sendItem($title, $userID, $url, $fourm)
 	}
 
 	$client = new xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
-	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($config['id_series_url'], 'string'),
-								new xmlrpcval($config['id_subscription_id'], 'string'),
+	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($config['id_subscription_url'], 'string'),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
