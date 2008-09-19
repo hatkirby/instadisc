@@ -4,9 +4,7 @@
 								
 <H1>{L_INSTADISC}</H1>
 									
-<P>{L_INSTADISC_EXPLAIN}
-<A HREF="http://fourisland.com/projects/instadisc/wiki/Update/phpBB3">{L_INSTADISC_LINK_TEXT}</A>
-</P>
+<P>{L_INSTADISC_EXPLAIN}<A HREF="http://central.fourisland.com/release/update/phpBB3/">{L_INSTADISC_LINK_TEXT}</A></P>
 								
 <form id="acp_instadisc" method="post" action="{U_ACTION}">
 	<fieldset>
@@ -17,17 +15,10 @@
 		</DL>
 		<DL>
 			<DT>
-				<LABEL FOR="series_url">{L_SERIES_URL}</LABEL>
-				<BR><SPAN>{L_SERIES_URL_DESC}</SPAN>
+				<LABEL FOR="series_url">{L_SUBSCRIPTION_URL}</LABEL>
+				<BR><SPAN>{L_SUBSCRIPTION_URL_DESC}</SPAN>
 			</DT>
-			<DD><INPUT NAME="series_url" TYPE="text" ID="series_url" MAXLENGTH="255" VALUE="{S_SERIES_URL}" SIZE="40"></DD>
-		</DL>
-		<DL>
-			<DT>
-				<LABEL FOR="subscription_id">{L_SUBSCRIPTION_ID}</LABEL>
-				<BR><SPAN>{L_SUBSCRIPTION_ID_DESC}</SPAN>
-			</DT>
-			<DD><INPUT NAME="subscription_id" TYPE="text" ID="subscription_id" MAXLENGTH="255" VALUE="{S_SUBSCRIPTION_ID}" SIZE="40"></DD>
+			<DD><INPUT NAME="subscription_url" TYPE="text" ID="subscription_url" MAXLENGTH="255" VALUE="{S_SUBSCRIPTION_URL}" SIZE="40"></DD>
 		</DL>
 		<DL>
 			<DT>
