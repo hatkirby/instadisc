@@ -28,13 +28,11 @@
 
 	<action-group>
 		<copy>
-			<file from="root/instadisc.php" to="instadisc.php" />
 			<file from="root/adm/style/acp_instadisc.html" to="adm/style/acp_instadisc.html" />
 			<file from="root/includes/functions_instadisc.php" to="includes/functions_instadisc.php" />
 			<file from="root/includes/acp/acp_instadisc.php" to="includes/acp/acp_instadisc.php" />
 			<file from="root/includes/acp/info/acp_instadisc.php" to="includes/acp/info/acp_instadisc.php" />
 			<file from="root/language/en/mods/instadisc.php" to="language/en/mods/instadisc.php" />
-			<file from="root/styles/prosilver/template/instadisc.html" to="styles/prosilver/template/instadisc.html" />
 		</copy>
 
 		<open src="includes/functions_posting.php">
@@ -64,6 +62,6 @@ if (($post_mode == 'post') || ($post_mode == 'reply'))
 			</edit>
 		</open>
 
-		<diy-instructions lang="en">Go to http://fourisland.com/projects/instadisc/wiki/Update/phpBB3 for help on setting up your subscriptions.</diy-instructions>
+		<diy-instructions lang="en">Go to http://central.fourisland.com/release/update/phpBB3/ for help on setting up your subscriptions.</diy-instructions>
 	</action-group>
 </mod>
