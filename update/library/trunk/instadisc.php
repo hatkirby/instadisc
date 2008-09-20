@@ -4,13 +4,9 @@
 
 include('xmlrpc/xmlrpc.inc');
 
-$idusSubscriptionURL = array();
-$idusEncryptionKey = array();
-$instaDisc_subCount = 0;
-
-function instaDisc_sendItem($id, $title, $author, $url, $semantics)
+function instaDisc_sendItem($subTitle, $subCategory, $title, $author, $url, $semantics)
 {
-	global $idusSubscriptionURL, $idusEncryptionKey;
+	$subscriptionURL = 'http://'' . $_SERVER['SERVER_NAME'] . '/' . $subCategory . '/' . generateSlug($subTitle) . '/';
 
 	$encID = 0;
 	if (($idusEncryptionKey[$id] != '') && extension_loaded('mcrypt'))
@@ -38,7 +34,7 @@ function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 	$verID = rand(1,2147483647);
 
 	$client = new xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
-	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($idusSubscriptionURL[$id], 'string'),
+	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($subscriptionURL, 'string'),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
@@ -49,7 +45,7 @@ function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 
 	if ($val == 2)
 	{
-		return instaDisc_sendItem($id, $title, $author, $url, $semantics, $encryptionID);
+		return instaDisc_sendItem($subTitle, $subCategory, $title, $author, $url, $semantics);
 	} else if ($val == 0)
 	{
 		return TRUE;
@@ -58,12 +54,21 @@ function instaDisc_sendItem($id, $title, $author, $url, $semantics)
 	}
 }
 
-function instaDisc_addSubscription($url, $enc = '')
+function generateSlug($title)
 {
-	global $instaDisc_subCount, $idusSubscriptionURL, $idusEncryptionKey;
-	$idusSubscriptionURL[$instaDisc_subCount] = $url;
-	$idusEncryptionKey[$instaDisc_subCount] = $enc;
-	$instaDisc_subCount++;
+        $title = preg_replace('/[^A-Za-z0-9]/','-',$title);
+        $title = preg_replace('/-{2,}/','-',$title);
+        if (substr($title,0,1) == '-')
+        {
+                $title = substr($title,1);
+        }
+        if (substr($title,strlen($title)-1,1) == '-')
+        {
+                $title = substr($title,0,strlen($title)-1);
+        }
+        $title = strtolower($title);
+
+        return($title);
 }
 
 function encryptString($td, $key, $string)
