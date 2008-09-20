@@ -4,18 +4,18 @@
 
 include('xmlrpc/xmlrpc.inc');
 
-function instaDisc_sendItem($subTitle, $subCategory, $title, $author, $url, $semantics)
+function instaDisc_sendItem($title, $author, $url, $semantics, $subTitle, $subCategory, $subPassword = '')
 {
 	$subscriptionURL = 'http://'' . $_SERVER['SERVER_NAME'] . '/' . $subCategory . '/' . generateSlug($subTitle) . '/';
 
 	$encID = 0;
-	if (($idusEncryptionKey[$id] != '') && extension_loaded('mcrypt'))
+	if (($subPassword != '') && extension_loaded('mcrypt'))
 	{
 		$encID = rand(1,2147483647);
 
 		$cipher = "rijndael-128";
 		$mode = "cbc";
-		$key = substr(md5(substr(str_pad($idusEncryptionKey[$id],16,$encID),0,16)),0,16);
+		$key = substr(md5(substr(str_pad($subPassword[$id],16,$encID),0,16)),0,16);
 
 		$td = mcrypt_module_open($cipher, "", $mode, "");
 
