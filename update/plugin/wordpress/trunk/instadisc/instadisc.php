@@ -64,20 +64,6 @@ function id_settings_page()
 </TABLE>
 <H3>Blog Posts Subscription</H3>
 <TABLE CLASS="form-table">
-<TR VALIGN="top">
- <TH SCOPE="row"><LABEL>Series Control URL</LABEL>
- <TD>
-  <INPUT TYPE="text" NAME="instaDisc_blogPost_seriesURL" VALUE="<?php echo(get_option('instaDisc_blogPost_seriesURL')); ?>" SIZE="40">
-  <BR>This is the XML-RPC URL of your Series Control.
- </TD>
-</TR>
-<TR VALIGN="top">
- <TH SCOPE="row"><LABEL>Subscription ID</LABEL>
- <TD>
-  <INPUT TYPE="text" NAME="instaDisc_blogPost_subscriptionID" VALUE="<?php echo(get_option('instaDisc_blogPost_subscriptionID')); ?>" SIZE="40">
-  <BR>This is the unique identifier this subscription is listed under on your Series Control.
- </TD>
-</TR>
 <?php
 	if (extension_loaded('mcrypt'))
 	{
@@ -95,20 +81,6 @@ function id_settings_page()
 </TABLE>
 <H3>Comments Subscription</H3>
 <TABLE CLASS="form-table">
-<TR VALIGN="top">
- <TH SCOPE="row"><LABEL>Series Control URL</LABEL>
- <TD>
-  <INPUT TYPE="text" NAME="instaDisc_comment_seriesURL" VALUE="<?php echo(get_option('instaDisc_comment_seriesURL')); ?>" SIZE="40">
-  <BR>This is the XML-RPC URL of your Series Control.
- </TD>
-</TR>
-<TR VALIGN="top">
- <TH SCOPE="row"><LABEL>Subscription ID</LABEL>
- <TD>
-  <INPUT TYPE="text" NAME="instaDisc_comment_subscriptionID" VALUE="<?php echo(get_option('instaDisc_comment_subscriptionID')); ?>" SIZE="40">
-  <BR>This is the unique identifier this subscription is listed under on your Series Control.
- </TD>
-</TR>
 <?php
 	if (extension_loaded('mcrypt'))
 	{
@@ -125,7 +97,7 @@ function id_settings_page()
 ?>
 </TABLE>
 <INPUT TYPE="hidden" NAME="action" VALUE="update">
-<INPUT TYPE="hidden" NAME="page_options" VALUE="instaDisc_subscription_title,instaDisc_blogPost_seriesURL,instaDisc_blogPost_subscriptionID,instaDisc_comment_seriesURL,instaDisc_comment_subscriptionID,instaDisc_blogPost_password,instaDisc_comment_password">
+<INPUT TYPE="hidden" NAME="page_options" VALUE="instaDisc_subscription_title,instaDisc_blogPost_password,instaDisc_comment_password">
 <P CLASS="submit"><INPUT TYPE="submit" NAME="Submit" VALUE="<?php _e('Save Changes') ?>"></P>
 </FORM></DIV><?php
 }
@@ -142,6 +114,8 @@ function sendPost($id)
 	$authorName = $author->display_name;
 	$url = get_permalink($id);
 
+	$subscriptionURL = 'http://' . $_SERVER['SERVER_NAME'] . '/blog-post/' . generateSlug(get_option('instaDisc_subscription_title')) . '/';
+
 	$encID = 0;
 	if (get_option('instaDisc_blogPost_password') != '')
 	{
@@ -151,8 +125,7 @@ function sendPost($id)
 	$verID = rand(1,2147483647);
 
 	$client = new xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
-	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array( new xmlrpcval(get_option('instaDisc_blogPost_seriesURL')),
-								new xmlrpcval(get_option('instaDisc_blogPost_subscriptionID')),
+	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array( new xmlrpcval($subscriptionURL, 'string'),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($authorName, 'string'),
 								new xmlrpcval($url, 'string'),
@@ -177,6 +150,8 @@ function sendComment($id)
 	$author = $comment->comment_author;
 	$url = get_permalink($comment->comment_post_ID) . "#comments-" . $id;
 
+	$subscriptionURL = 'http://' . $_SERVER['SERVER_NAME'] . '/blog-comment/' . generateSlug(get_option('instaDisc_subscription_title')) . '/';
+
 	$encID = 0;
 	if (get_option('instaDisc_comment_password') != '')
 	{
@@ -186,8 +161,7 @@ function sendComment($id)
 	$verID = rand(1,2147483647);
 
 	$client = new xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
-	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval(get_option('instaDisc_comment_seriesURL')),
-								new xmlrpcval(get_option('instaDisc_comment_subscriptionID')),
+	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($subscriptionURL, 'string'),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
@@ -200,6 +174,23 @@ function sendComment($id)
 	{
 		sendComment($id);
 	}
+}
+
+function generateSlug($title)
+{
+        $title = preg_replace('/[^A-Za-z0-9]/','-',$title);
+        $title = preg_replace('/-{2,}/','-',$title);
+        if (substr($title,0,1) == '-')
+        {
+                $title = substr($title,1);
+        }
+        if (substr($title,strlen($title)-1,1) == '-')
+        {
+                $title = substr($title,0,strlen($title)-1);
+        }
+        $title = strtolower($title);
+
+        return($title);
 }
 
 function encryptData(&$title, &$author, &$url, $password)
