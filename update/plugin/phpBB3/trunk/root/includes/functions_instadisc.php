@@ -42,6 +42,8 @@ function sendItem($title, $userID, $url, $fourm)
 	$db->sql_freeresult($getfourm2);
 	$semantics = array('forum' => $getfourm3['forum_name']);
 
+	$subscriptionURL = 'http://' . $_SERVER['SERVER_NAME'] . '/forum-post/' . generateSlug($config['id_subscription_title']) . '/';
+
 	$encID = 0;
 	if (($config['id_encryption_key'] != '') && extension_loaded('mcrypt'))
 	{
@@ -66,7 +68,7 @@ function sendItem($title, $userID, $url, $fourm)
 	}
 
 	$client = new xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
-	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($config['id_subscription_url'], 'string'),
+	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($subscriptionURL, 'string'),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
 								new xmlrpcval($url, 'string'),
@@ -79,6 +81,23 @@ function sendItem($title, $userID, $url, $fourm)
 	{
 		sendItem($title, $userID, $url, $fourm);
 	}
+}
+
+function generateSlug($title)
+{
+        $title = preg_replace('/[^A-Za-z0-9]/','-',$title);
+        $title = preg_replace('/-{2,}/','-',$title);
+        if (substr($title,0,1) == '-')
+        {
+                $title = substr($title,1);
+        }
+        if (substr($title,strlen($title)-1,1) == '-')
+        {
+                $title = substr($title,0,strlen($title)-1);
+        }
+        $title = strtolower($title);
+
+        return($title);
 }
 
 function encryptString($td, $key, $string)
