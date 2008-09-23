@@ -37,6 +37,9 @@ public class Category {
         } else if (category.equals("page-change"))
         {
             return new ImageIcon(Page_edit.page_edit);
+        } else if (category.equals("comic"))
+        {
+            return new ImageIcon(Comic.comic);
         }
         return null;
     }
