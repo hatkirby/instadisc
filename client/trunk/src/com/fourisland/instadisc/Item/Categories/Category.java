@@ -60,7 +60,10 @@ public class Category {
     
     public static String[] getRequiredSemantics(String category)
     {
-        if (category.equals("forum-post"))
+        if (category.equals("blog-post"))
+        {
+            return new String[] {"tag"};
+        } else if (category.equals("forum-post"))
         {
             return new String[] {"forum"};
         } else {
