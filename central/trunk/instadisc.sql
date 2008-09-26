@@ -3,11 +3,11 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: Sep 06, 2008 at 10:16 PM
+-- Generation Time: Sep 26, 2008 at 06:23 PM
 -- Server version: 5.0.51
 -- PHP Version: 5.2.4-2ubuntu5.3
 -- 
--- Database: `instadisc_central`
+-- Database: `instadisc_test`
 -- 
 
 -- --------------------------------------------------------
@@ -22,7 +22,7 @@ CREATE TABLE `config` (
   `name` varchar(255) NOT NULL,
   `value` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -42,7 +42,7 @@ CREATE TABLE `inbox` (
   `semantics` text NOT NULL,
   `encryptionID` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -56,7 +56,7 @@ CREATE TABLE `oldVerID` (
   `username` varchar(255) NOT NULL,
   `verID` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -87,7 +87,7 @@ CREATE TABLE `subscriptions` (
   `url` varchar(255) NOT NULL,
   `category` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -102,7 +102,9 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `ip` varchar(255) NOT NULL,
+  `port` int(11) NOT NULL,
   `nextItemID` int(11) NOT NULL,
+  `downloadItemMode` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
