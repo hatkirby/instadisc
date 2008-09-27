@@ -1,10 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.fourisland.instadisc;
+package com.fourisland.instadisc.DownloadItem;
 
+import com.fourisland.instadisc.Database.Wrapper;
 import com.fourisland.instadisc.Item.Item;
+import com.fourisland.instadisc.XmlRpc;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
@@ -14,24 +12,47 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author hatkirby
- */
-public class InstaDiscThread implements Runnable {
+
+public class PushMode implements DownloadItemMode
+{
+    InstaDiscThread idt;
+    
+    public void modeInitalize()
+    {
+        idt = new InstaDiscThread();
+        new Thread(idt).start();
+    }
+    
+    public void modeDeinitalize()
+    {
+        idt.kill();
+    }
+
+    public void requestRetained() {
+        XmlRpc xmlrpc = new XmlRpc("requestRetained");
+        xmlrpc.execute();
+    }
+
+    public int setTimer() {
+        int delay = (1000 * 60 * 60);
+        if (Wrapper.getConfig("ipCheckUnit").equals("day")) {
+            delay *= (24 * Integer.decode(Wrapper.getConfig("ipCheckValue")));
+        } else if (Wrapper.getConfig("ipCheckUnit").equals("hour")) {
+            delay *= Integer.decode(Wrapper.getConfig("ipCheckValue"));
+        }
+        
+        return delay;
+    }
+
+    public void timerTick() {
+        XmlRpc xmlrpc = new XmlRpc("checkRegistration");
+        xmlrpc.execute();
+    }
+}
+class InstaDiscThread implements Runnable {
 
     boolean cancelled = false;
-    InstaDiscView idv;
-    
-    public InstaDiscThread()
-    {
-        this.idv = null;
-    }
-    
-    public InstaDiscThread(InstaDiscView idv)
-    {
-        this.idv = idv;
-    }
+    ServerSocket svr;
 
     public void cancel() {
         cancelled = true;
@@ -40,16 +61,15 @@ public class InstaDiscThread implements Runnable {
     public void run() {
         try
         {
-            ServerSocket svr = new ServerSocket();
+            svr = new ServerSocket();
             java.net.InetSocketAddress addr = new java.net.InetSocketAddress(1204);
             svr.bind(addr);
-            Runtime.getRuntime().addShutdownHook(new Thread(new CloseServerSocketThread(svr)));
             while (!cancelled)
             {
                 try
                 {
                     Socket s = svr.accept();
-                    HandleItemThread hit = new HandleItemThread(s,idv);
+                    HandleItemThread hit = new HandleItemThread(s);
                     Thread hitt = new Thread(hit);
                     hitt.start();
                 } catch (SocketException ex)
@@ -66,29 +86,29 @@ public class InstaDiscThread implements Runnable {
         {
             Logger.getLogger(InstaDiscThread.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+    }
+    
+    public void kill()
+    {
+        try
+        {
+            svr.close();
+        } catch (IOException ex)
+        {
+            Logger.getLogger(InstaDiscThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
 
 class HandleItemThread implements Runnable {
 
     Socket s;
-    InstaDiscView idv;
 
-    public HandleItemThread(Socket s, InstaDiscView idv) {
+    public HandleItemThread(Socket s) {
         this.s = s;
-        this.idv = idv;
     }
 
     public void run() {
-        try
-        {
-            idv.startProgress();
-            idv.doText("Downloading Item....");
-        } catch (NullPointerException ex)
-        {
-        }
-        
         try
         {
             InputStream is = s.getInputStream();
@@ -105,13 +125,6 @@ class HandleItemThread implements Runnable {
                     if (rs != -1)
                     {
                         buffer[i] = rs;
-                    }
-                    
-                    try
-                    {
-                       idv.doProgress(buffer.length / (is.available()+1));
-                    } catch (NullPointerException ex)
-                    {
                     }
                     
                     i++;
@@ -149,7 +162,6 @@ class HandleItemThread implements Runnable {
                 i++;
             }
 
-            //Logger.getLogger(HandleItemThread.class.getName()).log(Level.INFO, headerMap.toString());
             try
             {
                 s.close();
@@ -163,13 +175,6 @@ class HandleItemThread implements Runnable {
         } catch (IOException ex)
         {
             Logger.getLogger(HandleItemThread.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        try
-        {
-            idv.doneProgress();
-        } catch (NullPointerException ex)
-        {
         }
     }
 }
