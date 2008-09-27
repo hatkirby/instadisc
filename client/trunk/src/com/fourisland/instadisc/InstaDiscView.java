@@ -5,6 +5,8 @@ package com.fourisland.instadisc;
 
 import com.fourisland.instadisc.Database.Item;
 import com.fourisland.instadisc.Database.Wrapper;
+import com.fourisland.instadisc.DownloadItem.ModeControl;
+import com.fourisland.instadisc.DownloadItem.UnknownDownloadItemModeException;
 import com.fourisland.instadisc.Item.Categories.InstaDiscIcon;
 import java.awt.AWTException;
 import java.awt.SystemTray;
@@ -35,13 +37,14 @@ public class InstaDiscView extends FrameView {
 
     public InstaDiscView(SingleFrameApplication app) {
         super(app);
-
+        
         initComponents();
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
-        messageTimer = new Timer(messageTimeout, new ActionListener() {
+        messageTimer = new Timer(messageTimeout, new ActionListener()
+        {
 
             public void actionPerformed(ActionEvent e) {
                 statusMessageLabel.setText("");
@@ -49,10 +52,12 @@ public class InstaDiscView extends FrameView {
         });
         messageTimer.setRepeats(false);
         int busyAnimationRate = resourceMap.getInteger("StatusBar.busyAnimationRate");
-        for (int i = 0; i < busyIcons.length; i++) {
+        for (int i = 0; i < busyIcons.length; i++)
+        {
             busyIcons[i] = resourceMap.getIcon("StatusBar.busyIcons[" + i + "]");
         }
-        busyIconTimer = new Timer(busyAnimationRate, new ActionListener() {
+        busyIconTimer = new Timer(busyAnimationRate, new ActionListener()
+        {
 
             public void actionPerformed(ActionEvent e) {
                 busyIconIndex = (busyIconIndex + 1) % busyIcons.length;
@@ -65,28 +70,34 @@ public class InstaDiscView extends FrameView {
 
         // connecting action tasks to status bar via TaskMonitor
         TaskMonitor taskMonitor = new TaskMonitor(getApplication().getContext());
-        taskMonitor.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+        taskMonitor.addPropertyChangeListener(new java.beans.PropertyChangeListener()
+        {
 
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 String propertyName = evt.getPropertyName();
-                if ("started".equals(propertyName)) {
-                    if (!busyIconTimer.isRunning()) {
+                if ("started".equals(propertyName))
+                {
+                    if (!busyIconTimer.isRunning())
+                    {
                         statusAnimationLabel.setIcon(busyIcons[0]);
                         busyIconIndex = 0;
                         busyIconTimer.start();
                     }
                     progressBar.setVisible(true);
                     progressBar.setIndeterminate(true);
-                } else if ("done".equals(propertyName)) {
+                } else if ("done".equals(propertyName))
+                {
                     busyIconTimer.stop();
                     statusAnimationLabel.setIcon(idleIcon);
                     progressBar.setVisible(false);
                     progressBar.setValue(0);
-                } else if ("message".equals(propertyName)) {
+                } else if ("message".equals(propertyName))
+                {
                     String text = (String) (evt.getNewValue());
                     statusMessageLabel.setText((text == null) ? "" : text);
                     messageTimer.restart();
-                } else if ("progress".equals(propertyName)) {
+                } else if ("progress".equals(propertyName))
+                {
                     int value = (Integer) (evt.getNewValue());
                     progressBar.setVisible(true);
                     progressBar.setIndeterminate(false);
@@ -97,12 +108,15 @@ public class InstaDiscView extends FrameView {
 
         this.getFrame().setIconImage(new ImageIcon(InstaDiscIcon.instadiscicon).getImage());
 
-        if (SystemTray.isSupported()) {
-            try {
+        if (SystemTray.isSupported())
+        {
+            try
+            {
                 TrayIcon ti = new TrayIcon(new ImageIcon(InstaDiscIcon.instadisciconmiddle).getImage(), "InstaDisc");
                 SystemTray.getSystemTray().add(ti);
                 InstaDiscApp.ti = ti;
-            } catch (AWTException ex) {
+            } catch (AWTException ex)
+            {
                 Logger.getLogger(InstaDiscView.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -110,12 +124,15 @@ public class InstaDiscView extends FrameView {
         jList1.setCellRenderer(new IDItemListCellRenderer());
         refreshItemPane();
 
-        InstaDiscThread idt = new InstaDiscThread(this);
-        Thread idtt = new Thread(idt);
-        idtt.start();
-
-        XmlRpc xmlrpc = new XmlRpc("requestRetained");
-        xmlrpc.execute();
+        try
+        {
+            ModeControl.INSTANCE.initalize(Wrapper.getConfig("downloadItemMode"));
+        } catch (UnknownDownloadItemModeException ex)
+        {
+            Logger.getLogger(InstaDiscView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ModeControl.INSTANCE.modeInitalize();
+        ModeControl.INSTANCE.requestRetained();
 
         updateTimer();
     }
@@ -396,8 +413,7 @@ public class InstaDiscView extends FrameView {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        XmlRpc xmlrpc = new XmlRpc("requestRetained");
-        xmlrpc.execute();
+        ModeControl.INSTANCE.requestRetained();
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jList1ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jList1ComponentShown
@@ -504,31 +520,20 @@ public class InstaDiscView extends FrameView {
     }
 
     public void updateTimer() {
-        int delay = (1000 * 60 * 60);
-
         try {
             ipCheckTimer.stop();
         } catch (NullPointerException ex) {
-
         }
 
-        if (Wrapper.getConfig("ipCheckUnit").equals("day")) {
-            delay *= (24 * Integer.decode(Wrapper.getConfig("ipCheckValue")));
-        } else if (Wrapper.getConfig("ipCheckUnit").equals("hour")) {
-            delay *= Integer.decode(Wrapper.getConfig("ipCheckValue"));
-        }
-
-        ipCheckTimer = new Timer(delay, new ActionListener() {
+        ipCheckTimer = new Timer(ModeControl.INSTANCE.setTimer(), new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                XmlRpc xmlrpc = new XmlRpc("checkRegistration");
-                xmlrpc.execute();
+                ModeControl.INSTANCE.timerTick();
             }
         });
 
         ipCheckTimer.start();
         
-        XmlRpc xmlrpc = new XmlRpc("checkRegistration");
-        xmlrpc.execute();
+        ModeControl.INSTANCE.timerTick();
     }
     
     public synchronized void startProgress()
