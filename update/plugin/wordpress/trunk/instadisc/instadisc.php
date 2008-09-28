@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: InstaDisc Update Server
-Plugin URI: http://fourisland.com/projects/instadisc/wiki/Update_Wordpress_Plugin
+Plugin URI: http://instadisc.org/Wordpress
 Description: This plugin provides two InstaDisc feeds for your Wordpress blog, a post subscription and a comment subscription.
 Version: 1.0
 Author: Starla Insigna
@@ -43,8 +43,7 @@ if ((get_option('instaDisc_comment_password') === FALSE) || !extension_loaded('m
 add_action('admin_menu', 'am_pages');
 
 function am_pages()
-{
-	add_options_page('InstaDisc Settings', 'InstaDisc', 8, 'instadisc', 'id_settings_page');
+{	add_options_page('InstaDisc Settings', 'InstaDisc', 8, 'instadisc', 'id_settings_page');
 }
 
 function id_settings_page()
@@ -114,6 +113,18 @@ function sendPost($id)
 	$authorName = $author->display_name;
 	$url = get_permalink($id);
 
+	foreach (wp_get_post_categories($id) as $value)
+	{
+	        $tags[] = get_cat_name($value);
+	}
+
+	foreach (wp_get_post_tags($id) as $value)
+	{
+	        $tags[] = $value->name;
+	}
+
+	$semantics = array('tag' => implode($tags,','));
+
 	$subscriptionURL = 'http://' . $_SERVER['SERVER_NAME'] . '/blog-post/' . generateSlug(get_option('instaDisc_subscription_title')) . '/';
 
 	$encID = 0;
@@ -129,7 +140,7 @@ function sendPost($id)
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($authorName, 'string'),
 								new xmlrpcval($url, 'string'),
-								new xmlrpcval(serialize(array()), 'string'),
+								new xmlrpcval(serialize($semantics), 'string'),
 								new xmlrpcval($encID, 'int')));
 	$resp = $client->send($msg);
 	$val = $resp->value()->scalarVal();
