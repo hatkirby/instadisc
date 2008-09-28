@@ -237,4 +237,30 @@ function instaDisc_changePassword($username, $password)
 	$setpass2 = mysql_query($setpass);
 }
 
+function instaDisc_initalizePort($username)
+{
+	$getports = "SELECT * FROM users WHERE ip = \"" . mysql_real_escape_string($username) . "\" AND port <> 0 ORDER BY port ASC";
+	$getports2 = mysql_query($getports);
+	$i=0;
+	while ($getports3[$i] = mysql_fetch_array($getports2))
+	{
+		$i++;
+	}
+
+	if ($i==0)
+	{
+		$port = 1204;
+	} else if ($i>=4331)
+	{
+		return 0;
+	} else {
+		$port = (61204 + ($i-1));
+	}
+
+	$setuser = "UPDATE users SET port = " . $port . " WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+	$setuser2 = mysql_query($setuser);
+
+	return $port;
+}
+
 ?>
