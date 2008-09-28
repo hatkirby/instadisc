@@ -13,6 +13,10 @@ public class PullMode implements DownloadItemMode
     public void requestRetained() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    
+    public void sendItem(int id) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
     public int setTimer() {
         throw new UnsupportedOperationException("Not supported yet.");

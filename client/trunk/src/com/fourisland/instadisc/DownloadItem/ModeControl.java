@@ -31,9 +31,12 @@ public class ModeControl implements DownloadItemMode
         dim.modeDeinitalize();
     }
     
-    public void requestRetained()
-    {
+    public void requestRetained() {
         dim.requestRetained();
+    }
+    
+    public void sendItem(int id) {
+        dim.sendItem(id);
     }
 
     public int setTimer() {

@@ -37,6 +37,12 @@ public class PushMode implements DownloadItemMode
         XmlRpc xmlrpc = new XmlRpc("requestRetained");
         xmlrpc.execute();
     }
+    
+    public void sendItem(int id) {
+        XmlRpc xmlrpc = new XmlRpc("sendItem");
+        xmlrpc.addParam(id);
+        xmlrpc.execute();
+    }
 
     public int setTimer() {
         int delay = (1000 * 60 * 60);

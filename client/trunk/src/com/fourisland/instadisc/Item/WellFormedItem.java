@@ -7,6 +7,7 @@ package com.fourisland.instadisc.Item;
 import com.fourisland.instadisc.Database.Filter;
 import com.fourisland.instadisc.Database.Subscription;
 import com.fourisland.instadisc.Database.Wrapper;
+import com.fourisland.instadisc.DownloadItem.ModeControl;
 import com.fourisland.instadisc.Functions;
 import com.fourisland.instadisc.Item.Categories.Category;
 import com.fourisland.instadisc.XmlRpc;
@@ -182,11 +183,7 @@ public class WellFormedItem {
             Verification ver = new Verification(ivid);
             good = aThis.headerMap.get("Verification").equals(ver.getHash());
         } catch (VerificationIDReusedException ex) {
-            XmlRpc xmlrpc = new XmlRpc("resendItem");
-            String id = aThis.headerMap.get("ID");
-            int iid = Integer.decode(id);
-            xmlrpc.addParam(iid);
-            xmlrpc.execute();
+            ModeControl.INSTANCE.sendItem(Integer.decode(aThis.headerMap.get("ID")));
         } catch (Exception ex) {
             Logger.getLogger(WellFormedItem.class.getName()).log(Level.SEVERE, null, ex);
         }
