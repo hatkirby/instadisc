@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: Sep 26, 2008 at 06:23 PM
+-- Generation Time: Sep 28, 2008 at 05:51 PM
 -- Server version: 5.0.51
 -- PHP Version: 5.2.4-2ubuntu5.3
 -- 
@@ -61,22 +61,6 @@ CREATE TABLE `oldVerID` (
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `pending`
--- 
-
-DROP TABLE IF EXISTS `pending`;
-CREATE TABLE `pending` (
-  `id` int(11) NOT NULL auto_increment,
-  `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `code` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
--- 
 -- Table structure for table `subscriptions`
 -- 
 
@@ -107,4 +91,3 @@ CREATE TABLE `users` (
   `downloadItemMode` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
