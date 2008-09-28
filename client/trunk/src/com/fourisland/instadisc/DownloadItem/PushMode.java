@@ -38,8 +38,8 @@ public class PushMode implements DownloadItemMode
         xmlrpc.execute();
     }
     
-    public void sendItem(int id) {
-        XmlRpc xmlrpc = new XmlRpc("sendItem");
+    public void resendItem(int id) {
+        XmlRpc xmlrpc = new XmlRpc("resendItem");
         xmlrpc.addParam(id);
         xmlrpc.execute();
     }
