@@ -127,13 +127,27 @@ function addSubscription($username, $verification, $verificationID, $subscriptio
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
 
+function downloadItemModeTest()
+{
+	$fp = @fsockopen($_SERVER['REMOTE_ADDR'], 61200, $errno, $errstr);
+        if ($fp)
+        {
+                fwrite($fp, "InstaDisc Download Item Mode Test\r\n\r\n\r\n");
+                fclose($fp);
+                return new xmlrpcresp(new xmlrpcval('0', 'int'));
+        } else {
+                return new xmlrpcresp(new xmlrpcval('1', 'int'));
+        }
+}
+
 $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function" => "checkRegistration"),
 				"InstaDisc.deleteItem" => array("function" => "deleteItem"),
 				"InstaDisc.resendItem" => array("function" => "resendItem"),
 				"InstaDisc.requestRetained" => array("function" => "requestRetained"),
 				"InstaDisc.sendFromUpdate" => array("function" => "sendFromUpdate"),
 				"InstaDisc.deleteSubscription" => array("function" => "deleteSubscription"),
-				"InstaDisc.addSubscription" => array("function" => "addSubscription")
+				"InstaDisc.addSubscription" => array("function" => "addSubscription"),
+				"InstaDisc.downloadItemModeTest" => array("function" => "downloadItemModeTest")
 			),0);
 $s->functions_parameters_type = 'phpvals';
 $s->service();
