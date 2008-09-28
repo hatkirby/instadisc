@@ -5,6 +5,8 @@
 
 package com.fourisland.instadisc.FirstRun;
 
+import com.fourisland.instadisc.Database.Wrapper;
+import com.fourisland.instadisc.DownloadItem.DownloadItemModeTest;
 import javax.swing.JFrame;
 
 /**
@@ -25,8 +27,22 @@ public class FirstRunWizard implements Runnable {
             if (StepEndResults.ok)
             {
                 StepEndResults.ok = false;
-                Step3 s3 = new Step3(new JFrame(), true);
-                s3.setVisible(true);
+                DownloadItemModeTest dIMT = new DownloadItemModeTest(new JFrame(), true);
+                dIMT.setVisible(true);
+                if (StepEndResults.ok)
+                {
+                    StepEndResults.ok = false;
+                    Step3 s3 = new Step3(new JFrame(), true);
+                    s3.setVisible(true);
+                    
+                    Wrapper.setConfig("initCheck", "done");
+                    Wrapper.setConfig("itemBufferSize", "10");
+                    Wrapper.setConfig("verIDBufferSize", "10000");
+                    Wrapper.setConfig("nextFilterID", "0");
+                    Wrapper.setConfig("ipCheckValue", "1");
+                    Wrapper.setConfig("ipCheckUnit", "day");
+                    Wrapper.setConfig("useUnreadFlag", "true");
+                }
             }
         }
         System.exit(0);

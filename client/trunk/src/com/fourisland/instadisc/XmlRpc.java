@@ -88,4 +88,9 @@ public class XmlRpc {
         }
         return result;
     }
+    
+    public void resetParams()
+    {
+        params = new Object[] {};
+    }
 }
