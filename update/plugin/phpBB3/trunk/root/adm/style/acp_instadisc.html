@@ -4,7 +4,7 @@
 								
 <H1>{L_INSTADISC}</H1>
 									
-<P>{L_INSTADISC_EXPLAIN}<A HREF="http://central.fourisland.com/release/update/phpBB3/">{L_INSTADISC_LINK_TEXT}</A></P>
+<P>{L_INSTADISC_EXPLAIN}<A HREF="http://instadisc.org/phpBB3">{L_INSTADISC_LINK_TEXT}</A></P>
 								
 <form id="acp_instadisc" method="post" action="{U_ACTION}">
 	<fieldset>
@@ -15,10 +15,17 @@
 		</DL>
 		<DL>
 			<DT>
+				<LABEL FOR="subscription_file">{L_SUBSCRIPTION_FILE}</LABEL>
+				<BR><SPAN>{L_SUBSCRIPTION_FILE_DESC}</SPAN>
+			</DT>
+			<DD>{S_SUBSCRIPTION_FILE}</DD>
+		</DL>
+		<DL>
+			<DT>
 				<LABEL FOR="encryption_key">{L_ENCRYPTION}</LABEL>
 				<BR><SPAN>{L_ENCRYPTION_DESC}</SPAN>
 			</DT>
-			<DD><INPUT NAME="encryption_key" TYPE="password" ID="encryption_key" MAXLENGTH="255" VALUE="{S_ENCRYPTION}" SIZE="40"></DD>
+			<DD><INPUT NAME="encryption_key" TYPE="password" ID="encryption_key" MAXLENGTH="255" VALUE="{S_ENCRYPTION_KEY}" SIZE="40"></DD>
 		</DL>
 	</fieldset>
 	<p class="submit-buttons">
