@@ -1,11 +1,14 @@
 package com.fourisland.instadisc.DownloadItem;
 
-import java.util.Timer;
-
 public class ModeControl implements DownloadItemMode
 {
     public static final ModeControl INSTANCE = new ModeControl();
     private DownloadItemMode dim;
+    
+    public ModeControl()
+    {
+        Runtime.getRuntime().addShutdownHook(new Thread(new DeinitalizeModeThread()));
+    }
     
     public void initalize(String dim) throws UnknownDownloadItemModeException
     {
@@ -18,8 +21,6 @@ public class ModeControl implements DownloadItemMode
         } else {
             throw new UnknownDownloadItemModeException();
         }
-        
-        Runtime.getRuntime().addShutdownHook(new Thread(new DeinitalizeModeThread()));
     }
 
     public void modeInitalize() {

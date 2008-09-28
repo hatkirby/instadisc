@@ -5,6 +5,7 @@ package com.fourisland.instadisc;
 
 import com.fourisland.instadisc.Database.Item;
 import com.fourisland.instadisc.Database.Wrapper;
+import com.fourisland.instadisc.DownloadItem.DownloadItemModeTest;
 import com.fourisland.instadisc.DownloadItem.ModeControl;
 import com.fourisland.instadisc.DownloadItem.UnknownDownloadItemModeException;
 import com.fourisland.instadisc.Item.Categories.InstaDiscIcon;
@@ -166,9 +167,11 @@ public class InstaDiscView extends FrameView {
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JSeparator();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem8 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
@@ -269,6 +272,18 @@ public class InstaDiscView extends FrameView {
         });
         jMenu1.add(jMenuItem7);
 
+        jMenuItem8.setText(resourceMap.getString("jMenuItem8.text")); // NOI18N
+        jMenuItem8.setName("jMenuItem8"); // NOI18N
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem8);
+
+        jSeparator2.setName("jSeparator2"); // NOI18N
+        jMenu1.add(jSeparator2);
+
         jMenuItem3.setText(resourceMap.getString("jMenuItem3.text")); // NOI18N
         jMenuItem3.setName("jMenuItem3"); // NOI18N
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
@@ -287,14 +302,14 @@ public class InstaDiscView extends FrameView {
         });
         jMenu1.add(jMenuItem4);
 
-        jMenuItem8.setText(resourceMap.getString("jMenuItem8.text")); // NOI18N
-        jMenuItem8.setName("jMenuItem8"); // NOI18N
-        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem9.setText(resourceMap.getString("jMenuItem9.text")); // NOI18N
+        jMenuItem9.setName("jMenuItem9"); // NOI18N
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem8ActionPerformed(evt);
+                jMenuItem9ActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem8);
+        jMenu1.add(jMenuItem9);
 
         jMenuItem5.setText(resourceMap.getString("jMenuItem5.text")); // NOI18N
         jMenuItem5.setName("jMenuItem5"); // NOI18N
@@ -485,6 +500,23 @@ public class InstaDiscView extends FrameView {
         jMenuItem8.setEnabled(Wrapper.getConfig("useUnreadFlag").equals("true"));
     }//GEN-LAST:event_jMenu1MenuSelected
 
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        try
+        {
+            ModeControl.INSTANCE.modeDeinitalize();
+
+            DownloadItemModeTest dIMT = new DownloadItemModeTest(new JFrame(), true);
+            dIMT.setVisible(true);
+
+            ModeControl.INSTANCE.initalize(Wrapper.getConfig("downloadItemMode"));
+            ModeControl.INSTANCE.modeInitalize();//GEN-LAST:event_jMenuItem9ActionPerformed
+            ModeControl.INSTANCE.requestRetained();
+        } catch (UnknownDownloadItemModeException ex)
+        {
+            Logger.getLogger(InstaDiscView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList jList1;
     private javax.swing.JMenu jMenu1;
@@ -496,8 +528,10 @@ public class InstaDiscView extends FrameView {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JProgressBar progressBar;
