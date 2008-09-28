@@ -237,6 +237,15 @@ function deinitalizePort($username, $verification, $verificationID)
 	return new xmlrpcresp(new xmlrpcval('1', 'int'));
 }
 
+function countSubscribers($url)
+{
+	$cntsub = "SELECT * FROM subscriptions WHERE url = \"" . mysql_real_escape_string($url) . "\"";
+	$cntsub2 = mysql_query($cntsub);
+	$cntsub3 = mysql_fetch_array($cntsub2);
+
+	return new xmlrpcresp(new xmlrpcval($cntsub3[0], 'int'));
+}
+
 $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function" => "checkRegistration"),
 				"InstaDisc.deleteItem" => array("function" => "deleteItem"),
 				"InstaDisc.resendItem" => array("function" => "resendItem"),
@@ -248,7 +257,8 @@ $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function"
 				"InstaDisc.downloadItemModeTest" => array("function" => "downloadItemModeTest"),
 				"InstaDisc.setDownloadItemMode" => array("function" => "setDownloadItemMode"),
 				"InstaDisc.initalizePort" => array("function" => "initalizePort"),
-				"InstaDisc.deinitalizePort" => array("function" => "deinitalizePort")
+				"InstaDisc.deinitalizePort" => array("function" => "deinitalizePort"),
+				"InstaDisc.countSubscribers" => array("function" => "countSubscribers")
 			),0);
 $s->functions_parameters_type = 'phpvals';
 $s->service();
