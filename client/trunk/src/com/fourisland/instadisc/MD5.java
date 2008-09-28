@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.fourisland.instadisc.Item;
+package com.fourisland.instadisc;
 
+import com.fourisland.instadisc.Item.*;
 import com.fourisland.instadisc.Functions;
 import java.security.MessageDigest;
 import java.util.logging.Level;

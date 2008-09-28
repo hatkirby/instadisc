@@ -12,5 +12,6 @@ package com.fourisland.instadisc.FirstRun;
 public class StepEndResults {
     
     public static boolean ok = false;
+    public static boolean hasAccount = false;
 
 }

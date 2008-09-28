@@ -1,26 +1,26 @@
 /*
- * ChangePasswordForm.java
+ * Step2.java
  *
- * Created on August 15, 2008, 2:56 PM
+ * Created on July 28, 2008, 4:18 PM
  */
-
-package com.fourisland.instadisc;
+package com.fourisland.instadisc.FirstRun;
 
 import com.fourisland.instadisc.Database.Wrapper;
 import com.fourisland.instadisc.MD5;
+import com.fourisland.instadisc.XmlRpc;
 
 /**
  *
  * @author  hatkirby
  */
-public class ChangePasswordForm extends javax.swing.JDialog {
-    
-    /** Creates new form ChangePasswordForm */
-    public ChangePasswordForm(java.awt.Frame parent, boolean modal) {
+public class Step2A extends javax.swing.JDialog {
+
+    /** Creates new form Step2 */
+    public Step2A(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -33,18 +33,15 @@ public class ChangePasswordForm extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
         jPasswordField1 = new javax.swing.JPasswordField();
-        jPasswordField2 = new javax.swing.JPasswordField();
-        jPasswordField3 = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setName("Form"); // NOI18N
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.fourisland.instadisc.InstaDiscApp.class).getContext().getResourceMap(ChangePasswordForm.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.fourisland.instadisc.InstaDiscApp.class).getContext().getResourceMap(Step2A.class);
         jLabel1.setFont(resourceMap.getFont("jLabel1.font")); // NOI18N
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
@@ -58,17 +55,11 @@ public class ChangePasswordForm extends javax.swing.JDialog {
         jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
         jLabel4.setName("jLabel4"); // NOI18N
 
-        jLabel5.setText(resourceMap.getString("jLabel5.text")); // NOI18N
-        jLabel5.setName("jLabel5"); // NOI18N
+        jTextField1.setText(resourceMap.getString("jTextField1.text")); // NOI18N
+        jTextField1.setName("jTextField1"); // NOI18N
 
         jPasswordField1.setText(resourceMap.getString("jPasswordField1.text")); // NOI18N
         jPasswordField1.setName("jPasswordField1"); // NOI18N
-
-        jPasswordField2.setText(resourceMap.getString("jPasswordField2.text")); // NOI18N
-        jPasswordField2.setName("jPasswordField2"); // NOI18N
-
-        jPasswordField3.setText(resourceMap.getString("jPasswordField3.text")); // NOI18N
-        jPasswordField3.setName("jPasswordField3"); // NOI18N
 
         jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
@@ -86,9 +77,6 @@ public class ChangePasswordForm extends javax.swing.JDialog {
             }
         });
 
-        jLabel6.setText(resourceMap.getString("jLabel6.text")); // NOI18N
-        jLabel6.setName("jLabel6"); // NOI18N
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -100,25 +88,19 @@ public class ChangePasswordForm extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5)
+                                .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPasswordField3, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE))
+                                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4))
+                                .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jPasswordField2, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
-                                    .addComponent(jPasswordField1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)))
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE))))
+                                .addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -131,20 +113,15 @@ public class ChangePasswordForm extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jPasswordField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton2))
                 .addContainerGap())
         );
 
@@ -152,35 +129,47 @@ public class ChangePasswordForm extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        setVisible(false);
+        if (jTextField1.getText().equals("")) {
+            jLabel2.setText("Error: You forgot to enter a username");
+        } else {
+            if (jPasswordField1.getPassword().length == 0) {
+                jLabel2.setText("Error: You forgot to enter a password");
+            } else {
+                MD5 md5 = new MD5(jPasswordField1.getPassword());
+                String password = md5.hash();
+
+                XmlRpc xmlrpc = new XmlRpc("createUser", jTextField1.getText(), password);
+                String usr = (String) xmlrpc.execute();
+
+                if (!usr.equals(jTextField1.getText()))
+                {
+                    jLabel2.setText("Error: The specified username is already taken. Why don't you try: " + usr);
+                } else {
+                    Wrapper.setConfig("username", jTextField1.getText());
+                    Wrapper.setConfig("password", password);
+
+                    StepEndResults.ok = true;
+                    this.setVisible(false);
+                }
+            }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        MD5 old = new MD5(new String(jPasswordField1.getPassword()));
-        MD5 newP = new MD5(new String(jPasswordField2.getPassword()));
-        
-        if (Wrapper.getConfig("password").equals(old.hash()))
-        {
-            if (new String(jPasswordField2.getPassword()).equals(new String(jPasswordField3.getPassword())))
-            {
-                Wrapper.setConfig("password",newP.hash());
-                jLabel6.setText("Password changed");
-            } else {
-                jLabel6.setText("Error: Passwords do not match");
-            }
-        } else {
-            jLabel6.setText("Error: Old password is not correct");
-        }
+        StepEndResults.ok = false;
+        setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
-                ChangePasswordForm dialog = new ChangePasswordForm(new javax.swing.JFrame(), true);
+                Step2 dialog = new Step2(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+
                     public void windowClosing(java.awt.event.WindowEvent e) {
                         System.exit(0);
                     }
@@ -189,7 +178,6 @@ public class ChangePasswordForm extends javax.swing.JDialog {
             }
         });
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -197,11 +185,7 @@ public class ChangePasswordForm extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
-    private javax.swing.JPasswordField jPasswordField3;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
-    
 }
