@@ -44,9 +44,18 @@ function resendItem($username, $verification, $verificationID, $id)
 		$getitem3 = mysql_fetch_array($getitem2);
 		if ($getitem3['itemID'] == $id)
 		{
-			instaDisc_sendItem($username, $id);
+			$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+			$getuser2 = mysql_query($getuser);
+			$getuser3 = mysql_fetch_array($getuser2);
+			if ($getuser3['downloadItemMode'] == 'Push')
+			{
+				instaDisc_sendItem($username, $id);
 
-			return new xmlrpcresp(new xmlrpcval(0, "int"));
+				return new xmlrpcresp(new xmlrpcval(0, "int"));
+			} else if ($getuser3['downloadItemMode'] == 'Pull')
+			{
+				return new xmlrpcresp(new xmlrpcval(instaDisc_formItem($username, $id), 'string'));
+			}
 		}
 	}
 
@@ -57,23 +66,75 @@ function requestRetained($username, $verification, $verificationID)
 {
 	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
 	{
-		$getitems = "SELECT * FROM inbox WHERE username = \"" . mysql_real_escape_string($username) . "\"";
-		$getitems2 = mysql_query($getitems);
-		$i=0;
-		while ($getitems3[$i] = mysql_fetch_array($getitems2))
+		$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+		$getuser2 = mysql_query($getuser);
+		$getuser3 = mysql_fetch_array($getuser2);
+		if ($getuser3['downloadItemMode'] == 'Push')
 		{
-			if (!instaDisc_sendItem($username, $getitems3[$i]['itemID']))
+			$getitems = "SELECT * FROM inbox WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+			$getitems2 = mysql_query($getitems);
+			$i=0;
+			while ($getitems3[$i] = mysql_fetch_array($getitems2))
 			{
-				return new xmlrpcresp(new xmlrpcval(1, "int"));
+				if (!instaDisc_sendItem($username, $getitems3[$i]['itemID']))
+				{
+					return new xmlrpcresp(new xmlrpcval(1, "int"));
+				}
+				$i++;
 			}
-			$i++;
-		}
 
-		return new xmlrpcresp(new xmlrpcval(0, "int"));
+			return new xmlrpcresp(new xmlrpcval(0, "int"));
+		} else if ($getuser3['downloadItemMode'] == 'Pull')
+		{
+			$getitems = "SELECT * FROM inbox WHERE username = \"" . mysql_real_escape_string($username) . "\" LIMIT 0,2";
+			$getitems2 = mysql_query($getitems);
+			$getitems3 = mysql_fetch_array($getitems2);
+			$getitems4 = mysql_fetch_array($getitems2);
+			if ($getitems3['username'] == $username)
+			{
+				$item = instaDisc_formItem($username, $getitems3['id']);
+				if ($getitems4['username'] == $username)
+				{
+					$item .= 'More: ' . $getitems4['id'] . "\n";
+				}
+
+				return new xmlrpcresp(new xmlrpcval($item, 'string'));
+			}
+		}
 	}
 
 	return new xmlrpcresp(new xmlrpcval(1, "int"));
 }
+
+function sendItem($username, $verification, $verificationID, $id)
+{
+	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
+	{
+		$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+		$getuser2 = mysql_query($getuser);
+		$getuser3 = mysql_fetch_array($getuser2);
+		if ($getuser3['downloadItemMode'] == 'Pull')
+		{
+			$getitems = "SELECT * FROM inbox WHERE username = \"" . mysql_real_escape_string($username) . "\" AND itemID > " . ($id-1) . " LIMIT 0,2";
+			$getitems2 = mysql_query($getitems);
+			$getitems3 = mysql_fetch_array($getitems2);
+			$getitems4 = mysql_fetch_array($getitems2);
+			if ($getitems3['username'] == $username)
+			{
+				$item = instaDisc_formItem($username, $getitems3['id']);
+				if ($getitems4['username'] == $username)
+				{
+					$item .= 'More: ' . $getitems4['id'] . "\n";
+				}
+
+				return new xmlrpcresp(new xmlrpcval($item, 'string'));
+			}
+		}
+	}
+
+	return new xmlrpcresp(new xmlrpcval(1, "int"));
+}
+
 
 function sendFromUpdate($subscriptionURL, $title, $author, $url, $semantics, $encryptionID)
 {
@@ -180,6 +241,7 @@ $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function"
 				"InstaDisc.deleteItem" => array("function" => "deleteItem"),
 				"InstaDisc.resendItem" => array("function" => "resendItem"),
 				"InstaDisc.requestRetained" => array("function" => "requestRetained"),
+				"InstaDisc.sendItem" => array("function" => "sendItem"),
 				"InstaDisc.sendFromUpdate" => array("function" => "sendFromUpdate"),
 				"InstaDisc.deleteSubscription" => array("function" => "deleteSubscription"),
 				"InstaDisc.addSubscription" => array("function" => "addSubscription"),
