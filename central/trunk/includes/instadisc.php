@@ -58,41 +58,22 @@ function instaDisc_sendItem($username, $id)
 		$getuser2 = mysql_query($getuser);
 		$getuser3 = mysql_fetch_array($getuser2);
 
-		$fp = @fsockopen($getuser3['ip'], 1204, $errno, $errstr);
-		if ($fp)
+		if (($getuser3['downloadItemMode'] == 'Push') && ($getuser3['port'] != 0))
 		{
-			$verID = rand(1,2147483647);
-
-			$title = str_replace(': ', '__INSTADISC__', $getitem3['title']);
-
-			$out = 'ID: ' . $id . "\r\n";
-			$out .= 'Verification: ' . md5($username . ':' . $getuser3['password'] . ':' . $verID) . "\r\n";
-			$out .= 'Verification-ID: ' . $verID . "\r\n";
-			$out .= 'Subscription: ' . $getitem3['subscription'] . "\r\n";
-			$out .= 'Title: ' . $title . "\r\n";
-			$out .= 'Author: ' . $getitem3['author'] . "\r\n";
-			$out .= 'URL: ' . $getitem3['url'] . "\r\n";
-
-			$semantics = unserialize($getitem3['semantics']);
-			foreach ($semantics as $name => $value)
+			$fp = @fsockopen($getuser3['ip'], $getuser3['port'], $errno, $errstr);
+			if ($fp)
 			{
-				$value = str_replace(': ', '__INSTADISC__', $value);
-				$out .= $name . ': ' . $value . "\r\n";
+				$title = str_replace(': ', '__INSTADISC__', $getitem3['title']);
+
+				$out = instaDisc_formItem($username, $id, "\r\n") . "\r\n\r\n";
+
+				fwrite($fp, $out);
+				fclose($fp);
+
+				return true;
+			} else {
+				return false;
 			}
-
-			if ($getitem3['encryptionID'] != 0)
-			{
-				$out .= 'Encryption-ID: ' . $getitem3['encryptionID'] . "\r\n";
-			}
-
-			$out .= "\r\n\r\n";
-
-			fwrite($fp, $out);
-			fclose($fp);
-
-			return true;
-		} else {
-			return false;
 		}
 	}
 }
@@ -111,7 +92,10 @@ function instaDisc_addItem($username, $subscription, $title, $author, $url, $sem
 		$insitem = "INSERT INTO inbox (username, itemID, subscription, title, author, url, semantics, encryptionID) VALUES (\"" . mysql_real_escape_string($username) . "\", " . $itemID . ", \"" . mysql_real_escape_string($subscription) . "\", \"" . mysql_real_escape_string($title) . "\", \"" . mysql_real_escape_string($author) . "\", \"" . mysql_real_escape_string($url) . "\", \"" . mysql_real_escape_string($semantics) . "\"," . $encryptionID . ")";
 		$insitem2 = mysql_query($insitem);
 
-		instaDisc_sendItem($username, $itemID);
+		if ($getuser3['downloadItemMode'] == 'Push')
+		{
+			instaDisc_sendItem($username, $itemID);
+		}
 	}
 }
 
@@ -261,6 +245,40 @@ function instaDisc_initalizePort($username)
 	$setuser2 = mysql_query($setuser);
 
 	return $port;
+}
+
+function instaDisc_formItem($username, $id, $ln = "\n")
+{
+	$getitem = "SELECT * FROM inbox WHERE username = \"" . mysql_real_escape_string($username) . "\" AND itemID = " . $id;
+	$getitem2 = mysql_query($getitem);
+	$getitem3 = mysql_fetch_array($getitem2);
+	if ($getitem3['username'] == $username)
+	{
+		$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+		$getuser2 = mysql_query($getuser);
+		$getuser3 = mysql_fetch_array($getuser2);
+
+		$verID = rand(1,2147483647);
+
+		$out = 'ID: ' . $id . $ln;
+		$out .= 'Verification: ' . md5($username . ':' . $getuser3['password'] . ':' . $verID) . $ln;
+		$out .= 'Verification-ID: ' . $verID . $ln;
+		$out .= 'Subscription: ' . $getitem3['subscription'] . $ln;
+		$out .= 'Title: ' . $title . $ln;
+		$out .= 'Author: ' . $getitem3['author'] . $ln;
+		$out .= 'URL: ' . $getitem3['url'] . $ln;
+
+		$semantics = unserialize($getitem3['semantics']);
+		foreach ($semantics as $name => $value)
+		{
+			$value = str_replace(': ', '__INSTADISC__', $value);
+			$out .= $name . ': ' . $value . $ln;
+		}
+		if ($getitem3['encryptionID'] != 0)
+		{
+			$out .= 'Encryption-ID: ' . $getitem3['encryptionID'] . $ln;
+		}
+	}
 }
 
 ?>
