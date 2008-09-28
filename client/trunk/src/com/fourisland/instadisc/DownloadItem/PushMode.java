@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,13 +18,19 @@ public class PushMode implements DownloadItemMode
     
     public void modeInitalize()
     {
-        idt = new InstaDiscThread();
+        XmlRpc xmlrpc = new XmlRpc("initalizePort");
+        int port = (Integer) xmlrpc.execute();
+        
+        idt = new InstaDiscThread(port);
         new Thread(idt).start();
     }
     
     public void modeDeinitalize()
     {
         idt.kill();
+        
+        XmlRpc xmlrpc = new XmlRpc("deinitalizePort");
+        xmlrpc.execute();
     }
 
     public void requestRetained() {
@@ -53,6 +58,12 @@ class InstaDiscThread implements Runnable {
 
     boolean cancelled = false;
     ServerSocket svr;
+    int port;
+    
+    public InstaDiscThread(int port)
+    {
+        this.port = port;
+    }
 
     public void cancel() {
         cancelled = true;
@@ -62,7 +73,7 @@ class InstaDiscThread implements Runnable {
         try
         {
             svr = new ServerSocket();
-            java.net.InetSocketAddress addr = new java.net.InetSocketAddress(1204);
+            java.net.InetSocketAddress addr = new java.net.InetSocketAddress(port);
             svr.bind(addr);
             while (!cancelled)
             {
@@ -90,6 +101,8 @@ class InstaDiscThread implements Runnable {
     
     public void kill()
     {
+        cancel();
+        
         try
         {
             svr.close();
@@ -144,24 +157,6 @@ class HandleItemThread implements Runnable {
                 result.append(Character.toString((char) buffer[j]));
             }
 
-            String[] headers = result.toString().split("\n");
-            HashMap<String, String> headerMap = new HashMap<String, String>();
-            i = 0;
-            while (1 == 1)
-            {
-                try
-                {
-                    String[] nameVal = headers[i].split(": ");
-                    String name = nameVal[0];
-                    String value = nameVal[1].trim().replace("__INSTADISC__", ": ");
-                    headerMap.put(name, value);
-                } catch (Exception ex)
-                {
-                    break;
-                }
-                i++;
-            }
-
             try
             {
                 s.close();
@@ -170,7 +165,7 @@ class HandleItemThread implements Runnable {
                 Logger.getLogger(HandleItemThread.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            Item idI = new Item(headerMap);
+            Item idI = new Item(result.toString());
             idI.start();
         } catch (IOException ex)
         {

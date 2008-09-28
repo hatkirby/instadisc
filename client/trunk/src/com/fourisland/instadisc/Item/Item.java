@@ -21,8 +21,26 @@ public class Item {
 
     HashMap<String, String> headerMap;
 
-    public Item(HashMap<String, String> headerMap) {
-        this.headerMap = headerMap;
+    public Item(String result) {
+        String[] headers = result.toString().split("\n");
+        HashMap<String, String> tempHeaderMap = new HashMap<String, String>();
+        int i = 0;
+        while (1 == 1)
+        {
+            try
+            {
+                String[] nameVal = headers[i].split(": ");
+                String name = nameVal[0];
+                String value = nameVal[1].trim().replace("__INSTADISC__", ": ");
+                tempHeaderMap.put(name, value);
+            } catch (Exception ex)
+            {
+                break;
+            }
+            i++;
+        }
+        
+        this.headerMap = tempHeaderMap;
     }
 
     public void start() {
