@@ -30,8 +30,15 @@ $template->set_filenames(array(
 $template->assign_vars(array(
 	'S_SUBSCRIPTION'	=> ('http://' . $_SERVER['SERVER_NAME'] . '/forum-post/' . generateSlug($config['id_subscription_title']) . '/'),
 	'S_TITLE'		=> $config['id_subscription_title'],
-	'S_KEY'			=> $config['id_activation_key'],
 ));
+
+if ($config['id_encryption_key'] != '')
+{
+	$verID = rand(1,2147483647);
+
+	$template->assign_block_vars('encrypted', array(	'S_VERIFICATION' => md5($config['id_subscription_title'] . ':' . md5($config['id_encryption_key']) . ':' . $verID),
+								'S_VERID' => $verID));
+}
 
 page_footer();
 

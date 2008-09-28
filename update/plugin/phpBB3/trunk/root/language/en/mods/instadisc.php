@@ -40,10 +40,10 @@ $lang = array_merge($lang, array(
 	'SUBSCRIPTION'			=> 'Subscription',
 
 	'SUBSCRIPTION_TITLE'		=> 'Subscription Title',
-	'SUBSCRIPTION_URL'		=> 'Subscription URL',
+	'SUBSCRIPTION_FILE'		=> 'Subscription File URL',
 	'ENCRYPTION'			=> 'Encryption Key',
 
-	'SUBSCRIPTION_URL_DESC'		=> 'This is a unique URI used to identify your subscription.',
+	'SUBSCRIPTION_FILE_DESC'	=> 'This is the URL of your subscription file',
 	'ENCRYPTION_DESC'		=> 'If you have the PHP module "mcrypt" installed, you can password protect this subscription so that users who wish to subscribe to it must provide the correct password. Leave this field blank if you do not wish to encrypt this subscription.',
 
 	'ID_CHANGES_SAVED'		=> 'The changes you made to your InstaDisc settings have been saved!',
