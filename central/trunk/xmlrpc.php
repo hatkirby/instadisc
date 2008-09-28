@@ -140,6 +140,19 @@ function downloadItemModeTest()
         }
 }
 
+function setDownloadItemMode($username, $verification, $verificationID, $mode)
+{
+	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
+	{
+		$setuser = "UPDATE users SET downloadItemMode = \"" . mysql_real_escape_string($mode) . "\" WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+		$setuser2 = mysql_query($setuser);
+
+		return new xmlrpcresp(new xmlrpcval('0', 'int'));
+	}
+
+	return new xmlrpcresp(new xmlrpcval('1', 'int'));
+}
+
 $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function" => "checkRegistration"),
 				"InstaDisc.deleteItem" => array("function" => "deleteItem"),
 				"InstaDisc.resendItem" => array("function" => "resendItem"),
@@ -147,7 +160,8 @@ $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function"
 				"InstaDisc.sendFromUpdate" => array("function" => "sendFromUpdate"),
 				"InstaDisc.deleteSubscription" => array("function" => "deleteSubscription"),
 				"InstaDisc.addSubscription" => array("function" => "addSubscription"),
-				"InstaDisc.downloadItemModeTest" => array("function" => "downloadItemModeTest")
+				"InstaDisc.downloadItemModeTest" => array("function" => "downloadItemModeTest"),
+				"InstaDisc.setDownloadItemMode" => array("function" => "setDownloadItemMode")
 			),0);
 $s->functions_parameters_type = 'phpvals';
 $s->service();
