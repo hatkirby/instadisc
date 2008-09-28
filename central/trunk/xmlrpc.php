@@ -153,6 +153,29 @@ function setDownloadItemMode($username, $verification, $verificationID, $mode)
 	return new xmlrpcresp(new xmlrpcval('1', 'int'));
 }
 
+function initalizePort($username, $verification, $verificationID)
+{
+	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
+	{
+		return new xmlrpcresp(new xmlrpcval(instaDisc_initalizePort($username), 'int'));
+	}
+
+	return new xmlrpcresp(new xmlrpcval('0', 'int'));
+}
+
+function deinitalizePort($username, $verification, $verificationID)
+{
+	if (instaDisc_checkVerification($username, $verification, $verificationID, 'users', 'username', 'password'))
+	{
+		$setuser = "UPDATE users SET port = 0 WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+		$setuser2 = mysql_query($setuser);
+
+		return new xmlrpcresp(new xmlrpcval('0', 'int'));
+	}
+
+	return new xmlrpcresp(new xmlrpcval('1', 'int'));
+}
+
 $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function" => "checkRegistration"),
 				"InstaDisc.deleteItem" => array("function" => "deleteItem"),
 				"InstaDisc.resendItem" => array("function" => "resendItem"),
@@ -161,7 +184,9 @@ $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function"
 				"InstaDisc.deleteSubscription" => array("function" => "deleteSubscription"),
 				"InstaDisc.addSubscription" => array("function" => "addSubscription"),
 				"InstaDisc.downloadItemModeTest" => array("function" => "downloadItemModeTest"),
-				"InstaDisc.setDownloadItemMode" => array("function" => "setDownloadItemMode")
+				"InstaDisc.setDownloadItemMode" => array("function" => "setDownloadItemMode"),
+				"InstaDisc.initalizePort" => array("function" => "initalizePort"),
+				"InstaDisc.deinitalizePort" => array("function" => "deinitalizePort")
 			),0);
 $s->functions_parameters_type = 'phpvals';
 $s->service();
