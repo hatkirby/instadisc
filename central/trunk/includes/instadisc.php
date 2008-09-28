@@ -98,9 +98,9 @@ function instaDisc_addItem($username, $subscription, $title, $author, $url, $sem
 	}
 }
 
-function instaDisc_createUser($username, $password, $email)
+function instaDisc_createUser($username, $password)
 {
-	$insuser = "INSERT INTO users (username, password, email) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($password) . "\", \"" . mysql_real_escape_string($email) . "\")";
+	$insuser = "INSERT INTO users (username, password) VALUES (\"" . mysql_real_escape_string($username) . "\", \"" . mysql_real_escape_string($password) . "\")";
 	$insuser2 = mysql_query($insuser);
 }
 

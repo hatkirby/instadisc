@@ -246,6 +246,36 @@ function countSubscribers($url)
 	return new xmlrpcresp(new xmlrpcval($cntsub3[0], 'int'));
 }
 
+function createUser($username, $password)
+{
+	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
+	$getuser2 = mysql_query($getuser);
+	$getuser3 = mysql_fetch_array$($getuser2);
+	if ($getuser3['username'] == $username)
+	{
+		$ij = 0;
+
+		while ($ij == 0)
+		{
+			$fakeUN = $username . rand(10,9999);
+
+			$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($fakeUN) . "\"";
+			$getuser2 = mysql_query($getuser);
+			$getuser3 = mysql_fetch_array$($getuser2);
+			if ($getuser3['username'] != $username)
+			{
+				$ij = 1;
+			}
+		}
+
+		return new xmlrpcresp(new xmlrpcval($fakeUN, 'string'));
+	} else {
+		instaDisc_createUser($username, $password);
+
+		return new xmlrpcresp(new xmlrpcval($username, 'string'));
+	}
+}
+
 $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function" => "checkRegistration"),
 				"InstaDisc.deleteItem" => array("function" => "deleteItem"),
 				"InstaDisc.resendItem" => array("function" => "resendItem"),
@@ -258,7 +288,8 @@ $s = new xmlrpc_server(	array(	"InstaDisc.checkRegistration" => array("function"
 				"InstaDisc.setDownloadItemMode" => array("function" => "setDownloadItemMode"),
 				"InstaDisc.initalizePort" => array("function" => "initalizePort"),
 				"InstaDisc.deinitalizePort" => array("function" => "deinitalizePort"),
-				"InstaDisc.countSubscribers" => array("function" => "countSubscribers")
+				"InstaDisc.countSubscribers" => array("function" => "countSubscribers"),
+				"InstaDisc.createUser" => array("function" => "createUser")
 			),0);
 $s->functions_parameters_type = 'phpvals';
 $s->service();
