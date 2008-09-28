@@ -7,6 +7,7 @@ package com.fourisland.instadisc.FirstRun;
 
 import com.fourisland.instadisc.Database.Wrapper;
 import com.fourisland.instadisc.DownloadItem.DownloadItemModeTest;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 /**
@@ -22,7 +23,15 @@ public class FirstRunWizard implements Runnable {
         if (StepEndResults.ok)
         {
             StepEndResults.ok = false;
-            Step2 s2 = new Step2(new JFrame(), true);
+            JDialog s2;
+            
+            if (StepEndResults.hasAccount)
+            {
+                s2 = new Step2(new JFrame(), true);
+            } else {
+                s2 = new Step2A(new JFrame(), true);
+            }
+            
             s2.setVisible(true);
             if (StepEndResults.ok)
             {
@@ -43,6 +52,8 @@ public class FirstRunWizard implements Runnable {
                     Wrapper.setConfig("ipCheckUnit", "day");
                     Wrapper.setConfig("useUnreadFlag", "true");
                 }
+            } else {
+                run();
             }
         }
         System.exit(0);

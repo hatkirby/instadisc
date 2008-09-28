@@ -4,6 +4,7 @@
  */
 package com.fourisland.instadisc.Item;
 
+import com.fourisland.instadisc.MD5;
 import com.fourisland.instadisc.Database.Wrapper;
 import java.util.Random;
 
