@@ -1,28 +1,42 @@
 package com.fourisland.instadisc.DownloadItem;
 
+import com.fourisland.instadisc.Item.Item;
+import com.fourisland.instadisc.XmlRpc;
+
 public class PullMode implements DownloadItemMode
 {
     public void modeInitalize() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void modeDeinitalize() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void requestRetained() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        XmlRpc xmlrpc = new XmlRpc("requestRetained");
+        Item item = new Item((String) xmlrpc.execute());
+        item.start();
+        
+        while (item.headerMap.containsKey("More"))
+        {
+            xmlrpc = new XmlRpc("sendItem");
+            xmlrpc.addParam(Integer.decode(item.headerMap.get("More")));
+            item = new Item((String) xmlrpc.execute());
+            item.start();
+        }
     }
     
     public void resendItem(int id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        XmlRpc xmlrpc = new XmlRpc("resendItem");
+        xmlrpc.addParam(id);
+        Item item = new Item((String) xmlrpc.execute());
+        item.start();
     }
 
     public int setTimer() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return (60 * 5); // 5 minutes
     }
 
     public void timerTick() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        requestRetained();
     }
 }

@@ -19,7 +19,7 @@ import java.util.HashMap;
  */
 public class Item {
 
-    HashMap<String, String> headerMap;
+    public HashMap<String, String> headerMap;
 
     public Item(String result) {
         String[] headers = result.toString().split("\n");
