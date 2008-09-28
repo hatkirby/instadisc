@@ -14,8 +14,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -53,7 +51,7 @@ public class SubscriptionFile {
         for (i = 0; i < it.length; i++)
         {
             if (it[i].getSubscription().equals(s.getURL()))
-            {
+            { 
                 Wrapper.deleteItem(it[i].getID());
             }
         }
@@ -150,56 +148,42 @@ class SubscriptionFileThread implements Runnable {
                         s.setTitle(headerMap.get("Title"));
                         s.setCategory(headerMap.get("Category"));
                         
-                        if (headerMap.containsKey("Series-Control-URL") && headerMap.containsKey("Password") && headerMap.containsKey("Subscription-ID"))
+                        if (Functions.xor(headerMap.containsKey("Verification"),headerMap.containsKey("Verification-ID")))
                         {
-                            if (headerMap.get("Password").endsWith("On"))
+                            if (headerMap.containsKey("Verification"))
                             {
-                                try
+                                AskForPasswordForm afpf = new AskForPasswordForm(new JFrame(),true);
+                                afpf.setVisible(true);
+                                
+                                if (afpf.getEntered() || afpf.getPassword().equals(""))
                                 {
-                                    URI url = new URI(headerMap.get("Series-Control-URL"));
-                                    XmlRpc xmlrpc = new XmlRpc(url.toString(), "getPasswordInfo");
-                                    xmlrpc.addParam(headerMap.get("Subscription-ID"));
-                                    String resp = (String) xmlrpc.execute();
-                                    String[] val = resp.split(":");
+                                    MD5 md5 = new MD5(afpf.getPassword());
+                                    MD5 hash = new MD5(s.getTitle() + ":" + md5.hash() + ":" + headerMap.get("Verification-ID"));
                                     
-                                    AskForPasswordForm afpf = new AskForPasswordForm(new JFrame(),true);
-                                    afpf.setVisible(true);
-
-                                    if (afpf.getEntered() || afpf.getPassword().equals(""))
+                                    if (hash.hash().equals(headerMap.get("Verification")))
                                     {
-                                        MD5 md5 = new MD5(afpf.getPassword());
-                                        MD5 hash = new MD5(s.getTitle() + ":" + md5.hash() + ":" + val[1]);
-
-                                        if (hash.hash().equals(val[0]))
-                                        {
-                                            s.setPassword(afpf.getPassword());
-                                        } else {
-                                            status.setText("Error: Incorrect password entered");
-                                            return;
-                                        }
+                                        s.setPassword(afpf.getPassword());
                                     } else {
-                                        status.setText("Error: No password entered");
+                                        status.setText("Error: Incorrect password entered");
                                         return;
                                     }
-                                } catch (URISyntaxException ex)
-                                {
-                                    Logger.getLogger(SubscriptionFileThread.class.getName()).log(Level.SEVERE, null, ex);
+                                } else {
+                                    status.setText("Error: No password entered");
+                                    return;
                                 }
                             } else {
                                 s.setPassword("");
                             }
-                        } else {
-                            s.setPassword("");
+                            
+                            Wrapper.addSubscription(s);
+
+                            XmlRpc xmlrpc = new XmlRpc("addSubscription");
+                            xmlrpc.addParam(headerMap.get("Subscription"));
+                            xmlrpc.addParam(headerMap.get("Category"));
+                            xmlrpc.execute();
+
+                            status.setText("You've sucessfully subscribed to that website");
                         }
-
-                        Wrapper.addSubscription(s);
-
-                        XmlRpc xmlrpc = new XmlRpc("addSubscription");
-                        xmlrpc.addParam(headerMap.get("Subscription"));
-                        xmlrpc.addParam(headerMap.get("Category"));
-                        xmlrpc.execute();
-
-                        status.setText("You've sucessfully subscribed to that website");
                     } else {
                         status.setText("Error: Subscription file is not well-formed");
                     }
