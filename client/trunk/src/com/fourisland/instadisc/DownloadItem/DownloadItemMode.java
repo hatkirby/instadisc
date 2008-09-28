@@ -6,7 +6,7 @@ public interface DownloadItemMode
     public void modeDeinitalize();
     
     public void requestRetained();
-    public void sendItem(int id);
+    public void resendItem(int id);
     
     public int setTimer();
     public void timerTick();

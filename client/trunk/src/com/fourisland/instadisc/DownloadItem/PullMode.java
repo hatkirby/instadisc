@@ -14,7 +14,7 @@ public class PullMode implements DownloadItemMode
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    public void sendItem(int id) {
+    public void resendItem(int id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

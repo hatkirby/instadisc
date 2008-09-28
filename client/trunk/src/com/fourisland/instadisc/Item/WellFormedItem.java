@@ -183,7 +183,7 @@ public class WellFormedItem {
             Verification ver = new Verification(ivid);
             good = aThis.headerMap.get("Verification").equals(ver.getHash());
         } catch (VerificationIDReusedException ex) {
-            ModeControl.INSTANCE.sendItem(Integer.decode(aThis.headerMap.get("ID")));
+            ModeControl.INSTANCE.resendItem(Integer.decode(aThis.headerMap.get("ID")));
         } catch (Exception ex) {
             Logger.getLogger(WellFormedItem.class.getName()).log(Level.SEVERE, null, ex);
         }
