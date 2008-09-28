@@ -63,6 +63,13 @@ function id_settings_page()
 </TABLE>
 <H3>Blog Posts Subscription</H3>
 <TABLE CLASS="form-table">
+<TR VALIGN="top">
+ <TH SCOPE="row"><LABEL>Subscription File URL</LABEL>
+ <TD>
+  <?php echo(get_option('siteurl') . '/wp-content/plugins/instadisc/subscription.php'); ?>
+  <BR>This is the URL that you advertise, the URL people use to subscribe to your subscription.
+ </TD>
+</TR>
 <?php
 	if (extension_loaded('mcrypt'))
 	{
@@ -80,6 +87,13 @@ function id_settings_page()
 </TABLE>
 <H3>Comments Subscription</H3>
 <TABLE CLASS="form-table">
+<TR VALIGN="top">
+ <TH SCOPE="row"><LABEL>Subscription File URL</LABEL>
+ <TD>
+  <?php echo(get_option('siteurl') . '/wp-content/plugins/instadisc/subscription.php?comment='); ?>
+  <BR>This is the URL that you advertise, the URL people use to subscribe to your subscription.
+ </TD>
+</TR>
 <?php
 	if (extension_loaded('mcrypt'))
 	{
