@@ -250,7 +250,7 @@ function createUser($username, $password)
 {
 	$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($username) . "\"";
 	$getuser2 = mysql_query($getuser);
-	$getuser3 = mysql_fetch_array$($getuser2);
+	$getuser3 = mysql_fetch_array($getuser2);
 	if ($getuser3['username'] == $username)
 	{
 		$ij = 0;
@@ -261,7 +261,7 @@ function createUser($username, $password)
 
 			$getuser = "SELECT * FROM users WHERE username = \"" . mysql_real_escape_string($fakeUN) . "\"";
 			$getuser2 = mysql_query($getuser);
-			$getuser3 = mysql_fetch_array$($getuser2);
+			$getuser3 = mysql_fetch_array($getuser2);
 			if ($getuser3['username'] != $username)
 			{
 				$ij = 1;
