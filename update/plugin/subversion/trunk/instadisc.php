@@ -62,7 +62,7 @@ function instaDisc_sendItem($title, $author, $url, $semantics, $subTitle, $subPa
 	
 	$verID = rand(1,2147483647);
 
-	$client = new xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
+	$client = new xmlrpc_client('http://rpc.instadisc.org');
 	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($subscriptionURL, 'string'),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),

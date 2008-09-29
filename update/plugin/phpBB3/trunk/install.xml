@@ -62,6 +62,6 @@ if (($post_mode == 'post') || ($post_mode == 'reply'))
 			</edit>
 		</open>
 
-		<diy-instructions lang="en">Go to http://central.fourisland.com/release/update/phpBB3/ for help on setting up your subscriptions.</diy-instructions>
+		<diy-instructions lang="en">Go to http://instadisc.org/phpBB3 for help on setting up your subscriptions.</diy-instructions>
 	</action-group>
 </mod>
