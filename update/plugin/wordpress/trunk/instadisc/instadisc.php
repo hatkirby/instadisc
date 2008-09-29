@@ -175,7 +175,7 @@ function sendComment($id)
 	$author = $comment->comment_author;
 	$url = get_permalink($comment->comment_post_ID) . "#comments-" . $id;
 
-	$subscriptionURL = 'http://' . $_SERVER['SERVER_NAME'] . '/blog-comment/' . generateSlug(get_option('instaDisc_subscription_title')) . '/';
+	$subscriptionURL = 'http://' . $_SERVER['SERVER_NAME'] . '/comment/' . generateSlug(get_option('instaDisc_subscription_title')) . '/';
 
 	$encID = 0;
 	if (get_option('instaDisc_comment_password') != '')
