@@ -7,7 +7,7 @@ echo('<DIV STYLE="display: none">: ' . "\n");
 if (isset($_GET['comment']))
 {
 	echo('Subscription: ');
-	echo('http://' . $_SERVER['SERVER_NAME'] . '/blog-comment/' . generateSlug(get_option('instaDisc_subscription_title')) . '/');
+	echo('http://' . $_SERVER['SERVER_NAME'] . '/comment/' . generateSlug(get_option('instaDisc_subscription_title')) . '/');
 	echo("\n");
 
 	echo('Title: ');
@@ -15,7 +15,7 @@ if (isset($_GET['comment']))
 	echo(' Comments');
 	echo("\n");
 
-	echo('Category: blog-comment');
+	echo('Category: comment');
 	echo("\n");
 
 	if (get_option('instaDisc_comment_password') != '')
@@ -27,7 +27,7 @@ if (isset($_GET['comment']))
 	}
 
 ?>
-End: </DIV><DIV STYLE="margin: 0 auto; margin-top: 5em; width: 500px; background-color: #FBEC5D; text-align: center; padding: 4px;"><B>This is an InstaDisc Subscription file.</B><P>If you would like to subscribe to the InstaDisc subscription:<BR><I><?php echo(get_option('instaDisc_subscription_title')); ?></I> (<U>blog-comment</U>)<BR>Copy the address of this file to the "Add Subscription" form on your InstaDisc client.</DIV>
+End: </DIV><DIV STYLE="margin: 0 auto; margin-top: 5em; width: 500px; background-color: #FBEC5D; text-align: center; padding: 4px;"><B>This is an InstaDisc Subscription file.</B><P>If you would like to subscribe to the InstaDisc subscription:<BR><I><?php echo(get_option('instaDisc_subscription_title')); ?></I> (<U>comment</U>)<BR>Copy the address of this file to the "Add Subscription" form on your InstaDisc client.</DIV>
 <?php
 
 	if (get_option('instaDisc_comment_password') != '')
