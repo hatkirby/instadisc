@@ -22,7 +22,7 @@ public class Category {
         if (category.equals("blog-post"))
         {
             return new ImageIcon(Blogpost.blogpost);
-        } else if (category.equals("blog-comment"))
+        } else if (category.equals("comment"))
         {
             return new ImageIcon(Comment.comment);
         } else if (category.equals("forum-post"))
