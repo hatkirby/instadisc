@@ -138,12 +138,15 @@ public class Step2A extends javax.swing.JDialog {
                 MD5 md5 = new MD5(jPasswordField1.getPassword());
                 String password = md5.hash();
 
-                XmlRpc xmlrpc = new XmlRpc("createUser", jTextField1.getText(), password);
+                XmlRpc xmlrpc = new XmlRpc("createUser", "", "");
+                xmlrpc.resetParams();
+                xmlrpc.addParam(jTextField1.getText());
+                xmlrpc.addParam(password);
                 String usr = (String) xmlrpc.execute();
 
                 if (!usr.equals(jTextField1.getText()))
                 {
-                    jLabel2.setText("Error: The specified username is already taken. Why don't you try: " + usr);
+                    jLabel2.setText("Error: The specified username is already taken.<BR>Why don't you try: " + usr);
                 } else {
                     Wrapper.setConfig("username", jTextField1.getText());
                     Wrapper.setConfig("password", password);
@@ -167,7 +170,7 @@ public class Step2A extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                Step2 dialog = new Step2(new javax.swing.JFrame(), true);
+                Step2A dialog = new Step2A(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
 
                     public void windowClosing(java.awt.event.WindowEvent e) {

@@ -23,22 +23,9 @@ public class XmlRpc {
     private String function;
     private Object[] params;
     private int step = 3;
-    private String url;
 
     public XmlRpc(String function) {
         this.function = function;
-        this.url = "http://central.fourisland.com/xmlrpc.php";
-
-        Verification ver = new Verification();
-        params = new Object[3];
-        params[0] = ver.getUsername();
-        params[1] = ver.getHash();
-        params[2] = ver.getID();
-    }
-    
-    public XmlRpc(String url, String function) {
-        this.function = function;
-        this.url = url;
 
         Verification ver = new Verification();
         params = new Object[3];
@@ -76,7 +63,7 @@ public class XmlRpc {
         Object result = null;
         try {
             XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-            config.setServerURL(new URL("http://central.fourisland.com/xmlrpc.php"));
+            config.setServerURL(new URL("http://rpc.instadisc.org/"));
             XmlRpcClient client = new XmlRpcClient();
             client.setConfig(config);
 
@@ -92,5 +79,6 @@ public class XmlRpc {
     public void resetParams()
     {
         params = new Object[] {};
+        step = 0;
     }
 }
