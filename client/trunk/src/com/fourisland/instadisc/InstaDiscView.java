@@ -440,7 +440,7 @@ public class InstaDiscView extends FrameView {
         {
             if (java.awt.Desktop.isDesktopSupported())
             {
-                java.awt.Desktop.getDesktop().browse(new URI("http://fourisland.com/projects/instadisc/"));
+                java.awt.Desktop.getDesktop().browse(new URI("http://instadisc.org"));
             } else {
                 doText("Error: Desktop not supported");
             }

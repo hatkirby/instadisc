@@ -67,7 +67,7 @@ function sendItem($title, $userID, $url, $fourm)
                 mcrypt_module_close($td);
 	}
 
-	$client = new xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
+	$client = new xmlrpc_client('http://rpc.instadisc.org');
 	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($subscriptionURL, 'string'),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),

@@ -7,7 +7,7 @@ include('xmlrpc/xmlrpc.inc');
 $wgExtensionCredits['other'][] = array(
 	'name' => 'InstaDisc',
 	'author' => 'Starla Insigna',
-	'url' => 'http://fourisland.com/projects/instadisc/wiki/Update/MediaWiki',
+	'url' => 'http://instadisc.org/MediaWiki',
 	'description' => 'This plugin provides an InstaDisc feed for your MediaWiki wiki, a page-change subscription.'
 );
 
@@ -36,7 +36,7 @@ function instaDisc_sendItem(&$article, &$user, &$text, &$summary, &$minoredit, &
 
 	$verID = rand(1,2147483647);
 
-	$client = new xmlrpc_client('http://central.fourisland.com/xmlrpc.php');
+	$client = new xmlrpc_client('http://rpc.instadisc.org');
 	$msg = new xmlrpcmsg("InstaDisc.sendFromUpdate", array(	new xmlrpcval($subscriptionURL, 'string'),
 								new xmlrpcval($title, 'string'),
 								new xmlrpcval($author, 'string'),
